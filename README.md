@@ -37,7 +37,7 @@ When creating or registering an animation, the frame work uses a blocks cased ap
 
 ###Simple Animation
 
-To perform a simple animation  call the `performAnimation(:)` method on the view you want to animate. Let's look at a simple example below.
+To perform a simple animation  call the `animate(:)` method on the view you want to animate. Let's look at a simple example below.
 
 ```
 view.animate { (animator) in
