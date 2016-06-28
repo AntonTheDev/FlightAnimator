@@ -67,14 +67,14 @@ extension ViewController {
     
         registerAnimation(onView : configView, forKey : AnimationKeys.ShowConfigAnimation) { (animator) in
             animator.frame(openConfigFrame).duration(0.8).easing(.EaseOutExponential)
-            animator.triggerOnStart(onView: self.dimmerView, maker: { (animator) in
+            animator.triggerOnStart(onView: self.dimmerView, animator: { (animator) in
                 animator.alpha(0.5).duration(0.8).easing(.EaseOutExponential)
             })
         }
         
         registerAnimation(onView : configView, forKey : AnimationKeys.HideConfigAnimation) { (animator) in
             animator.frame(closedConfigFrame).duration(0.6).easing(.EaseOutExponential)
-            animator.triggerOnStart(onView: self.dimmerView, maker: { (animator) in
+            animator.triggerOnStart(onView: self.dimmerView, animator: { (animator) in
                 animator.alpha(0.0).duration(0.6).easing(.EaseOutExponential)
             })
         }
@@ -112,7 +112,7 @@ extension ViewController {
             animator.alpha(toAlpha).duration(duration).easing(self.animConfig.alphaFunction).primary(self.animConfig.alphaPrimary)
             animator.transform(transform).duration(duration).easing(self.animConfig.transformFunction).primary(self.animConfig.transformPrimary)
             
-            animator.triggerAtTimeProgress(atProgress: 0.5, onView: self.dragView2, maker: { (animator) in
+            animator.triggerAtTimeProgress(atProgress: 0.5, onView: self.dragView2, animator: { (animator) in
                 animator.bounds(currentBounds).duration(duration).easing(self.animConfig.sizeFunction).primary(self.animConfig.sizePrimary)
                 animator.position(currentPosition).duration(duration).easing(self.animConfig.positionFunction).primary(self.animConfig.positionPrimary)
                 animator.alpha(currentAlpha).duration(duration).easing(self.animConfig.alphaFunction).primary(self.animConfig.alphaPrimary)
@@ -149,7 +149,7 @@ extension ViewController {
             animator.bounds(finalBounds).duration(1.0).easing(.Linear).primary(self.animConfig.sizePrimary)
             animator.position(finalCenter).duration(0.0).easing(easingFuntion).primary(true)
 
-            animator.triggerAtTimeProgress(atProgress: 0.5, onView: self.dragView2, maker: { (animator) in
+            animator.triggerAtTimeProgress(atProgress: 0.5, onView: self.dragView2, animator: { (animator) in
                 animator.bounds(currentBounds).duration(0.5).easing(self.animConfig.sizeFunction).primary(self.animConfig.sizePrimary)
                 animator.position(currentPosition).duration(0.5).easing(self.animConfig.positionFunction).primary(self.animConfig.positionPrimary)
                 animator.alpha(currentAlpha).duration(0.5).easing(self.animConfig.alphaFunction).primary(self.animConfig.alphaPrimary)
