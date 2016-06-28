@@ -9,13 +9,19 @@
 import Foundation
 import UIKit
 
-public func registerAnimation(onView view : UIView, forKey key: String, maker : (maker : FlightAnimator) -> Void ) {
-    let newMaker = FlightAnimator(withView: view, forKey : key)
-    maker(maker : newMaker)
+public func registerAnimation(onView view : UIView, forKey key: String, animator : (animator : FlightAnimator) -> Void ) {
+    let newAnimator = FlightAnimator(withView: view, forKey : key)
+    animator(animator : newAnimator)
 }
 
 public extension UIView {
-      
+    
+    func animate(@noescape animator : (animator : FlightAnimator) -> Void ) {
+        let newAnimator = FlightAnimator(withView: self, forKey : "AppliedAnimation")
+        animator(animator : newAnimator)
+        applyAnimation(forKey: "AppliedAnimation")
+    }
+
     func applyAnimation(forKey key: String,
                         animated : Bool = true) {
         

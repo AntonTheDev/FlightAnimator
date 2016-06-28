@@ -227,7 +227,7 @@ extension FAAnimationGroup {
                         progress = primaryEasingFunction.parametricProgress(CGFloat(totalTimeProgress))
                     }
                     
-                    // print("AnimationProgress duration", duration, "\nDifference", difference, "\ntotalTimeProgress", totalTimeProgress, "\nprogress", progress, "\n\n")
+                     print("AnimationProgress duration", duration, "\nDifference", difference, "\ntotalTimeProgress", totalTimeProgress, "\nprogress", progress, "\n\n")
                    
                     if CGFloat(progress) > firstProgressKey {
                         let segment = segmentArray[firstProgressKey]

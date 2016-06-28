@@ -31,7 +31,7 @@ class FAAnimationDelegate : NSObject {
         }
         
         if let animation = anim as? FAAnimationGroup {
-            animation.weakLayer?.removeAnimationForKey(animation.animationKey!)
+           // animation.weakLayer?.removeAnimationForKey(animation.animationKey!)
         }
     }
     

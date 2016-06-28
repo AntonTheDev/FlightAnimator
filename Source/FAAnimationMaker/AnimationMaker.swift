@@ -119,29 +119,30 @@ public class FlightAnimator {
     }
     
     public func triggerOnStart(onView view: UIView,
-                        maker: (maker : FlightAnimator) -> Void) {
-        triggerAnimation(true, key: animationKey!, view: view, progress: 0.0, maker: maker)
+                        @noescape animator: (animator : FlightAnimator) -> Void) {
+        triggerAnimation(true, key: animationKey!, view: view, progress: 0.0, animator: animator)
     }
     
-    public func triggerAtTimeProgress(atProgress progress: CGFloat, onView view: UIView,
-                        maker: (maker : FlightAnimator) -> Void) {
-        triggerAnimation(true, key: animationKey!, view: view, progress: 0.0, maker: maker)
+    public func triggerAtTimeProgress(atProgress progress: CGFloat,
+                                                 onView view: UIView,
+                        @noescape animator: (animator : FlightAnimator) -> Void) {
+        triggerAnimation(true, key: animationKey!, view: view, progress: progress, animator: animator)
     }
     
     public func triggerAtValueProgress(progress: CGFloat, onView view: UIView,
-                            maker: (maker : FlightAnimator) -> Void) {
-        triggerAnimation(true, key: animationKey!, view: view, progress: progress, maker: maker)
+                        @noescape animator: (animator : FlightAnimator) -> Void) {
+        triggerAnimation(false, key: animationKey!, view: view, progress: progress, animator: animator)
     }
     
     private func triggerAnimation(timeBased : Bool,
                                   key: String,
                                   view: UIView,
                                   progress: CGFloat = 0.0,
-                                  maker: (maker : FlightAnimator) -> Void) {
+                                  @noescape animator: (animator : FlightAnimator) -> Void) {
         
         let newSegment = SegmentItem()
         newSegment.animationKey = animationKey!
-        newSegment.timedProgress = false
+        newSegment.timedProgress = timeBased
         newSegment.animatedView = view
         
         if let animationGroup = associatedView!.cachedAnimations![animationKey!] {
@@ -150,8 +151,8 @@ public class FlightAnimator {
         }
         
         
-        let newMaker = FlightAnimator(withView: view, forKey : animationKey!)
-        maker(maker : newMaker)
+        let newAnimator = FlightAnimator(withView: view, forKey : animationKey!)
+        animator(animator : newAnimator)
     }
     
     public func value<T : FAAnimatable>(value : T, forKeyPath key : String) -> PropertyConfiguration {
@@ -183,9 +184,17 @@ public class FlightAnimator {
         return self.value(value, forKeyPath : "cornerRadius")
     }
     
-    public func frame<T : FAAnimatable>(value : T) -> PropertyConfiguration {
-        position(CGPointMake((value as? CGRect)!.midX, (value as? CGRect)!.midY))
-        return bounds(CGRectMake(0, 0, (value as? CGRect)!.width, (value as? CGRect)!.height))
+    public func frame(value : CGRect) -> PropertyConfiguration {
+        
+        
+        let animator = self
+        
+        animator.bounds(CGRectMake(0, 0, value.width, value.height)).duration(0.8).easing(.EaseOutExponential)
+       return animator.position(CGPointMake(value.midX, value.midY)).duration(0.8).easing(.EaseOutExponential).primary(true)
+        
+        
+       // position(CGPointMake(value.midX, value.midY)).primary(true)
+       // return bounds(CGRectMake(0, 0, value.width, value.height))
     }
     
     public func opacity<T : FAAnimatable>(value : T) -> PropertyConfiguration {
