@@ -40,7 +40,7 @@ When creating or registering an animation, the frame work uses a blocks cased ap
 To perform a simple animation  call the `performAnimation(:)` method on the view you want to animate. Let's look at a simple example below.
 
 ```
-view.performAnimation { (animator) in
+view.animate { (animator) in
       animator.bounds(newBounds).duration(0.5).easing(.EaseOutCubic)
       animator.position(newPositon).duration(0.5).easing(.EaseInSine)
 }
@@ -51,7 +51,7 @@ The closure returns an instance of an FAAnimationMaker, which can be used to bui
 In the case you have defined a custom NSManaged animatable property, i.e progress to fill up a draw a circle. You can use the `value(value:forKeyPath:)` method on the animator to animate that property.
 
 ```
-view.performAnimation { (animator) in
+view.animate { (animator) in
       animator.value(value, forKeyPath : "progress").duration(0.5).easing(.EaseOutCubic)
 }
 ```
@@ -69,7 +69,7 @@ Let's look at how we can nest some animations using time and value based progres
 A time based trigger will apply the next animation based on the the progressed time of the overall parent animation. Below is an examples that will trigger the second animation at the halfway point in time of the parent animation by calling `triggerAtTimeProgress(...)`
 
 ```
-view.performAnimation { (animator) in
+view.animate { (animator) in
 	animator.bounds(newBounds).duration(0.5).easing(.EaseOutCubic)
     animator.position(newPositon).duration(0.5).easing(.EaseOutCubic)
     
@@ -85,7 +85,7 @@ view.performAnimation { (animator) in
 A value based progress trigger will apply the next animation based on the the value progress of the overall parent animation. Below is an examples that will trigger the second animation at the halfway point of the value progress on the parent animation by calling `animator.triggerAtValueProgress(...)`
 
 ```
-view.performAnimation { (animator) in
+view.animate { (animator) in
 	animator.bounds(newBounds).duration(0.5).easing(.EaseOutCubic)
     animator.position(newPositon).duration(0.5).easing(.EaseOutCubic)
     
