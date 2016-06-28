@@ -112,7 +112,6 @@ registerAnimation(onView : view, forKey : AnimationKeys.CenterStateFrameAnimatio
       animator.bounds(newBounds).duration(0.5).easing(.EaseOutCubic)
       animator.position(newPositon).duration(0.5).easing(.EaseOutCubic)
 })
-
 ```
 
 ####Trigger Keyed Animation
