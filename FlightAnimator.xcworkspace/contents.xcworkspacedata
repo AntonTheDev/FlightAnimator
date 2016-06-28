@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <Group
+      location = "group:Source"
+      name = "Source">
+      <FileRef
+         location = "group:FAAnimation/FlightAnimator.swift">
+      </FileRef>
+      <Group
+         location = "container:"
+         name = "FAAnimationMaker">
+         <FileRef
+            location = "group:Source/FAAnimationMaker/AnimationMaker.swift">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:FAAnimation"
+         name = "FAAnimation">
+         <FileRef
+            location = "group:FAAnimation.swift">
+         </FileRef>
+         <FileRef
+            location = "group:FAAnimationGroup.swift">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:FAAnimatable"
+         name = "FAAnimatable">
+         <FileRef
+            location = "group:FAAnimatable.swift">
+         </FileRef>
+         <Group
+            location = "group:Implementation"
+            name = "Implementation">
+            <FileRef
+               location = "group:CGFloat+FAAnimatable.swift">
+            </FileRef>
+            <FileRef
+               location = "group:CGPoint+FAAnimatable.swift">
+            </FileRef>
+            <FileRef
+               location = "group:CGSize+FAAnimatable.swift">
+            </FileRef>
+            <FileRef
+               location = "group:CGRect+FAAnimatable.swift">
+            </FileRef>
+            <FileRef
+               location = "group:CATransform3D+FAAnimatable.swift">
+            </FileRef>
+         </Group>
+      </Group>
+      <Group
+         location = "group:Interpolation"
+         name = "Interpolation">
+         <FileRef
+            location = "group:FAInterpolation.swift">
+         </FileRef>
+         <FileRef
+            location = "group:FAInterpolation+EasingFunctions.swift">
+         </FileRef>
+         <FileRef
+            location = "group:FAInterpolation+SpringEngine.swift">
+         </FileRef>
+         <FileRef
+            location = "group:FAInterpolation+Helpers.swift">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:Extensions"
+         name = "Extensions">
+         <FileRef
+            location = "group:CALayer+FAAnimation.swift">
+         </FileRef>
+         <FileRef
+            location = "group:NSValue+FAAnimation.swift">
+         </FileRef>
+         <FileRef
+            location = "group:UIView+FAAnimation.swift">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:Extras"
+         name = "Extras">
+         <FileRef
+            location = "group:FAAnimation+Callbacks.swift">
+         </FileRef>
+         <FileRef
+            location = "group:FAPanGestureRecognizer.swift">
+         </FileRef>
+      </Group>
+   </Group>
+   <FileRef
+      location = "group:FlightAnimator/FlightAnimator.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:FlightAnimator-Demo/FlightAnimator-Demo.xcodeproj">
+   </FileRef>
+</Workspace>
