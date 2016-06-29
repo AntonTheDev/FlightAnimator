@@ -17,7 +17,7 @@ FlightAnimator uses CAKeyframeAnimation(s) and CoreAnimationGroup(s) under the h
 
 ##Features
 
-* Support for 31+ parametric curves
+* Support for 43+ parametric curves
 * Custom springs and decay animations
 * Blocks based animation builder
 * Muti-Curve group synchronisation
@@ -45,7 +45,7 @@ view.animate { (animator) in
       animator.position(newPositon).duration(0.5).easing(.EaseInSine)
 }
 ```
-The closure returns an instance of an FAAnimationMaker, which can be used to build a complex animation to perform, one property at a time. You can apply different durations, and easing curves to each individual property in the animation. And that's it, the animation kicks itself off, applies the final animation to the layer, and sets all the final layers values on the model layer.
+The closure returns an instance of an FAAnimationMaker, which can be used to build a complex animation to perform, one property at a time. You can apply different durations, and easing curves for each individual property in the animation. And that's it, the animation kicks itself off, applies the final animation to the layer, and sets all the final layers values on the model layer.
 
 In the case you have defined a custom NSManaged animatable property, i.e progress to draw a circle. You can use the `value(value:forKeyPath:)` method on the animator to animate that property.
 
