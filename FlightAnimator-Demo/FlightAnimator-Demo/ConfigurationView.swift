@@ -19,29 +19,29 @@ enum PropertyConfigType : Int {
 
 var functionTypes : [String] = ["SpringDecay", "SpringCustom",
                                 "Linear", "LinearSmooth", "LinearSmoother",
-                                "EaseInSine", "EaseOutSine", "EaseInOutSine",
-                                "EaseInQuadratic", "EaseOutQuadratic", "EaseInOutQuadratic",
-                                "EaseInCubic", "EaseOutCubic", "EaseInOutCubic",
-                                "EaseInQuartic",  "EaseOutQuartic", "EaseInOutQuartic",
-                                "EaseInQuintic", "EaseOutQuintic", "EaseInOutQuintic",
-                                "EaseInExponential", "EaseOutExponential", "EaseInOutExponential",
-                                "EaseInCircular", "EaseOutCircular", "EaseInOutCircular",
-                                "EaseInBack",  "EaseOutBack", "EaseInOutBack",
-                                "EaseInElastic", "EaseOutElastic", "EaseInOutElastic",
-                                "EaseInBounce", "EaseOutBounce", "EaseInOutBounce"]
+                                "EaseInSine", "EaseOutSine", "EaseInOutSine", "EaseOutInSine",
+                                "EaseInQuadratic", "EaseOutQuadratic", "EaseInOutQuadratic", "EaseOutInQuadratic",
+                                "EaseInCubic", "EaseOutCubic", "EaseInOutCubic", "EaseOutInCubic",
+                                "EaseInQuartic",  "EaseOutQuartic", "EaseInOutQuartic", "EaseOutInQuartic",
+                                "EaseInQuintic", "EaseOutQuintic", "EaseInOutQuintic", "EaseOutInQuintic",
+                                "EaseInExponential", "EaseOutExponential", "EaseInOutExponential", "EaseOutInExponential",
+                                "EaseInCircular", "EaseOutCircular", "EaseInOutCircular", "EaseOutInCircular",
+                                "EaseInBack",  "EaseOutBack", "EaseInOutBack", "EaseOutInBack",
+                                "EaseInElastic", "EaseOutElastic", "EaseInOutElastic", "EaseOutInElastic",
+                                "EaseInBounce", "EaseOutBounce", "EaseInOutBounce", "EaseOutInBounce"]
 
 var functions : [FAEasing]    = [.SpringDecay(velocity : CGPointZero), .SpringCustom(velocity: CGPointZero, frequency: 21, ratio: 0.99),
                                  .Linear, .LinearSmooth, .LinearSmoother,
-                                 .EaseInSine, .EaseOutSine, .EaseInOutSine,
-                                 .EaseInQuadratic, .EaseOutQuadratic, .EaseInOutQuadratic,
-                                 .EaseInCubic, .EaseOutCubic, .EaseInOutCubic,
-                                 .EaseInQuartic, .EaseOutQuartic, .EaseInOutQuartic,
-                                 .EaseInQuintic, .EaseOutQuintic, .EaseInOutQuintic,
-                                 .EaseInExponential, .EaseOutExponential, .EaseInOutExponential,
-                                 .EaseInCircular, .EaseOutCircular, .EaseInOutCircular,
-                                 .EaseInBack,  .EaseOutBack, .EaseInOutBack,
-                                 .EaseInElastic, .EaseOutElastic, .EaseInOutElastic,
-                                 .EaseInBounce, .EaseOutBounce, .EaseInOutBounce]
+                                 .EaseInSine, .EaseOutSine, .EaseInOutSine, .EaseOutInSine,
+                                 .EaseInQuadratic, .EaseOutQuadratic, .EaseInOutQuadratic, .EaseOutInQuadratic,
+                                 .EaseInCubic, .EaseOutCubic, .EaseInOutCubic, .EaseOutInCubic,
+                                 .EaseInQuartic, .EaseOutQuartic, .EaseInOutQuartic, .EaseOutInQuartic,
+                                 .EaseInQuintic, .EaseOutQuintic, .EaseInOutQuintic, .EaseOutInQuintic,
+                                 .EaseInExponential, .EaseOutExponential, .EaseInOutExponential, .EaseOutInExponential,
+                                 .EaseInCircular, .EaseOutCircular, .EaseInOutCircular, .EaseOutInCircular,
+                                 .EaseInBack,  .EaseOutBack, .EaseInOutBack, .EaseOutInBack,
+                                 .EaseInElastic, .EaseOutElastic, .EaseInOutElastic, .EaseOutInElastic,
+                                 .EaseInBounce, .EaseOutBounce, .EaseInOutBounce, .EaseOutInBounce]
 
 
 protocol ConfigurationViewDelegate {

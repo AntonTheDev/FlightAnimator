@@ -1,6 +1,6 @@
 #FlightAnimator
 
-[![Cocoapods Compatible](https://img.shields.io/badge/pod-v0.3.0-blue.svg)]()
+[![Cocoapods Compatible](https://img.shields.io/badge/pod-v0.4.0-blue.svg)]()
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)]()
 [![Platform](https://img.shields.io/badge/platform-ios-lightgrey.svg)]()
 [![License](https://img.shields.io/badge/license-MIT-343434.svg)](/LICENSE.md)
@@ -17,7 +17,7 @@ FlightAnimator uses CAKeyframeAnimation(s) and CoreAnimationGroup(s) under the h
 
 ##Features
 
-* Support for 31+ parametric curves
+* Support for 43+ parametric curves
 * Custom springs and decay animations
 * Blocks based animation builder
 * Muti-Curve group synchronisation
@@ -45,7 +45,7 @@ view.animate { (animator) in
       animator.position(newPositon).duration(0.5).easing(.EaseInSine)
 }
 ```
-The closure returns an instance of an FAAnimationMaker, which can be used to build a complex animation to perform, one property at a time. You can apply different durations, and easing curves to each individual property in the animation. And that's it, the animation kicks itself off, applies the final animation to the layer, and sets all the final layers values on the model layer.
+The closure returns an instance of an FAAnimationMaker, which can be used to build a complex animation to perform, one property at a time. You can apply different durations, and easing curves for each individual property in the animation. And that's it, the animation kicks itself off, applies the final animation to the layer, and sets all the final layers values on the model layer.
 
 In the case you have defined a custom NSManaged animatable property, i.e progress to draw a circle. You can use the `value(value:forKeyPath:)` method on the animator to animate that property.
 
@@ -143,24 +143,26 @@ A good reference for the supported easings can be found [here](http://easings.ne
 <table>
   <tbody>
     <tr>
-      <td>Linear <br>LinearSmooth<br>LinearSmoother</td>
-      <td>EaseInSine <br>EaseOutSine<br>EaseInOutSine</td>
-      <td>EaseInQuadratic <br>EaseOutQuadratic<br>EaseInOutQuadratic</td>
-    
+      <td>EaseInSine <br>EaseOutSine<br>EaseInOutSine<br>EaseOutInSine</td>
+      <td>EaseInQuadratic<br>EaseOutQuadratic<br>EaseInOutQuadratic<br>EaseOutInQuadratic</td>
+   <td>EaseInCubic <br>EaseOutCubic<br>EaseInOutCubic<br>EaseOutInCubic</td>
+       
     </tr>
-    <tr>
-      <td>EaseInCubic <br>EaseOutCubic<br>EaseInOutCubic</td>
-      <td>EaseInQuartic <br>EaseOutQuartic<br>EaseInOutQuartic</td>
-      <td>EaseInQuintic <br>EaseOutQuintic<br>EaseInOutQuintic</td>
+    <tr>    
+      <td>EaseInQuartic <br>EaseOutQuartic<br>EaseInOutQuartic<br>EaseOutInQuartic</td>
+      <td>EaseInQuintic <br>EaseOutQuintic<br>EaseInOutQuintic<br>EaseOutInQuintic</td>
+     <td>EaseInExponential <br>EaseOutExponential<br>EaseInOutExponential<br>EaseOutInExponential </td>
     </tr>
         <tr>
-      <td>EaseInExponential <br>EaseOutExponential<br>EaseInOutExponential </td>
-      <td>EaseInCircular <br>EaseOutCircular<br>EaseInOutCircular</td>
-      <td>EaseInBack <br>EaseOutBack<br>EaseInOutBack</td>
-    </tr>
+     
+      <td>EaseInCircular <br>EaseOutCircular<br>EaseInOutCircular<br>EaseOutInCircular</td>
+      <td>EaseInBack <br>EaseOutBack<br>EaseInOutBack<br>EaseOutInBack</td>
+    <td>EaseInElastic <br>EaseOutElastic<br>EaseInOutElastic<br>EaseOutInElastic </td>
+      
+      </tr>
     <tr>
-      <td>EaseInElastic <br>EaseOutElastic<br>EaseInOutElastic </td>
-      <td>EaseInBounce <br>EaseOutBounce<br>EaseInOutBounce</td>
+      <td>EaseInBounce <br>EaseOutBounce<br>EaseInOutBounce<br>EaseOutInBounce</td>
+      <td>Linear <br>LinearSmooth<br>LinearSmoother</td>
       <td></td>
     </tr> 
   </tbody>
