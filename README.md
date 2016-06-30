@@ -1,6 +1,6 @@
 #FlightAnimator
 
-[![Cocoapods Compatible](https://img.shields.io/badge/pod-v0.4.0-blue.svg)]()
+[![Cocoapods Compatible](https://img.shields.io/badge/pod-v0.5.0-blue.svg)]()
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)]()
 [![Platform](https://img.shields.io/badge/platform-ios-lightgrey.svg)]()
 [![License](https://img.shields.io/badge/license-MIT-343434.svg)](/LICENSE.md)
@@ -13,27 +13,33 @@ FlightAnimator is a natural animation engine built on top of CoreAnimation. Impl
 
 FlightAnimator uses CAKeyframeAnimation(s) and CoreAnimationGroup(s) under the hood. You can apply animations on a view directly, or cache animations to define states to apply at a later time. The animations are technically a custom CAAnimationGroup, once applied to the layer, will dynamically synchronize the remaining progress based on the current presentationLayer's values.
 
+Before beginning the tutorial feel free to clone the repository, and checkout the demo app included with the project. In the project you can set different curves for bounds, position, alpha, and transform to see the different combination of timings and the experiment with the resulting effects to get a feel for it.
+
 <br>
+
 
 ##Features
 
-* Support for 43+ parametric curves
-* Custom springs and decay animations
+* [Support for 43+ parametric curves](/Documentation/parametric_easings.md)
+* Custom springs and decay animations 
+* Support for custom springs, and decay
 * Blocks based animation builder
 * Muti-Curve group synchronisation
 * Progress based animation sequencing
 * Support for triggering cached animations
 * Easing curve synchronization
 
+
 ##Installation
 
 * [Installation Documentation](/Documentation/installation.md)
+* [Release Notes](/Documentation/release_notes.md)
 
 ##Basic Use 
 
 There are two ways you can use this framework, you can perform an animation on a specific view, or register an animation on a view to perform later. 
 
-When creating or registering an animation, the frame work uses a blocks cased approach to build the animation. You can apply a value, a timing, and set the primary flag, which will be discussed at a later point in the documentation.
+When creating or registering an animation, the frame work uses a blocks based syntax to build the animation. You can apply a value, a timing, and set the primary flag, which will be discussed at a later point in the documentation.
 
 ###Simple Animation
 
@@ -130,170 +136,74 @@ view.applyAnimation(forKey: AnimationKeys.CenterStateFrameAnimation, animated : 
 ```
 
 
-##Future Enhancements
+##Advanced Use
 
-To Be Continued
+The framework is so dynamic that animations won't always perform the way that you expect. FlightAnimator allows for a few settings to customize your animation timing accordingly.
 
-##Appendix
+The options you have are the following:
 
-####Supported Parametric Curves
+* Designating timing selection during synchronization for the overall animation
+* Designating a primary driver on one of the grouped property animations
 
-A good reference for the supported easings can be found [here](http://easings.net/)
+####Timing Priority
 
-<table>
-  <tbody>
-    <tr>
-      <td>EaseInSine <br>EaseOutSine<br>EaseInOutSine<br>EaseOutInSine</td>
-      <td>EaseInQuadratic<br>EaseOutQuadratic<br>EaseInOutQuadratic<br>EaseOutInQuadratic</td>
-   <td>EaseInCubic <br>EaseOutCubic<br>EaseInOutCubic<br>EaseOutInCubic</td>
-       
-    </tr>
-    <tr>    
-      <td>EaseInQuartic <br>EaseOutQuartic<br>EaseInOutQuartic<br>EaseOutInQuartic</td>
-      <td>EaseInQuintic <br>EaseOutQuintic<br>EaseInOutQuintic<br>EaseOutInQuintic</td>
-     <td>EaseInExponential <br>EaseOutExponential<br>EaseInOutExponential<br>EaseOutInExponential </td>
-    </tr>
-        <tr>
-     
-      <td>EaseInCircular <br>EaseOutCircular<br>EaseInOutCircular<br>EaseOutInCircular</td>
-      <td>EaseInBack <br>EaseOutBack<br>EaseInOutBack<br>EaseOutInBack</td>
-    <td>EaseInElastic <br>EaseOutElastic<br>EaseInOutElastic<br>EaseOutInElastic </td>
-      
-      </tr>
-    <tr>
-      <td>EaseInBounce <br>EaseOutBounce<br>EaseInOutBounce<br>EaseOutInBounce</td>
-      <td>Linear <br>LinearSmooth<br>LinearSmoother</td>
-      <td></td>
-    </tr> 
-  </tbody>
-</table>
+First a little background, the framework basically does some magic so synchronize the time by prioritizing the maximun time remaining based on progress if redirected in mid flight.
 
-*  SpringDecay(velocity)
-*  SpringCustom(velocity, frequency, damping)
 
-####Supported Animatable Properties
+Lets look at the following example of setting the timingPriority on a group animation to .MaxTime, which is the default value, and start with a behavior you are familiar with from FlightAnimator.
 
-FlightAnimator also supports any user defined animatable properties of the following types:
+```
+func animateView(toFrame : CGRect) {
+	
+	let newBounds = CGRectMake(0,0, toFrame.width, toFrame.height)
+	let newPosition = CGPointMake(toFrame.midX, toFrame.midY)
+	
+	view.animate(.MaxTime) { (animator) in
+      	animator.bounds(newBounds).duration(0.5).easing(.EaseOutCubic)
+      	animator.position(newPositon).duration(0.5).easing(.EaseInSine)
+	}
+}
+```
+Just like the demo app, This method gets called by different buttons, and takes on the frame value of button that triggered the method. Let's the animation has been triggered, and is in mid flight. While in mid flight another button is tapped, a new animation is applied, and ehe position changes, but the bounds stay the same. 
 
-* CGFloat
-* CGSize
-* CGPoint
-* CGRect
-* CATransform3D
+Internally the framework will figure out the current progress in reference to the last animation, and will select the highest duration value from the from property animations. Since the bounds doesn't change, and it's animation duration is assumed to be 0.0 after synchronization, the new animation will adjust to the duration of the position value, which is the max duration based on the **.MaxTime** timming priority.
 
-The following is a support chart for animatable CALayer properties
-<table>
-  <tbody>
-    <tr>
-      <td bgcolor="#66CCCC">anchorPoint</td>
-      <td>Supported with all easing Curves</td>
-    </tr> 
-    <tr>
-      <td bgcolor="#ffcfcf">backgroundColor</td>
-      <td>To be supported in a later release</td>
-    </tr> 
-    <tr>
-      <td bgcolor="#ffcfcf">backgroundFilters</td>
-      <td>Possible support without easing curves <br>in a later version without </td>
-    </tr> 
-    <tr>
-      <td bgcolor="#FFDA90">borderColor</td>
-      <td>To be supported in a later release</td>
-    </tr> 
-    <tr>
-      <td bgcolor="#66CCCC">borderWidth</td>
-      <td>Supported with all easing Curves</td>
-    </tr> 
-    <tr>
-      <td bgcolor="#66CCCC">bounds</td>
-      <td>Supported with all easing Curves</td>
-    </tr> 
-    <tr>
-      <td bgcolor="#ffcfcf">compositingFilter</td>
-      <td>Possible support without easing curves in a later version without </td>
-    </tr> 
-    <tr>
-      <td bgcolor="#ffcfcf">contents</td>
-      <td>Possible support without easing curves in a later version without </td>
-    </tr> 
-    <tr>
-      <td bgcolor="#66CCCC">contentsRect</td>
-      <td>Supported with all easing Curves</td>
-    </tr> 
-    <tr>
-      <td bgcolor="#66CCCC">cornerRadius</td>
-      <td>To be supported in a later release</td>
-    </tr> 
-    <tr>
-      <td bgcolor="#ffcfcf">doubleSided</td>
-      <td>Possible support without easing curves in a later version</td>
-    </tr> 
-    <tr>
-      <td bgcolor="#66CCCC">filters</td>
-      <td>Supported with all easing Curves</td>
-    </tr> 
-    <tr>
-      <td bgcolor="#66CCCC">frame</td>
-      <td>Supported by combining bounds and position</td>
-    </tr> 
-    <tr>
-      <td bgcolor="#ffcfcf">hidden</td>
-      <td>Possible support without easing curves in a later version</td>
-    </tr> 
-    <tr>
-      <td bgcolor="#ffcfcf">mask</td>
-      <td>Possible support without easing curves in a later version</td>
-    </tr> 
-    <tr>
-      <td bgcolor="#ffcfcf">masksToBounds</td>
-      <td>Possible support without easing curves in a later version</td>
-    </tr> 
-    <tr>
-      <td bgcolor="#66CCCC">opacity</td>
-      <td>Supported with all easing Curves</td>
-    </tr> 
-    <tr>
-      <td bgcolor="#ffcfcf">position</td>
-      <td>Supported with all easing Curves</td>
-    </tr> 
-    <tr>
-      <td bgcolor="#FFDA90">shadowColor</td>
-      <td>To be supported in a later release</td>
-    </tr> 
-    <tr>
-      <td bgcolor="#66CCCC">shadowOffset</td>
-      <td>Supported with all easing Curves</td>
-    </tr> 
-    <tr>
-      <td bgcolor="#66CCCC">shadowOpacity</td>
-      <td>Supported with all easing Curves</td>
-    </tr> 
-    <tr>
-      <td bgcolor="#ffcfcf">shadowPath</td>
-      <td>Possible support without easing curves in a later version</td>
-    </tr> 
-    <tr>
-      <td bgcolor="#66CCCC">shadowRadius</td>
-      <td>Supported with all easing Curves</td>
-    </tr> 
-    <tr>
-      <td bgcolor="#ffcfcf">sublayers</td>
-      <td>Possible support without easing curves in a later version</td>
-    </tr>
-     <tr>
-      <td bgcolor="#66CCCC">sublayerTransform</td>
-      <td>Supported with all easing Curves</td>
-    </tr> 
-     <tr>
-      <td bgcolor="#66CCCC">transform</td>
-      <td>Supported with all easing Curves</td>
-    </tr> 
-     <tr>
-      <td bgcolor="#66CCCC">zPosition</td>
-      <td>Supported with all easing Curves</td>
-    </tr>  
-  </tbody>
-</table>
+The more animations that you append, the more likely you will need to adjust how the timing is applied. For this purpose there are 4 timing priorities to choose from:
+
+* .MaxTime 
+* .MinTime
+* .Median
+* .Average
+
+Now this leads into the next topic, and that is the primary flag.
+
+####Primary Flag
+
+As in the example prior, there is a mention that animations can get quiete complete, and the more, property animtions we append, the more likely we might have a hick up in the timing, especially when synchronizing 4+ animations with different curves and durations.
+
+For this purpose, we can set the pripary flag on the property animations, and designate them as primary duration drivers. By default, if no property animation is set to primary, during synchronization, Flight animator will use it's timing priority settings to find the corresponding value from all the animations after progress synchonization.
+
+If we need only some specific property animations to define the progress accordingly, and we can set the primary flag to true, which will exclude any other animation which is not marked as primary from consideration.
+
+Let's look at an example below of a simple view that is being animated from it's current position to a new frame using bounds and position.
+
+```
+view.animate(.MaxTime) { (animator) in
+      animator.bounds(newBounds).duration(0.5).easing(.EaseOutCubic).primary(true)
+      animator.position(newPositon).duration(0.5).easing(.EaseInSine).primary(true)
+      animator.alpha(0.0).duration(0.5).easing(.EaseOutCubic)
+      animator.transform(newTransform).duration(0.5).easing(.EaseInSine)
+}
+```
+
+Simple as that, now when we redirect the animation in mid flight, only the bounds and position animations will be considered as part of the timing synchronization.
+
+
+##Reference 
+[Supported Parametric Curves](/Documentation/parametric_easings.md)
+
+[CALayer's Supported Animatable Property](/Documentation/supported_animatable_properties.md)
+
 
 ## License
 

@@ -17,10 +17,10 @@ struct AnimationConfiguration {
     
     var primaryTimingPriority : FAPrimaryTimingPriority = .MaxTime
     
-    var sizeFunction : FAEasing = FAEasing.EaseOutSine
+    var sizeFunction : FAEasing = FAEasing.OutSine
     var positionFunction : FAEasing =  FAEasing.SpringCustom(velocity: CGPointZero, frequency: 14, ratio: 0.8)
-    var alphaFunction : FAEasing = FAEasing.EaseInSine
-    var transformFunction : FAEasing = FAEasing.EaseOutBack
+    var alphaFunction : FAEasing = FAEasing.InSine
+    var transformFunction : FAEasing = FAEasing.OutBack
     
     var positionPrimary : Bool = true
     var sizePrimary : Bool = false
@@ -66,17 +66,34 @@ extension ViewController {
     func registerConfigViewAnimations() {
     
         registerAnimation(onView : configView, forKey : AnimationKeys.ShowConfigAnimation) { (animator) in
-            animator.frame(openConfigFrame).duration(0.8).easing(.EaseOutExponential)
+            
+            let toBounds = CGRectMake(0,0, openConfigFrame.width, openConfigFrame.height)
+            let toPosition = CGPointMake(openConfigFrame.midX, openConfigFrame.midY)
+            
+            animator.bounds(toBounds).duration(0.8).easing(.OutExponential)
+            animator.position(toPosition).duration(0.8).easing(.OutExponential).primary(true)
+
             animator.triggerOnStart(onView: self.dimmerView, animator: { (animator) in
-                animator.alpha(0.5).duration(0.8).easing(.EaseOutExponential)
+                animator.alpha(0.5).duration(0.8).easing(.OutExponential)
             })
         }
         
         registerAnimation(onView : configView, forKey : AnimationKeys.HideConfigAnimation) { (animator) in
-            animator.frame(closedConfigFrame).duration(0.6).easing(.EaseOutExponential)
+
+            let toBounds = CGRectMake(0,0, closedConfigFrame.width, closedConfigFrame.height)
+            let toPosition = CGPointMake(closedConfigFrame.midX, closedConfigFrame.midY)
+            
+            animator.bounds(toBounds).duration(0.6).easing(.OutExponential)
+            animator.position(toPosition).duration(0.6).easing(.OutExponential).primary(true)
+        
             animator.triggerOnStart(onView: self.dimmerView, animator: { (animator) in
-                animator.alpha(0.0).duration(0.6).easing(.EaseOutExponential)
+                animator.alpha(0.0).duration(0.6).easing(.OutExponential)
             })
+        }
+        
+        
+        dragView.animate(.MaxTime) { (animator) in
+            
         }
     }
     

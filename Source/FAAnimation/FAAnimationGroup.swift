@@ -21,7 +21,7 @@ internal class SegmentItem {
 public class FAAnimationGroup : CAAnimationGroup {
     
     var segmentArray = [CGFloat : SegmentItem]()
-    var primaryEasingFunction : FAEasing = FAEasing.Linear
+    private var primaryEasingFunction : FAEasing = FAEasing.Linear
     
     var primaryTimingPriority : FAPrimaryTimingPriority = .MaxTime
     var animationKey : String?
@@ -69,10 +69,11 @@ public class FAAnimationGroup : CAAnimationGroup {
     
     override public func copyWithZone(zone: NSZone) -> AnyObject {
         let animationGroup = super.copyWithZone(zone) as! FAAnimationGroup
-        animationGroup.weakLayer        = weakLayer
-        animationGroup.startTime        = startTime
-        animationGroup.animationKey    = animationKey
-        animationGroup.segmentArray    = segmentArray
+        animationGroup.weakLayer                = weakLayer
+        animationGroup.startTime                = startTime
+        animationGroup.animationKey             = animationKey
+        animationGroup.segmentArray             = segmentArray
+        animationGroup.primaryTimingPriority    = primaryTimingPriority
         return animationGroup
     }
     

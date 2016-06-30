@@ -11,12 +11,12 @@ import UIKit
 
 extension CGFloat : FAAnimatable {
     
-    public func magnitudeToValue<T : FAAnimatable>(toValue:  T) -> CGFloat {
-        return (self - (toValue as! CGFloat)).magnitudeValue()
-    }
-    
     public func magnitudeValue() -> CGFloat {
         return sqrt((self * self))
+    }
+    
+    public func magnitudeToValue<T : FAAnimatable>(toValue:  T) -> CGFloat {
+        return (self - (toValue as! CGFloat)).magnitudeValue()
     }
     
     public func interpolatedValue<T : FAAnimatable>(toValue : T, progress : CGFloat) -> NSValue {
