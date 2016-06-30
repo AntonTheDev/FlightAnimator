@@ -65,7 +65,7 @@ extension ViewController {
      */
     func registerConfigViewAnimations() {
     
-        registerAnimation(onView : configView, forKey : AnimationKeys.ShowConfigAnimation) { (animator) in
+        registerAnimation(onView : configView, forKey : AnimationKeys.ShowConfigAnimation, timingPriority: self.animConfig.primaryTimingPriority) { (animator) in
             
             let toBounds = CGRectMake(0,0, openConfigFrame.width, openConfigFrame.height)
             let toPosition = CGPointMake(openConfigFrame.midX, openConfigFrame.midY)
@@ -78,7 +78,7 @@ extension ViewController {
             })
         }
         
-        registerAnimation(onView : configView, forKey : AnimationKeys.HideConfigAnimation) { (animator) in
+        registerAnimation(onView : configView, forKey : AnimationKeys.HideConfigAnimation, timingPriority: self.animConfig.primaryTimingPriority) { (animator) in
 
             let toBounds = CGRectMake(0,0, closedConfigFrame.width, closedConfigFrame.height)
             let toPosition = CGPointMake(closedConfigFrame.midX, closedConfigFrame.midY)
@@ -89,11 +89,6 @@ extension ViewController {
             animator.triggerOnStart(onView: self.dimmerView, animator: { (animator) in
                 animator.alpha(0.0).duration(0.6).easing(.OutExponential)
             })
-        }
-        
-        
-        dragView.animate(.MaxTime) { (animator) in
-            
         }
     }
     
@@ -123,7 +118,7 @@ extension ViewController {
         let toBounds = CGRectMake(0, 0, toFrame.size.width , toFrame.size.height)
         let toPosition = CGCSRectGetCenter(toFrame)
         
-        registerAnimation(onView : dragView, forKey : AnimationKeys.TapStageOneAnimationKey) { (animator) in
+        registerAnimation(onView : dragView, forKey : AnimationKeys.TapStageOneAnimationKey, timingPriority: self.animConfig.primaryTimingPriority) { (animator) in
             animator.bounds(toBounds).duration(duration).easing(self.animConfig.sizeFunction).primary(self.animConfig.sizePrimary)
             animator.position(toPosition).duration(duration).easing(self.animConfig.positionFunction).primary(self.animConfig.positionPrimary)
             animator.alpha(toAlpha).duration(duration).easing(self.animConfig.alphaFunction).primary(self.animConfig.alphaPrimary)
@@ -162,7 +157,7 @@ extension ViewController {
             break
         }
         
-        registerAnimation(onView : dragView, forKey : AnimationKeys.PanGestureKey) { (animator) in
+        registerAnimation(onView : dragView, forKey : AnimationKeys.PanGestureKey, timingPriority: self.animConfig.primaryTimingPriority) { (animator) in
             animator.bounds(finalBounds).duration(1.0).easing(.Linear).primary(self.animConfig.sizePrimary)
             animator.position(finalCenter).duration(0.0).easing(easingFuntion).primary(true)
 

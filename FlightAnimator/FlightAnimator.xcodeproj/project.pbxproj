@@ -192,10 +192,10 @@
 		1398A1111D1B9BED00D1AE2B /* Interpolation */ = {
 			isa = PBXGroup;
 			children = (
-				3AEE80E01D24D74F004FFC49 /* FAInterpolation+Easing.swift */,
-				1398A1131D1B9BED00D1AE2B /* FAInterpolation+Helpers.swift */,
-				1398A1141D1B9BED00D1AE2B /* FAInterpolation+SpringEngine.swift */,
 				1398A1151D1B9BED00D1AE2B /* FAInterpolation.swift */,
+				3AEE80E01D24D74F004FFC49 /* FAInterpolation+Easing.swift */,
+				1398A1141D1B9BED00D1AE2B /* FAInterpolation+SpringEngine.swift */,
+				1398A1131D1B9BED00D1AE2B /* FAInterpolation+Helpers.swift */,
 			);
 			path = Interpolation;
 			sourceTree = "<group>";
