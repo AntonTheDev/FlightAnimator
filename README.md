@@ -138,7 +138,7 @@ view.applyAnimation(forKey: AnimationKeys.CenterStateFrameAnimation, animated : 
 
 ##Advanced Use
 
-The dynamic nature of the framework won't always perform the way that you expect at first, and may take a few tweaks to get it just right. FlightAnimator has a few settings that allow for customization your animation duration.
+Due to the dynamic nature of the framework, it won't always perform the way that you expect at first, and may take a few tweaks to get it just right. FlightAnimator has a few settings that allow for customization your animation duration.
 
 The options you have are the following:
 
@@ -181,7 +181,7 @@ Now this leads into the next topic, and that is the primary flag.
 
 ####Primary Flag
 
-As in the example prior, there is a mention that animations can get quiete complete, and the more, property animtions we append, the more likely we might have a hick up in the timing, especially when synchronizing 4+ animations with different curves and durations.
+As in the example prior, there is a mention that animations can get quite complex, and the more property animtions we append, the more likely the animation will have a hick-up in the timing, especially when synchronizing 4+ animations with different curves and durations.
 
 For this purpose, we can set the pripary flag on the property animations, and designate them as primary duration drivers. By default, if no property animation is set to primary, during synchronization, FlightAnimator will use the timing priority setting to find the corresponding value from all the animations after progress synchonization.
 

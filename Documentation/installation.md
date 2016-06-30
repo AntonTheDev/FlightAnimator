@@ -12,7 +12,7 @@
 	```
     pod 'FlightAnimator', :git => 'https://github.com/AntonTheDev/FlightAnimator.git' 
 	```
-2. Install SwiftLayout by running
+2. Install FlightAnimator by running
 
     ```
     pod install
