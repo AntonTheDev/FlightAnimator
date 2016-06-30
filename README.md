@@ -13,7 +13,7 @@ FlightAnimator is a natural animation engine built on top of CoreAnimation. Impl
 
 FlightAnimator uses CAKeyframeAnimation(s) and CoreAnimationGroup(s) under the hood. You can apply animations on a view directly, or cache animations to define states to apply at a later time. The animations are technically a custom CAAnimationGroup, once applied to the layer, will dynamically synchronize the remaining progress based on the current presentationLayer's values.
 
-Before beginning the tutorial feel free to clone the repository, and checkout the demo app included with the project. In the project you can set different curves for bounds, position, alpha, and transform to see the different combination of timings and the experiment with the resulting effects to get a feel for it.
+Before beginning the tutorial feel free to clone the repository, and checkout the demo app included with the project. In the project you can set different curves for bounds, position, alpha, and transform the experiment by adjusting the easing to see the resulting effects.
 
 <br>
 
@@ -138,12 +138,12 @@ view.applyAnimation(forKey: AnimationKeys.CenterStateFrameAnimation, animated : 
 
 ##Advanced Use
 
-The framework is so dynamic that animations won't always perform the way that you expect. FlightAnimator allows for a few settings to customize your animation timing accordingly.
+The dynamic nature of the framework won't always perform the way that you expect at first, and may take a few tweaks to get it just right. FlightAnimator has a few settings that allow for customization your animation duration.
 
 The options you have are the following:
 
-* Designating timing selection during synchronization for the overall animation
-* Designating a primary driver on one of the grouped property animations
+* Designating timing priority during synchronization for the overall animation
+* Designating a primary driver on individual property animations within a group
 
 ####Timing Priority
 
@@ -166,7 +166,9 @@ func animateView(toFrame : CGRect) {
 ```
 Just like the demo app, This method gets called by different buttons, and takes on the frame value of button that triggered the method. Let's the animation has been triggered, and is in mid flight. While in mid flight another button is tapped, a new animation is applied, and ehe position changes, but the bounds stay the same. 
 
-Internally the framework will figure out the current progress in reference to the last animation, and will select the highest duration value from the from property animations. Since the bounds doesn't change, and it's animation duration is assumed to be 0.0 after synchronization, the new animation will adjust to the duration of the position value, which is the max duration based on the **.MaxTime** timming priority.
+Internally the framework will figure out the current progress in reference to the last animation, and will select the max duration value from the array of surations on the grouped property animations. 
+
+Lets assume the bounds don't change, thus animation's duration is assumed to be 0.0 after synchronization. The new animation will synchronize to the duration of the position animation based on progress, and automatically becomes the max duration based on the **.MaxTime** timing priority.
 
 The more animations that you append, the more likely you will need to adjust how the timing is applied. For this purpose there are 4 timing priorities to choose from:
 
@@ -181,9 +183,9 @@ Now this leads into the next topic, and that is the primary flag.
 
 As in the example prior, there is a mention that animations can get quiete complete, and the more, property animtions we append, the more likely we might have a hick up in the timing, especially when synchronizing 4+ animations with different curves and durations.
 
-For this purpose, we can set the pripary flag on the property animations, and designate them as primary duration drivers. By default, if no property animation is set to primary, during synchronization, Flight animator will use it's timing priority settings to find the corresponding value from all the animations after progress synchonization.
+For this purpose, we can set the pripary flag on the property animations, and designate them as primary duration drivers. By default, if no property animation is set to primary, during synchronization, FlightAnimator will use the timing priority setting to find the corresponding value from all the animations after progress synchonization.
 
-If we need only some specific property animations to define the progress accordingly, and we can set the primary flag to true, which will exclude any other animation which is not marked as primary from consideration.
+If we need only some specific property animations to define the progress accordingly, and become the primary drivers, you can set the primary flag to true, which will exclude any other animation which is not marked as primary from consideration.
 
 Let's look at an example below of a simple view that is being animated from it's current position to a new frame using bounds and position.
 
