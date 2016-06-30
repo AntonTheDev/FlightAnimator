@@ -1,10 +1,12 @@
 #Release Notes
+
 ####Version 0.5.0
 
-* Updated the naming convention of the easing curves bi removing the 'Ease' prefix
+* Updated the naming convention of the easing curves by removing the 'Ease' prefix on the enumerator to make swift-like syntax, now you can easily access animations without being presented too many types.
 	* i.e .EaseInSine -> .InSine , 
 	* i.e .EaseInOutSine -> .InOutSine
-* Added the ability to set the timing priority on the ``registerAimation()`` and ``animate()`` method call. The default is **.MaxTime**
+* Added the ability to set the timing priority on the ``registerAimation()`` and ``animate()`` method 
+	* The default is **.MaxTime**
 * Refactored some code and ensured that it is in the right places
 * Separated the readme into multiple pages, with a reference for easing curves, supported animatable properties, and alas these release notes
 

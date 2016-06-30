@@ -90,6 +90,11 @@ extension ViewController {
                 animator.alpha(0.0).duration(0.6).easing(.OutExponential)
             })
         }
+        
+        
+        dragView.animate(.MaxTime) { (animator) in
+            
+        }
     }
     
     func tappedShowConfig() {
