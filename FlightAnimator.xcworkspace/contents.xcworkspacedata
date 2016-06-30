@@ -8,13 +8,6 @@
          location = "group:FAAnimation/FlightAnimator.swift">
       </FileRef>
       <Group
-         location = "container:"
-         name = "FAAnimationMaker">
-         <FileRef
-            location = "group:Source/FAAnimationMaker/AnimationMaker.swift">
-         </FileRef>
-      </Group>
-      <Group
          location = "group:FAAnimation"
          name = "FAAnimation">
          <FileRef
@@ -22,6 +15,9 @@
          </FileRef>
          <FileRef
             location = "group:FAAnimationGroup.swift">
+         </FileRef>
+         <FileRef
+            location = "group:FlightAnimator+Private.swift">
          </FileRef>
       </Group>
       <Group
@@ -57,7 +53,7 @@
             location = "group:FAInterpolation.swift">
          </FileRef>
          <FileRef
-            location = "group:FAInterpolation+EasingFunctions.swift">
+            location = "group:FAInterpolation+Easing.swift">
          </FileRef>
          <FileRef
             location = "group:FAInterpolation+SpringEngine.swift">

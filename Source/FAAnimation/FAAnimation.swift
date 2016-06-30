@@ -169,9 +169,9 @@ public class FAAnimation : CAKeyframeAnimation {
                                                                   dampingRatio: damping)
                 break
             default:
-                self.duration = synchronizedConfiguration(typedFromValue,
-                                                          newAnimation: self,
-                                                          oldAnimation: oldAnimation) as! CFTimeInterval
+                
+                let progress = currentValue.remainingProgress(typedToValue, oldFromValue : typedFromValue)
+                duration = CFTimeInterval(CGFloat(self.duration) * progress)
             }
         }
         
@@ -223,5 +223,29 @@ public class FAAnimation : CAKeyframeAnimation {
         }
         
         return CGPointZero
+    }
+    
+    private func interpolatedValues<T : FAAnimatable>(fromValue : T, animation : FAAnimation?) -> (duration : Double,  values : [AnyObject]) {
+        
+        if let toValue = (animation?.toValue as? NSValue)?.typeValue() as? T {
+            
+            switch animation!.easingFunction {
+            case let .SpringDecay(velocity):
+                if let springs = animation?.springs {
+                    return interpolatedSpringValues(toValue, springs: springs, springEasing : .SpringDecay(velocity: velocity))
+                }
+            case let .SpringCustom(velocity,frequency,damping):
+                if let springs = animation?.springs {
+                    return interpolatedSpringValues(toValue, springs: springs, springEasing : .SpringCustom(velocity: velocity,frequency: frequency,ratio: damping))
+                }
+            default:
+                return (animation!.duration, interpolatedParametricValues(fromValue,
+                    finalValue: toValue ,
+                    duration: CGFloat(animation!.duration),
+                    easingFunction: (animation?.easingFunction)!))
+            }
+        }
+        
+        return (0.0, [AnyObject]())
     }
 }

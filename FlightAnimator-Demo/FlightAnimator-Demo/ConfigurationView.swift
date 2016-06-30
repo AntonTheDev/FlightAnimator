@@ -32,16 +32,16 @@ var functionTypes : [String] = ["SpringDecay", "SpringCustom",
 
 var functions : [FAEasing]    = [.SpringDecay(velocity : CGPointZero), .SpringCustom(velocity: CGPointZero, frequency: 21, ratio: 0.99),
                                  .Linear, .LinearSmooth, .LinearSmoother,
-                                 .EaseInSine, .EaseOutSine, .EaseInOutSine,
-                                 .EaseInQuadratic, .EaseOutQuadratic, .EaseInOutQuadratic,
-                                 .EaseInCubic, .EaseOutCubic, .EaseInOutCubic,
-                                 .EaseInQuartic, .EaseOutQuartic, .EaseInOutQuartic,
-                                 .EaseInQuintic, .EaseOutQuintic, .EaseInOutQuintic,
-                                 .EaseInExponential, .EaseOutExponential, .EaseInOutExponential,
-                                 .EaseInCircular, .EaseOutCircular, .EaseInOutCircular,
-                                 .EaseInBack,  .EaseOutBack, .EaseInOutBack,
-                                 .EaseInElastic, .EaseOutElastic, .EaseInOutElastic,
-                                 .EaseInBounce, .EaseOutBounce, .EaseInOutBounce]
+                                 .InSine, .OutSine, .InOutSine,
+                                 .InQuadratic, .OutQuadratic, .InOutQuadratic,
+                                 .InCubic, .OutCubic, .InOutCubic,
+                                 .InQuartic, .OutQuartic, .InOutQuartic,
+                                 .InQuintic, .OutQuintic, .InOutQuintic,
+                                 .InExponential, .OutExponential, .InOutExponential,
+                                 .InCircular, .OutCircular, .InOutCircular,
+                                 .InBack,  .OutBack, .InOutBack,
+                                 .InElastic, .OutElastic, .InOutElastic,
+                                 .InBounce, .OutBounce, .InOutBounce]
 
 
 protocol ConfigurationViewDelegate {
