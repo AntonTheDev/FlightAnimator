@@ -48,6 +48,8 @@ final public class FAAnimation : CAKeyframeAnimation {
     // non spring animations, it may not progress to the final value.
     private var primaryAnimation : Bool = false
     
+    var springs : Dictionary<String, FASpring>?
+    
     func setAnimationAsPrimary(primary : Bool) {
         primaryAnimation = primary
     }
@@ -87,8 +89,6 @@ final public class FAAnimation : CAKeyframeAnimation {
         return animation
     }
     
-    var springs : Dictionary<String, FASpring>?
-    
     func synchronizeWithAnimation(oldAnimation : FAAnimation? = nil) {
         configureValues(oldAnimation)
     }
@@ -118,94 +118,38 @@ final public class FAAnimation : CAKeyframeAnimation {
         
         fromValue = currentValue.valueRepresentation()
         
-        if let typedToValue = (toValue as? NSValue)?.typeValue() as? T,
-           let typedFromValue = (fromValue as? NSValue)?.typeValue() as? T {
+        synchronizeAnimationVelocity(currentValue, oldAnimation : oldAnimation)
+        
+        if let typedToValue = (toValue as? NSValue)?.typeValue() as? T {
             
-            switch easingFunction {
-            case let .SpringDecay(velocity):
-                synchronizeAnimationVelocity(oldAnimation)
-                
-                springs  = typedFromValue.interpolationSprings(typedToValue,
-                                                               initialVelocity: velocity,
-                                                               angularFrequency: 18,
-                                                               dampingRatio: 1.12)
-                break
-                
-            case let .SpringCustom(velocity, frequency, damping):
-                synchronizeAnimationVelocity(oldAnimation)
-                
-                springs  = currentValue.interpolationSprings(typedToValue,
-                                                             initialVelocity: velocity,
-                                                             angularFrequency: frequency,
-                                                             dampingRatio: damping)
-                break
-            default:
-                if let typedOldFromValue = (oldAnimation?.fromValue as? NSValue)?.typeValue() as? T {
-                    duration = relativeDuration(typedOldFromValue)
-                }
-            }
+            let previousFromValue = (oldAnimation?.fromValue as? NSValue)?.typeValue() as? T
+    
+            let interpolator  = FAInterpolator(toValue : typedToValue,
+                                       fromValue: currentValue,
+                                       previousFromValue : previousFromValue,
+                                       duration: CGFloat(duration),
+                                       easingFunction : easingFunction)
             
-            let config = interpolatedValues(typedFromValue, toValue: typedToValue, animation: self)
+            let config = interpolator.interpolatedAnimationConfig()
             
+            springs = config.springs
             duration = config.duration
             values = config.values
         }
     }
     
-    private func relativeDuration<T : FAAnimatable>(oldFromValue : T) -> CFTimeInterval {
-        if let typedToValue = (self.toValue as? NSValue)?.typeValue() as? T,
-            let typedFromValue = (self.fromValue as? NSValue)?.typeValue() as? T,
-            let typedOldFromValue = (oldFromValue as? NSValue)?.typeValue() as? T {
-            
-            var progress : CGFloat  = CGFloat(1.0)
-            
-            if typedOldFromValue == typedToValue  {
-                progress = CGFloat(1.0)
-            } else {
-                let progressedDiff = typedOldFromValue.magnitudeToValue(typedFromValue)
-                let remainingDiff  = typedFromValue.magnitudeToValue(typedToValue)
-                
-                progress  = remainingDiff / (remainingDiff + progressedDiff)
-                
-                if progress.isNaN {
-                    progress = CGFloat(1.0)
-                }
-            }
-            
-            return  CFTimeInterval(CGFloat(self.duration) * progress)
-        }
-        
-        return self.duration
-    }
-    
-    private func synchronizeAnimationVelocity(oldAnimation : FAAnimation?) -> CGPoint? {
-        
-        if  let animation = oldAnimation,
-            let presentationLayer = animation.weakLayer?.presentationLayer(),
+    private func synchronizeAnimationVelocity<T : FAAnimatable>(fromValue : T, oldAnimation : FAAnimation?) {
+       
+        if  let presentationLayer = oldAnimation?.weakLayer?.presentationLayer(),
             let animationStartTime = oldAnimation?.startTime,
             let oldSprings = oldAnimation?.springs {
             
-            let currentTime = presentationLayer.convertTime(CACurrentMediaTime(), toLayer: animation.weakLayer)
-            let difference = CGFloat(currentTime - animationStartTime)
-            var newVelocity = CGPointZero
+            let currentTime = presentationLayer.convertTime(CACurrentMediaTime(), toLayer: oldAnimation!.weakLayer)
+            let deltaTime = CGFloat(currentTime - animationStartTime)
+        
+            let newVelocity =  fromValue.springVelocity(oldSprings, deltaTime: deltaTime)
             
-            if  let _fromValue = oldAnimation?.fromValue as? NSValue {
-                if let _ =  _fromValue.typeValue() as? CGPoint,
-                    let currentXVelocity = oldSprings[SpringAnimationKey.CGPointX]?.velocity(difference),
-                    let currentYVelocity = oldSprings[SpringAnimationKey.CGPointY]?.velocity(difference) {
-                    newVelocity = CGPointMake(currentXVelocity, currentYVelocity)
-                } else if let _ =  _fromValue.typeValue() as? CGSize,
-                    let currentXVelocity = oldSprings[SpringAnimationKey.CGSizeWidth]?.velocity(difference),
-                    let currentYVelocity = oldSprings[SpringAnimationKey.CGSizeHeight]?.velocity(difference) {
-                    newVelocity = CGPointMake(currentXVelocity, currentYVelocity)
-                } else if let _ =  _fromValue.typeValue() as? CGRect,
-                    let currentXVelocity = oldSprings[SpringAnimationKey.CGPointX]?.velocity(difference),
-                    let currentYVelocity = oldSprings[SpringAnimationKey.CGPointY]?.velocity(difference) {
-                    newVelocity = CGPointMake(currentXVelocity , currentYVelocity)
-                }
-            }
-            
-            switch self.easingFunction {
+            switch easingFunction {
             case .SpringDecay(_):
                 easingFunction = .SpringDecay(velocity: newVelocity)
             case let .SpringCustom(_,frequency,damping):
@@ -214,8 +158,6 @@ final public class FAAnimation : CAKeyframeAnimation {
                 break
             }
         }
-        
-        return CGPointZero
     }
 }
 

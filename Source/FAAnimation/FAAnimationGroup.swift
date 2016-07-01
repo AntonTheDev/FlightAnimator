@@ -77,6 +77,7 @@ final public class FAAnimationGroup : CAAnimationGroup {
     }
     
     func synchronizeAnimationGroup(oldAnimationGroup : FAAnimationGroup?) {     
+        
         dispatch_async(dispatch_get_main_queue()) {
             oldAnimationGroup?.stopUpdateLoop()
         }
@@ -149,6 +150,7 @@ final public class FAAnimationGroup : CAAnimationGroup {
     
     func applyFinalState(animated : Bool = false) {
         stopUpdateLoop()
+        
         if let animationLayer = weakLayer {
             if animated {
                 animationLayer.speed = 1.0
@@ -198,7 +200,6 @@ extension FAAnimationGroup {
         if let presentationLayer = weakLayer?.presentationLayer(),
            let animationStartTime = startTime {
             
-        
             let currentTime = presentationLayer.convertTime(CACurrentMediaTime(), toLayer: nil)
             let difference = CGFloat(currentTime - animationStartTime)
        

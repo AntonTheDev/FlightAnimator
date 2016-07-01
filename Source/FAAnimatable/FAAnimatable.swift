@@ -51,6 +51,9 @@ public protocol FAAnimatable : Equatable {
     // Calculates the value at delta time
     func interpolatedSpringValue<T : FAAnimatable>(toValue : T, springs : Dictionary<String, FASpring>, deltaTime : CGFloat) -> NSValue
     
+    // Calculates the value at delta time
+    func springVelocity(springs : Dictionary<String, FASpring>, deltaTime : CGFloat) -> CGPoint
+    
     // Generate a dictionary of FASpring instances per dimension of the animatable value
     func interpolationSprings<T : FAAnimatable>(toValue : T,
                               initialVelocity : Any,

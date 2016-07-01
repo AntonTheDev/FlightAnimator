@@ -24,7 +24,14 @@ extension CGFloat : FAAnimatable {
     public func interpolatedValue<T : FAAnimatable>(toValue : T, progress : CGFloat) -> NSValue {
         return interpolateCGFloat(self, end: (toValue as! CGFloat), progress: progress).valueRepresentation()
     }
-
+    
+    public func springVelocity(springs : Dictionary<String, FASpring>, deltaTime : CGFloat) -> CGPoint {
+        if let currentFloatVelocity = springs[SpringAnimationKey.CGFloat]?.velocity(deltaTime) {
+           return  CGPointMake(currentFloatVelocity, currentFloatVelocity)
+        }
+        
+        return CGPointZero
+    }
     public func interpolationSprings<T : FAAnimatable>(toValue : T, initialVelocity : Any, angularFrequency : CGFloat, dampingRatio : CGFloat) -> Dictionary<String, FASpring> {
         var springs = Dictionary<String, FASpring>()
         

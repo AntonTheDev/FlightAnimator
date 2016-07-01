@@ -13,6 +13,9 @@ public enum FAEasing : Equatable {
     case Linear
     case LinearSmooth
     case LinearSmoother
+    case InAtan
+    case OutAtan
+    case InOutAtan
     case InSine
     case OutSine
     case InOutSine

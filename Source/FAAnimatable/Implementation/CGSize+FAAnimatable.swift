@@ -37,6 +37,15 @@ extension CGSize : FAAnimatable {
         return size.valueRepresentation()
     }
     
+    public func springVelocity(springs : Dictionary<String, FASpring>, deltaTime : CGFloat) -> CGPoint {
+        if let currentWidthVelocity = springs[SpringAnimationKey.CGSizeWidth]?.velocity(deltaTime),
+            let currentHeightVelocity = springs[SpringAnimationKey.CGSizeHeight]?.velocity(deltaTime) {
+                return  CGPointMake(currentWidthVelocity, currentHeightVelocity)
+        }
+        
+        return CGPointZero
+    }
+    
     public func interpolationSprings<T : FAAnimatable>(toValue : T, initialVelocity : Any, angularFrequency : CGFloat, dampingRatio : CGFloat) -> Dictionary<String, FASpring> {
         
         var springs = Dictionary<String, FASpring>()

@@ -101,6 +101,10 @@ extension CATransform3D : FAAnimatable {
         return transform.valueRepresentation()
     }
     
+    public func springVelocity(springs : Dictionary<String, FASpring>, deltaTime : CGFloat) -> CGPoint {
+        return CGPointZero
+    }
+    
     public func interpolationSprings<T : FAAnimatable>(toValue : T, initialVelocity : Any, angularFrequency : CGFloat, dampingRatio : CGFloat) -> Dictionary<String, FASpring> {
         
         var springs = Dictionary<String, FASpring>()

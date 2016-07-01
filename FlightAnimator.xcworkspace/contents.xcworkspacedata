@@ -19,6 +19,19 @@
          <FileRef
             location = "group:FAAnimationMaker.swift">
          </FileRef>
+         <Group
+            location = "group:Extensions"
+            name = "Core Extensions">
+            <FileRef
+               location = "group:CALayer+FAAnimation.swift">
+            </FileRef>
+            <FileRef
+               location = "group:NSValue+FAAnimation.swift">
+            </FileRef>
+            <FileRef
+               location = "group:UIView+FAAnimation.swift">
+            </FileRef>
+         </Group>
       </Group>
       <Group
          location = "group:FAAnimatable"
@@ -48,28 +61,15 @@
       </Group>
       <Group
          location = "group:FAInterpolation"
-         name = "FAInterpolation">
+         name = "FAInterpolator">
          <FileRef
-            location = "group:FAInterpolation.swift">
+            location = "group:/Users/Anton/Developer/FlightAnimator/Source/FAInterpolation/FAInterpolator.swift">
          </FileRef>
          <FileRef
             location = "group:FAEasing.swift">
          </FileRef>
          <FileRef
             location = "group:FASpring.swift">
-         </FileRef>
-      </Group>
-      <Group
-         location = "group:Extensions"
-         name = "Extensions">
-         <FileRef
-            location = "group:CALayer+FAAnimation.swift">
-         </FileRef>
-         <FileRef
-            location = "group:NSValue+FAAnimation.swift">
-         </FileRef>
-         <FileRef
-            location = "group:UIView+FAAnimation.swift">
          </FileRef>
       </Group>
       <Group

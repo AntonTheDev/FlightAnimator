@@ -15,7 +15,7 @@ private struct FAAssociatedKey {
 
 extension UIView {
     
-    public var cachedAnimations: [String : FAAnimationGroup]? {
+    internal var cachedAnimations: [String : FAAnimationGroup]? {
         get {
             return fa_getAssociatedObject(self, associativeKey: &FAAssociatedKey.layoutConfigurations)
         }

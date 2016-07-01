@@ -60,6 +60,15 @@ extension CGPoint : FAAnimatable {
         return CGPointMake(adjustedx, adjustedy).valueRepresentation()
     }
     
+    public func springVelocity(springs : Dictionary<String, FASpring>, deltaTime : CGFloat) -> CGPoint {
+        if let currentXVelocity = springs[SpringAnimationKey.CGPointX]?.velocity(deltaTime),
+            let currentYVelocity = springs[SpringAnimationKey.CGPointY]?.velocity(deltaTime) {
+                return  CGPointMake(currentXVelocity, currentYVelocity)
+        }
+        
+        return CGPointZero
+    }
+    
     public func valueRepresentation() -> NSValue {
          return NSValue(CGPoint :  self)
     }

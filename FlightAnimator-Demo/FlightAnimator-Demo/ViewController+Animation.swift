@@ -83,11 +83,11 @@ extension ViewController {
             let toBounds = CGRectMake(0,0, closedConfigFrame.width, closedConfigFrame.height)
             let toPosition = CGPointMake(closedConfigFrame.midX, closedConfigFrame.midY)
             
-            animator.bounds(toBounds).duration(0.6).easing(.OutExponential)
-            animator.position(toPosition).duration(0.6).easing(.OutExponential).primary(true)
+            animator.bounds(toBounds).duration(0.7).easing(.InOutExponential)
+            animator.position(toPosition).duration(0.7).easing(.InOutExponential).primary(true)
         
             animator.triggerOnStart(onView: self.dimmerView, animator: { (animator) in
-                animator.alpha(0.0).duration(0.6).easing(.OutExponential)
+                animator.alpha(0.0).duration(0.7).easing(.InExponential)
             })
         }
     }

@@ -40,6 +40,16 @@ extension CGRect : FAAnimatable {
         return rect.valueRepresentation()
     }
     
+    
+    public func springVelocity(springs : Dictionary<String, FASpring>, deltaTime : CGFloat) -> CGPoint {
+        if let currentXVelocity = springs[SpringAnimationKey.CGPointX]?.velocity(deltaTime),
+            let currentYVelocity = springs[SpringAnimationKey.CGPointY]?.velocity(deltaTime) {
+            return  CGPointMake(currentXVelocity, currentYVelocity)
+        }
+        
+        return CGPointZero
+    }
+    
     public func interpolationSprings<T : FAAnimatable>(toValue : T, initialVelocity : Any, angularFrequency : CGFloat, dampingRatio : CGFloat) -> Dictionary<String, FASpring> {
         var springs = Dictionary<String, FASpring>()
         
