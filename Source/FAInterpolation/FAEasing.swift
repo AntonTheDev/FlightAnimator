@@ -15,6 +15,9 @@ public enum FAEasing : Equatable {
     case Linear
     case LinearSmooth
     case LinearSmoother
+    case InAtan
+    case OutAtan
+    case InOutAtan
     case InSine
     case OutSine
     case InOutSine
@@ -66,6 +69,15 @@ public enum FAEasing : Equatable {
             return p * p * (3.0 - 2.0 * p)
         case .LinearSmoother:
             return  p * p * p * (p * (p * 6.0 - 15.0) + 10.0)
+        case .InAtan:
+            let m: CGFloat = atan(15.0)
+            return atan((p - 1.0) * 15.0) / m + 1.0
+        case .OutAtan:
+            let m: CGFloat = atan(15.0)
+            return atan(p * 15.0) / m
+        case .InOutAtan:
+            let m: CGFloat = atan(0.5 * 15.0)
+            return atan((p - 0.5) * 15.0) / (2.0 * m) + 0.5
         case .InSine:
             return sin((p - 1.0) * CGFloat(M_PI_2)) + 1.0
         case .OutSine:
@@ -273,6 +285,12 @@ public func ==(lhs : FAEasing, rhs : FAEasing) -> Bool {
         switch rhs { case .InOutSine: return true default: return false }
     case .OutInSine:
         switch rhs { case .OutInSine: return true default: return false }
+    case .InAtan:
+        switch rhs { case .InAtan: return true default: return false }
+    case .OutAtan:
+        switch rhs { case .OutAtan: return true default: return false }
+    case .InOutAtan:
+        switch rhs { case .InOutAtan: return true default: return false }
     case .InQuadratic:
         switch rhs { case .InQuadratic: return true default: return false }
     case .OutQuadratic:

@@ -342,6 +342,7 @@ class ViewController: UIViewController {
     lazy var configView: ConfigurationView = {
         var view = ConfigurationView()
         view.interactionDelegate = self
+        view.cellDelegate = self
         view.layer.borderColor = UIColor.lightGrayColor().CGColor
         view.layer.borderWidth = 1.0
         view.layer.cornerRadius = 4.0
@@ -424,38 +425,131 @@ extension ViewController {
 }
 
 
-extension ViewController : ConfigurationViewDelegate {
+extension ViewController : ConfigurationViewDelegate, CurveCollectionViewCellDelegate {
     
     func selectedTimingPriority(priority : FAPrimaryTimingPriority) {
         animConfig.primaryTimingPriority = priority
     }
     
-    func selectedEasingFunctionTitleFor(propertyType : PropertyConfigType) -> String {
-        switch propertyType {
-        case .Bounds:
-            return AnimationConfiguration.titleForFunction(animConfig.sizeFunction)
-        case .Position:
-            return AnimationConfiguration.titleForFunction(animConfig.positionFunction)
-        case .Alpha:
-            return AnimationConfiguration.titleForFunction(animConfig.alphaFunction)
-        case .Transform:
-            return AnimationConfiguration.titleForFunction(animConfig.transformFunction)
+    func cell(cell : CurveSelectionCollectionViewCell , didSelectEasing function: FAEasing) {
+        if let index = self.configView.contentCollectionView.indexPathForCell(cell) {
+            switch index.row {
+            case 0:
+                //size
+                animConfig.sizeFunction = function
+            case 1:
+                // position
+                animConfig.positionFunction = function
+            case 2:
+                // alpha
+                animConfig.alphaFunction = function
+            default:
+                // transform
+                animConfig.transformFunction = function
+            }
         }
     }
     
-    func primarySelectionUpdated(propertyType : PropertyConfigType,  isPrimary : Bool) {
-        switch propertyType {
-        case .Bounds:
-            animConfig.sizePrimary = isPrimary
-        case .Position:
-            animConfig.positionPrimary = isPrimary
-        case .Alpha:
-            animConfig.alphaPrimary = isPrimary
-        case .Transform:
-            animConfig.transformPrimary = isPrimary
+    func currentPrimaryValue(cell : CurveSelectionCollectionViewCell) -> Bool {
+        if let index = self.configView.contentCollectionView.indexPathForCell(cell) {
+            switch index.row {
+            case 0:
+                //size
+                return animConfig.sizePrimary
+            case 1:
+                // position
+                return animConfig.positionPrimary
+            case 2:
+                // alpha
+                return animConfig.alphaPrimary
+            default:
+                // transform
+                return animConfig.transformPrimary
+            }
+        }
+        
+        return false
+    }
+    
+    
+    func currentEAsingFuntion(cell : CurveSelectionCollectionViewCell) -> FAEasing {
+        if let index = self.configView.contentCollectionView.indexPathForCell(cell) {
+            switch index.row {
+            case 0:
+                //size
+                return animConfig.sizeFunction
+            case 1:
+                // position
+                return animConfig.positionFunction
+            case 2:
+                // alpha
+                return animConfig.alphaFunction
+            default:
+                // transform
+                return animConfig.transformFunction
+            }
+        }
+        
+        return .Linear
+    }
+    
+    
+    
+    func cell(cell : CurveSelectionCollectionViewCell , didSelectPrimary isPrimary : Bool) {
+        if let index = self.configView.contentCollectionView.indexPathForCell(cell) {
+            switch index.row {
+            case 0:
+                //size
+                animConfig.sizePrimary = isPrimary
+            case 1:
+                // position
+                animConfig.positionPrimary = isPrimary
+            case 2:
+                // alpha
+                animConfig.alphaPrimary = isPrimary
+            default:
+                // transform
+                animConfig.transformPrimary = isPrimary
+            }
         }
     }
     
+    
+    func currentPrimaryFlagValue(atIndex : Int) -> Bool {
+        switch atIndex {
+        case 0:
+            //size
+            return animConfig.sizePrimary
+        case 1:
+            // position
+            return animConfig.positionPrimary
+        case 2:
+            // alpha
+            return animConfig.alphaPrimary
+        default:
+            // transform
+            return animConfig.transformPrimary
+        }
+    }
+    func currentEAsingFuntion(atIndex : Int) -> FAEasing {
+       switch atIndex {
+            case 0:
+                //size
+                return animConfig.sizeFunction
+            case 1:
+                // position
+                return animConfig.positionFunction
+            case 2:
+                // alpha
+                return animConfig.alphaFunction
+            default:
+                // transform
+                return animConfig.transformFunction
+            }
+
+    }
+    
+ 
     func configCellDidSelectEasingFuntion(function: FAEasing, propertyType : PropertyConfigType, functionTitle: String) {
         
         switch propertyType {

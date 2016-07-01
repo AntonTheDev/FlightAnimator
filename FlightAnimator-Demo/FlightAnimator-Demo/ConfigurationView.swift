@@ -17,9 +17,11 @@ enum PropertyConfigType : Int {
     case Transform
 }
 
+
 var functionTypes : [String] = ["SpringDecay", "SpringCustom",
                                 "Linear", "LinearSmooth", "LinearSmoother",
                                 "InSine", "OutSine", "InOutSine", "OutInSine",
+                                "InAtan", "OutAtan", "InOutAtan",
                                 "InQuadratic", "OutQuadratic", "InOutQuadratic", "OutInQuadratic",
                                 "InCubic", "OutCubic", "InOutCubic", "OutInCubic",
                                 "InQuartic",  "OutQuartic", "InOutQuartic", "OutInQuartic",
@@ -33,6 +35,7 @@ var functionTypes : [String] = ["SpringDecay", "SpringCustom",
 var functions : [FAEasing]    = [.SpringDecay(velocity : CGPointZero), .SpringCustom(velocity: CGPointZero, frequency: 21, ratio: 0.99),
                                  .Linear, .LinearSmooth, .LinearSmoother,
                                  .InSine, .OutSine, .InOutSine, .OutInSine,
+                                 .InAtan, .OutAtan, .InOutAtan,
                                  .InQuadratic, .OutQuadratic, .InOutQuadratic, .OutInQuadratic,
                                  .InCubic, .OutCubic, .InOutCubic, .OutInCubic,
                                  .InQuartic, .OutQuartic, .InOutQuartic, .OutInQuartic,
@@ -44,17 +47,17 @@ var functions : [FAEasing]    = [.SpringDecay(velocity : CGPointZero), .SpringCu
                                  .InBounce, .OutBounce, .InOutBounce, .OutInBounce]
 
 protocol ConfigurationViewDelegate {
-    func configCellDidSelectEasingFuntion(function: FAEasing, propertyType : PropertyConfigType, functionTitle: String)
-    func selectedEasingFunctionTitleFor(propertyType : PropertyConfigType) -> String
     func selectedTimingPriority(priority : FAPrimaryTimingPriority)
     
-    func primarySelectionUpdated(propertyType : PropertyConfigType,  isPrimary : Bool)
-    func primaryValueFor(propertyType : PropertyConfigType) -> Bool
+    func currentPrimaryFlagValue(atIndex : Int) -> Bool
+    func currentEAsingFuntion(atIndex : Int) -> FAEasing
 }
 
 class ConfigurationView : UIView {
     
     var interactionDelegate: ConfigurationViewDelegate?
+    weak var cellDelegate : CurveCollectionViewCellDelegate?
+   
     var selectedIndex: NSIndexPath = NSIndexPath(forRow: 0, inSection: 0)
     
     var propertyConfigType : PropertyConfigType = PropertyConfigType.Bounds {
@@ -78,7 +81,6 @@ class ConfigurationView : UIView {
         backgroundColor = UIColor(rgba: "#444444")
         
         addSubview(backgroundView)
-        addSubview(pickerView)
         addSubview(contentCollectionView)
         addSubview(separator)
         addSubview(titleLabel)
@@ -125,12 +127,6 @@ class ConfigurationView : UIView {
 
         
         backgroundView.frame = self.bounds
-        pickerView.sizeToFit()
-        pickerView.alignWithSize(pickerView.bounds.size,
-                                 toFrame: bounds,
-                                 horizontal: HGHorizontalAlign.Center,
-                                 vertical: HGVerticalAlign.Base,
-                                 verticalOffset : -36)
     }
     
     func registerCells() {
@@ -148,14 +144,6 @@ class ConfigurationView : UIView {
     
     // MARK: - Lazy Loaded Views
     
-    lazy var pickerView : UIPickerView = {
-        var picker = UIPickerView()
-        picker.dataSource = self
-        picker.delegate = self
-        picker.opaque = false
-        picker.backgroundColor = UIColor(rgba: "#444444")
-        return picker
-    }()
     
     lazy var segnmentedControl : UISegmentedControl = {
         let items = ["MaxTime", "MinTime", "Median", "Average"]
@@ -236,60 +224,31 @@ extension ConfigurationView : UICollectionViewDelegate, UICollectionViewDataSour
     }
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+        
+        /*
         selectedIndex = indexPath
         propertyConfigType = PropertyConfigType(rawValue:indexPath.row)!
         let title = interactionDelegate?.selectedEasingFunctionTitleFor(PropertyConfigType(rawValue : indexPath.row)!)
         pickerView.selectRow(functionTypes.indexOf(title!)!, inComponent: 0, animated: true)
+         */
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         return cellAtIndex(indexPath)
     }
     
+    
     func cellAtIndex(indexPath: NSIndexPath) -> UICollectionViewCell {
         if let cell = contentCollectionView.dequeueReusableCellWithReuseIdentifier("PropertyCell\(indexPath.row)" as String, forIndexPath: indexPath) as? CurveSelectionCollectionViewCell {
-            cell.delegate = self
+            cell.delegate = cellDelegate
             cell.propertyConfigType = PropertyConfigType(rawValue : indexPath.row)!
-            cell.primarySwitch.on = (interactionDelegate?.primaryValueFor(PropertyConfigType(rawValue : indexPath.row)!))!
-            cell.curveSelectionLabel.text =  "Easing Curve : " + (interactionDelegate?.selectedEasingFunctionTitleFor(PropertyConfigType(rawValue : indexPath.row)!))!
+            cell.primarySwitch.on = interactionDelegate!.currentPrimaryFlagValue(indexPath.row)
+            cell.pickerView.selectRow(functions.indexOf(interactionDelegate!.currentEAsingFuntion(indexPath.row))!, inComponent: 0, animated: true)
             
-            if selectedIndex.row == indexPath.row {
-                cell.startFade()
-            } else {
-                cell.stopFade()
-            }
             return cell
         }
         
         return UICollectionViewCell()
-    }
-}
-
-extension ConfigurationView: UIPickerViewDataSource, UIPickerViewDelegate, CurveCollectionViewCellDelegate {
-    
-    func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
-        return 1
-    }
-    
-    func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return functionTypes.count
-    }
-    
-    func pickerView(pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
-        let string = functionTypes[row]
-        return NSAttributedString(string: string, attributes: [NSForegroundColorAttributeName:UIColor.whiteColor()])
-    }
-    
-    func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        interactionDelegate?.configCellDidSelectEasingFuntion(functions[row], propertyType : propertyConfigType, functionTitle: functionTypes[row])
-    
-        if let cell = contentCollectionView.cellForItemAtIndexPath(NSIndexPath(forRow : propertyConfigType.rawValue , inSection: 0)) as? CurveSelectionCollectionViewCell {
-            cell.curveSelectionLabel.text = "Easing Curve : " + (interactionDelegate?.selectedEasingFunctionTitleFor(propertyConfigType))!
-        }
-    }
-    
-    func primarySelectionUpdated(propertyType : PropertyConfigType,  isPrimary : Bool) {
-        self.interactionDelegate?.primarySelectionUpdated(propertyType, isPrimary: isPrimary)
     }
 }
 
