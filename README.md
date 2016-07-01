@@ -228,10 +228,12 @@ Simple as that, now when we redirect the animation in mid flight, only the bound
 
 
 ##Reference 
+
 [Supported Parametric Curves](/Documentation/parametric_easings.md)
 
 [CALayer's Supported Animatable Property](/Documentation/supported_animatable_properties.md)
 
+[Current Release Notes](/Documentation/release_notes.md)
 
 ## License
 
