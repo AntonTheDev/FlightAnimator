@@ -15,6 +15,8 @@ public func ==(lhs:CGSize, rhs:CGSize) -> Bool {
 
 extension CGSize : FAAnimatable {
     
+    public typealias T = CGSize
+    
     public func magnitudeValue() -> CGFloat {
         return sqrt((width * width) + (height * height))
     }
@@ -27,10 +29,6 @@ extension CGSize : FAAnimatable {
         let width : CGFloat = ceil(interpolateCGFloat(self.width, end: (toValue as! CGSize).width, progress: progress))
         let height : CGFloat = ceil(interpolateCGFloat(self.height, end: (toValue as! CGSize).height, progress: progress))
         return  CGSizeMake(width, height).valueRepresentation()
-    }
-    
-    public func interpolatedValues(toValue : Any, duration : CGFloat, easingFunction : FAEasing) -> [AnyObject] {
-        return interpolatedParametricValues(self, finalValue : (toValue as! CGSize), duration : duration, easingFunction : easingFunction)
     }
     
     public func interpolatedSpringValue<T : FAAnimatable>(toValue : T, springs : Dictionary<String, FASpring>, deltaTime : CGFloat) -> NSValue {
@@ -56,9 +54,5 @@ extension CGSize : FAAnimatable {
     
     public func valueRepresentation() -> NSValue {
         return NSValue(CGSize :  self)
-    }
-    
-    public func getValue() -> CGSize {
-        return self
     }
 }

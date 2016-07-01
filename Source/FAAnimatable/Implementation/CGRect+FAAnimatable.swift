@@ -15,6 +15,8 @@ public func ==(lhs:CGRect, rhs:CGRect) -> Bool {
 
 extension CGRect : FAAnimatable {
     
+    public typealias T = CGRect
+    
     public func magnitudeValue() -> CGFloat {
         return sqrt((width * width) + (height * height))
     }
@@ -65,9 +67,5 @@ extension CGRect : FAAnimatable {
     
     public func valueRepresentation() -> NSValue {
         return NSValue(CGRect :  self)
-    }
-    
-    public func getValue() -> CGRect {
-        return self
     }
 }

@@ -15,6 +15,8 @@ public func ==(lhs:CATransform3D, rhs:CATransform3D) -> Bool {
 
 extension CATransform3D : FAAnimatable {
     
+    public typealias T = CATransform3D
+
     public func magnitudeValue() -> CGFloat {
         return sqrt((m11 * m11) + (m12 * m12) + (m13 * m13) + (m14 * m14) + (m21 * m21) + (m22 * m22) + (m23 * m23) + (m24 * m24) +
             (m31 * m31) + (m32 * m32) + (m33 * m33) + (m34 * m34) + (m41 * m41) + (m42 * m42) + (m43 * m43) + (m44 * m44))
@@ -184,14 +186,9 @@ extension CATransform3D : FAAnimatable {
         
         return springs
     }
-    
-    
+
     public func valueRepresentation() -> NSValue {
         return NSValue(CATransform3D :  self)
-    }
-    
-    public func getValue() -> CATransform3D {
-        return self
     }
 }
 

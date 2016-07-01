@@ -108,7 +108,6 @@ public class FAAnimationGroup : CAAnimationGroup {
         }
         
         animations = newAnimations.map {$1}
-        
         adjustGroupDurationWith(primaryDurationsArray: durationArray)
     }
 
@@ -119,7 +118,7 @@ public class FAAnimationGroup : CAAnimationGroup {
         case .MinTime:
             duration = durationArray.minElement()!
         case .Median:
-            duration = durationArray.median
+            duration = durationArray.sort(<)[durationArray.count / 2]
         case .Average:
             duration = durationArray.reduce(0, combine: +) / Double(durationArray.count)
         }
@@ -149,22 +148,6 @@ public class FAAnimationGroup : CAAnimationGroup {
         weakLayer?.timeOffset = CFTimeInterval(duration * Double(progress))
     }
     
-    private func animationDictionaryForGroup(animationGroup : FAAnimationGroup?) -> [String : FAAnimation] {
-        var animationDictionary = [String: FAAnimation]()
-        
-        if let group = animationGroup {
-            if let currentAnimations = group.animations {
-                for animation in currentAnimations {
-                    if let customAnimation = animation as? FAAnimation {
-                        animationDictionary[customAnimation.keyPath!] = customAnimation
-                    }
-                }
-            }
-        }
-        
-        return animationDictionary
-    }
-    
     func applyFinalState(animated : Bool = false) {
         stopUpdateLoop()
         if let animationLayer = weakLayer {
@@ -185,6 +168,22 @@ public class FAAnimationGroup : CAAnimationGroup {
             }
         }
         startUpdateLoop()
+    }
+    
+    private func animationDictionaryForGroup(animationGroup : FAAnimationGroup?) -> [String : FAAnimation] {
+        var animationDictionary = [String: FAAnimation]()
+        
+        if let group = animationGroup {
+            if let currentAnimations = group.animations {
+                for animation in currentAnimations {
+                    if let customAnimation = animation as? FAAnimation {
+                        animationDictionary[customAnimation.keyPath!] = customAnimation
+                    }
+                }
+            }
+        }
+        
+        return animationDictionary
     }
 }
 
@@ -228,7 +227,7 @@ extension FAAnimationGroup {
                         progress = primaryEasingFunction.parametricProgress(CGFloat(totalTimeProgress))
                     }
                     
-                     print("AnimationProgress duration", duration, "\nDifference", difference, "\ntotalTimeProgress", totalTimeProgress, "\nprogress", progress, "\n\n")
+                   ///  print("AnimationProgress duration", duration, "\nDifference", difference, "\ntotalTimeProgress", totalTimeProgress, "\nprogress", progress, "\n\n")
                    
                     if CGFloat(progress) > firstProgressKey {
                         let segment = segmentArray[firstProgressKey]
@@ -246,7 +245,6 @@ extension FAAnimationGroup {
     }
     
     func startUpdateLoop() {
-        
         if self.segmentArray.keys.count == 0 {
             return
         }

@@ -1,13 +1,13 @@
 //
-//  AnimatableProtocol+Interpolation.swift
-//  FlightAnimator
+//  FAAnimatable+Interpolation.swift
+//  FlightAnimator-Demo
 //
-//  Created by Anton Doudarev on 4/22/16.
+//  Created by Anton on 6/30/16.
 //  Copyright © 2016 Anton Doudarev. All rights reserved.
 //
 
 import Foundation
-import QuartzCore
+import UIKit
 
 /**
  The timing priority effect how the time is resynchronized across the animation group.
@@ -26,45 +26,6 @@ public enum FAPrimaryTimingPriority : Int {
 }
 
 /**
- Knowing the current progress, this method is called by the the FAAnimationGroup to
- get all the values interpolated over the duration during synchronization. From the
- initial value of the animation, to the final value of the animation. The initial
- value is determined by the current value of the presentation layer, for the duration
- adjusted accordingly during synchronization
- 
- - parameter initialValue:   The initial value of an animable type
- - parameter finalValue:     The final value of an animable type
- - parameter duration:       the duration of an animation
- - parameter easingFunction: the easing function for the animation
- 
- - returns: returns and array of NSValue/CGfloat ovjects for the keyframe animation to perform
- */
-func interpolatedParametricValues<T : FAAnimatable>(initialValue : T,
-                                  finalValue : T,
-                                  duration : CGFloat,
-                                  easingFunction : FAEasing) -> [AnyObject] {
-    var newArray = [AnyObject]()
-    var animationTime : CGFloat = 0.0
-
-    let newValue = initialValue.interpolatedValue(finalValue, progress: 0.0)
-    newArray.append(newValue)
-    
-    repeat {
-        animationTime += 1.0 / 60.0
-        let progress = easingFunction.parametricProgress(CGFloat(animationTime / duration))
-        let newValue = initialValue.interpolatedValue(finalValue, progress: progress)
-        newArray.append(newValue)
-    } while (animationTime <= duration)
-
-    newArray.removeLast()
-    
-    let finalValue = initialValue.interpolatedValue(finalValue, progress: 1.0)
-    newArray.append(finalValue)
-    return newArray
-}
-
-
-/**
  This is a simple method that calculates the actual value between
  the relative start and end value, based on the progress
  
@@ -78,20 +39,78 @@ func interpolateCGFloat(start : CGFloat, end : CGFloat, progress : CGFloat) -> C
     return start * (1.0 - progress) + end * progress
 }
 
-func interpolatedSpringValues<T : FAAnimatable>(toValue : T , springs : Dictionary<String, FASpring>, springEasing : FAEasing) -> (duration : Double,  values : [AnyObject]) {
+
+func interpolatedValues<T : FAAnimatable>(fromValue : T, toValue : T,  animation : FAAnimation?) -> (duration : Double,  values : [AnyObject]) {
+    
+    switch animation!.easingFunction {
+    case let .SpringDecay(velocity):
+        if let springs = animation?.springs {
+            return interpolatedSpringValues(fromValue, toValue : toValue, springs: springs, springEasing : .SpringDecay(velocity: velocity))
+        }
+    case let .SpringCustom(velocity,frequency,damping):
+        if let springs = animation?.springs {
+            return interpolatedSpringValues(fromValue,toValue :toValue, springs: springs, springEasing : .SpringCustom(velocity: velocity,frequency: frequency,ratio: damping))
+        }
+    default:
+        return (animation!.duration, interpolatedParametricValues(fromValue,
+            toValue: toValue ,
+            duration: CGFloat(animation!.duration),
+            easingFunction: (animation?.easingFunction)!))
+    }
+    
+    return (0.0, [AnyObject]())
+}
+
+/**
+ Knowing the current progress, this method is called by the the FAAnimationGroup to
+ get all the values interpolated over the duration during synchronization. From the
+ initial value of the animation, to the final value of the animation. The initial
+ value is determined by the current value of the presentation layer, for the duration
+ adjusted accordingly during synchronization
+ 
+ - parameter initialValue:   The initial value of an animable type
+ - parameter finalValue:     The final value of an animable type
+ - parameter duration:       the duration of an animation
+ - parameter easingFunction: the easing function for the animation
+ 
+ - returns: returns and array of NSValue/CGfloat ovjects for the keyframe animation to perform
+ */
+func interpolatedParametricValues<T : FAAnimatable>(fromValue : T, toValue : T, duration : CGFloat, easingFunction : FAEasing) -> [AnyObject] {
+    
+    var newArray = [AnyObject]()
+    var animationTime : CGFloat = 0.0
+    
+    let newValue = fromValue.interpolatedValue(toValue, progress: 0.0)
+    newArray.append(newValue)
+    
+    repeat {
+        animationTime += 1.0 / 60.0
+        let progress = easingFunction.parametricProgress(CGFloat(animationTime / duration))
+        let newValue = fromValue.interpolatedValue(toValue, progress: progress)
+        newArray.append(newValue)
+    } while (animationTime <= duration)
+    
+    newArray.removeLast()
+    
+    let finalValue = fromValue.interpolatedValue(toValue, progress: 1.0)
+    newArray.append(finalValue)
+    return newArray
+}
+
+func interpolatedSpringValues<T : FAAnimatable>(fromValue : T, toValue : T , springs : Dictionary<String, FASpring>, springEasing : FAEasing) -> (duration : Double,  values : [AnyObject]) {
     
     var valueArray: Array<AnyObject> = Array<AnyObject>()
     var animationTime : CGFloat = 0.0
     
     var animationComplete = false
-
+    
     switch springEasing {
     case .SpringDecay(_):
         repeat {
             let newValue = toValue.interpolatedSpringValue(toValue, springs : springs, deltaTime: animationTime)
             let currentAnimatableValue  = newValue.typeValue() as! T
             animationComplete = toValue.magnitudeToValue(currentAnimatableValue)  < 1.2
-        
+            
             valueArray.append(newValue)
             animationTime += 1.0 / 60.0
         } while (animationComplete == false)
@@ -102,7 +121,7 @@ func interpolatedSpringValues<T : FAAnimatable>(toValue : T , springs : Dictiona
         repeat {
             let newValue = toValue.interpolatedSpringValue(toValue, springs : springs, deltaTime: animationTime)
             let currentAnimatableValue  = newValue.typeValue() as! T
-           
+            
             if floor(toValue.magnitudeToValue(currentAnimatableValue)) == 0.0 {
                 bouncCount += 1
             }
@@ -113,7 +132,7 @@ func interpolatedSpringValues<T : FAAnimatable>(toValue : T , springs : Dictiona
         
         break
     }
-
+    
     valueArray.append(toValue.valueRepresentation())
     animationTime += 2.0 / 60.0
     

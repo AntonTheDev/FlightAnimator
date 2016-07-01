@@ -15,18 +15,29 @@ public func ==(lhs:CGPoint, rhs:CGPoint) -> Bool {
 
 extension CGPoint : FAAnimatable {
     
+    public typealias T = CGPoint
+    
     public func magnitudeValue() -> CGFloat {
         return sqrt((x * x) + (y * y))
     }
     
     public func magnitudeToValue<T : FAAnimatable>(toValue:  T) -> CGFloat {
-        return CGPointMake((toValue as! CGPoint).x - x, (toValue as! CGPoint).y - y).magnitudeValue()
+        
+        if let toValue = toValue as? CGPoint {
+            return CGPointMake(toValue.x - x, toValue.y - y).magnitudeValue()
+        }
+        
+        return CGPointZero.magnitudeValue()
     }
     
     public func interpolatedValue<T : FAAnimatable>(toValue : T, progress : CGFloat) -> NSValue {
-        let adjustedx : CGFloat = interpolateCGFloat(self.x, end: (toValue as! CGPoint).x, progress: progress)
-        let adjustedy : CGFloat = interpolateCGFloat(self.y, end: (toValue as! CGPoint).y, progress: progress)
-        return  CGPointMake(adjustedx, adjustedy).valueRepresentation()
+        if let toValue = toValue as? CGPoint {
+            let adjustedx : CGFloat = interpolateCGFloat(self.x, end: toValue.x, progress: progress)
+            let adjustedy : CGFloat = interpolateCGFloat(self.y, end: toValue.y, progress: progress)
+            return  CGPointMake(adjustedx, adjustedy).valueRepresentation()
+        }
+        
+        return CGPointZero.valueRepresentation()
     }
 
     public func interpolationSprings<T : FAAnimatable>(toValue : T, initialVelocity : Any, angularFrequency : CGFloat, dampingRatio : CGFloat) -> Dictionary<String, FASpring> {
@@ -51,9 +62,5 @@ extension CGPoint : FAAnimatable {
     
     public func valueRepresentation() -> NSValue {
          return NSValue(CGPoint :  self)
-    }
-    
-    public func getValue() -> CGPoint {
-        return self
     }
 }

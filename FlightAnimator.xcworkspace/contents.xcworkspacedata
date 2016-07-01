@@ -17,7 +17,7 @@
             location = "group:FAAnimationGroup.swift">
          </FileRef>
          <FileRef
-            location = "group:FlightAnimator+Private.swift">
+            location = "group:FAAnimationMaker.swift">
          </FileRef>
       </Group>
       <Group
@@ -30,36 +30,33 @@
             location = "group:Implementation"
             name = "Implementation">
             <FileRef
+               location = "group:CATransform3D+FAAnimatable.swift">
+            </FileRef>
+            <FileRef
                location = "group:CGFloat+FAAnimatable.swift">
             </FileRef>
             <FileRef
                location = "group:CGPoint+FAAnimatable.swift">
             </FileRef>
             <FileRef
-               location = "group:CGSize+FAAnimatable.swift">
-            </FileRef>
-            <FileRef
                location = "group:CGRect+FAAnimatable.swift">
             </FileRef>
             <FileRef
-               location = "group:CATransform3D+FAAnimatable.swift">
+               location = "group:CGSize+FAAnimatable.swift">
             </FileRef>
          </Group>
       </Group>
       <Group
-         location = "group:Interpolation"
-         name = "Interpolation">
+         location = "group:FAInterpolation"
+         name = "FAInterpolation">
+         <FileRef
+            location = "group:FAEasing.swift">
+         </FileRef>
          <FileRef
             location = "group:FAInterpolation.swift">
          </FileRef>
          <FileRef
-            location = "group:FAInterpolation+Easing.swift">
-         </FileRef>
-         <FileRef
-            location = "group:FAInterpolation+SpringEngine.swift">
-         </FileRef>
-         <FileRef
-            location = "group:FAInterpolation+Helpers.swift">
+            location = "group:FASpring.swift">
          </FileRef>
       </Group>
       <Group

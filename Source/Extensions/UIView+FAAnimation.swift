@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-private struct AssociatedKey {
+private struct FAAssociatedKey {
     static var layoutConfigurations = "layoutConfigurations"
 }
 
@@ -17,16 +17,16 @@ extension UIView {
     
     public var cachedAnimations: [String : FAAnimationGroup]? {
         get {
-            return getAssociatedObject(self, associativeKey: &AssociatedKey.layoutConfigurations)
+            return fa_getAssociatedObject(self, associativeKey: &FAAssociatedKey.layoutConfigurations)
         }
         set {
             if let value = newValue {
-                setAssociatedObject(self, value: value, associativeKey: &AssociatedKey.layoutConfigurations, policy: objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+                fa_setAssociatedObject(self, value: value, associativeKey: &FAAssociatedKey.layoutConfigurations, policy: objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             }
         }
     }
     
-    private func setAssociatedObject<T>(object: AnyObject,
+    private func fa_setAssociatedObject<T>(object: AnyObject,
                                      value: T,
                                      associativeKey: UnsafePointer<Void>,
                                      policy: objc_AssociationPolicy) {
@@ -38,7 +38,7 @@ extension UIView {
         }
     }
     
-    private func getAssociatedObject<T>(object: AnyObject, associativeKey: UnsafePointer<Void>) -> T? {
+    private func fa_getAssociatedObject<T>(object: AnyObject, associativeKey: UnsafePointer<Void>) -> T? {
         if let v = objc_getAssociatedObject(object, associativeKey) as? T {
             return v
         } else if let v = objc_getAssociatedObject(object, associativeKey) as? ValueWrapper<T> {

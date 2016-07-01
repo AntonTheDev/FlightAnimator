@@ -89,10 +89,12 @@ public class FAAnimation : CAKeyframeAnimation {
     
     var springs : Dictionary<String, FASpring>?
     
-    func synchronizeWithAnimation(oldAnimation : FAAnimation?) {
-        
+    func synchronizeWithAnimation(oldAnimation : FAAnimation? = nil) {
+        configureValues(oldAnimation)
+    }
+    
+    func configureValues(oldAnimation : FAAnimation? = nil) {
         if let presentationValue = (weakLayer?.presentationLayer() as? CALayer)?.anyValueForKeyPath(self.keyPath!) {
-            
             if let currentValue = presentationValue as? CGPoint {
                 synchProgress(currentValue, oldAnimation : oldAnimation)
             } else  if let currentValue = presentationValue as? CGSize {
@@ -105,38 +107,8 @@ public class FAAnimation : CAKeyframeAnimation {
                 synchProgress(currentValue, oldAnimation : oldAnimation)
             }
         }
-        
-        self.weakLayer?.owningView()
     }
     
-    func configureValues() {
-        if  let fromTypedValue = (fromValue as? NSValue)?.typeValue() {
-            
-            var configuration : (duration : Double,  values : [AnyObject])?
-            
-            if let fromValue =  fromTypedValue as? CGPoint {
-                configuration = interpolatedValues(fromValue, animation: self)
-            }
-            else if let fromValue = fromTypedValue as? CGSize {
-                configuration = interpolatedValues(fromValue, animation: self)
-            }
-            else if let fromValue =  fromTypedValue as? CGRect {
-                configuration = interpolatedValues(fromValue, animation: self)
-            }
-            else if let fromValue = fromTypedValue as? CGFloat {
-                configuration = interpolatedValues(fromValue, animation: self)
-            }
-            else if let fromValue = fromTypedValue as? CATransform3D {
-                configuration = interpolatedValues(fromValue, animation: self)
-            }
-            
-            if let config = configuration {
-                duration = config.duration
-                values = config.values
-            }
-        }
-    }
-
     func scrubToProgress(progress : CGFloat) {
         self.weakLayer!.speed = 0.0
         self.weakLayer!.timeOffset = CFTimeInterval(duration * Double(progress))
@@ -144,45 +116,66 @@ public class FAAnimation : CAKeyframeAnimation {
     
     private func synchProgress<T : FAAnimatable>(currentValue : T, oldAnimation : FAAnimation?) {
         
-        if currentValue.valueRepresentation() != (fromValue as? NSValue) {
-            fromValue = currentValue.valueRepresentation()
+        fromValue = currentValue.valueRepresentation()
+        
+        if let typedToValue = (toValue as? NSValue)?.typeValue() as? T,
+           let typedFromValue = (fromValue as? NSValue)?.typeValue() as? T {
             
-            let typedToValue = (self.toValue as? NSValue)?.typeValue() as! T
-            let typedFromValue = (self.fromValue as? NSValue)?.typeValue() as! T
-            
-            switch self.easingFunction {
+            switch easingFunction {
             case let .SpringDecay(velocity):
                 synchronizeAnimationVelocity(oldAnimation)
                 
-                self.springs  = currentValue.interpolationSprings(typedToValue,
-                                                                  initialVelocity: velocity,
-                                                                  angularFrequency: 18,
-                                                                  dampingRatio: 1.12)
+                springs  = typedFromValue.interpolationSprings(typedToValue,
+                                                               initialVelocity: velocity,
+                                                               angularFrequency: 18,
+                                                               dampingRatio: 1.12)
                 break
                 
             case let .SpringCustom(velocity, frequency, damping):
                 synchronizeAnimationVelocity(oldAnimation)
                 
-                self.springs  = currentValue.interpolationSprings(typedToValue,
-                                                                  initialVelocity: velocity,
-                                                                  angularFrequency: frequency,
-                                                                  dampingRatio: damping)
+                springs  = currentValue.interpolationSprings(typedToValue,
+                                                             initialVelocity: velocity,
+                                                             angularFrequency: frequency,
+                                                             dampingRatio: damping)
                 break
             default:
-                
-                let progress = currentValue.remainingProgress(typedToValue, oldFromValue : typedFromValue)
-                duration = CFTimeInterval(CGFloat(self.duration) * progress)
+                if let typedOldFromValue = (oldAnimation?.fromValue as? NSValue)?.typeValue() as? T {
+                    duration = relativeDuration(typedOldFromValue)
+                }
             }
+            
+            let config = interpolatedValues(typedFromValue, toValue: typedToValue, animation: self)
+            
+            duration = config.duration
+            values = config.values
+        }
+    }
+    
+    private func relativeDuration<T : FAAnimatable>(oldFromValue : T) -> CFTimeInterval {
+        if let typedToValue = (self.toValue as? NSValue)?.typeValue() as? T,
+            let typedFromValue = (self.fromValue as? NSValue)?.typeValue() as? T,
+            let typedOldFromValue = (oldFromValue as? NSValue)?.typeValue() as? T {
+            
+            var progress : CGFloat  = CGFloat(1.0)
+            
+            if typedOldFromValue == typedToValue  {
+                progress = CGFloat(1.0)
+            } else {
+                let progressedDiff = typedOldFromValue.magnitudeToValue(typedFromValue)
+                let remainingDiff  = typedFromValue.magnitudeToValue(typedToValue)
+                
+                progress  = remainingDiff / (remainingDiff + progressedDiff)
+                
+                if progress.isNaN {
+                    progress = CGFloat(1.0)
+                }
+            }
+            
+            return  CFTimeInterval(CGFloat(self.duration) * progress)
         }
         
-        let typedFromValue = (self.fromValue as? NSValue)?.typeValue() as! T
-        
-        let config : (duration : Double,  values : [AnyObject])? = interpolatedValues(typedFromValue, animation: self)
-        
-        if let configurationValues = config  {
-            duration = configurationValues.duration
-            values = configurationValues.values
-        }
+        return self.duration
     }
     
     private func synchronizeAnimationVelocity(oldAnimation : FAAnimation?) -> CGPoint? {
@@ -224,28 +217,5 @@ public class FAAnimation : CAKeyframeAnimation {
         
         return CGPointZero
     }
-    
-    private func interpolatedValues<T : FAAnimatable>(fromValue : T, animation : FAAnimation?) -> (duration : Double,  values : [AnyObject]) {
-        
-        if let toValue = (animation?.toValue as? NSValue)?.typeValue() as? T {
-            
-            switch animation!.easingFunction {
-            case let .SpringDecay(velocity):
-                if let springs = animation?.springs {
-                    return interpolatedSpringValues(toValue, springs: springs, springEasing : .SpringDecay(velocity: velocity))
-                }
-            case let .SpringCustom(velocity,frequency,damping):
-                if let springs = animation?.springs {
-                    return interpolatedSpringValues(toValue, springs: springs, springEasing : .SpringCustom(velocity: velocity,frequency: frequency,ratio: damping))
-                }
-            default:
-                return (animation!.duration, interpolatedParametricValues(fromValue,
-                    finalValue: toValue ,
-                    duration: CGFloat(animation!.duration),
-                    easingFunction: (animation?.easingFunction)!))
-            }
-        }
-        
-        return (0.0, [AnyObject]())
-    }
 }
+
