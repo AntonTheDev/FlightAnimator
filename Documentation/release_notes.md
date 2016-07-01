@@ -1,5 +1,14 @@
 #Release Notes
 
+####Version 0.6.0
+
+* Refactored some of the code:
+	* Separate file for FAEasing and FASpring
+	* Simplified the synchronization logic inside of FAAnimation
+	* Removed some of the loose extensions
+* You can also set the timing priority on ``triggerAtTimeProgress()`` or ``triggerAtValueProgress()``. 
+
+
 ####Version 0.5.0
 
 * Updated the naming convention of the easing curves by removing the 'Ease' prefix on the enumerator to make swift-like syntax, now you can easily access animations without being presented too many types.

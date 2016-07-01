@@ -63,7 +63,7 @@ view.animate { (animator) in
 
 ##Sequence
 
-Chaining animations together in flight animator is very easy, and allows you to trigger another animation based on the time progress, or the value progress of an animation.
+Chaining animations together in FlightAnimator is very easy, and allows you to trigger another animation based on the time progress, or the value progress of an animation.
 
 You can nest a trigger on a parent animation at a specified progress, and trigger which will trigger accordingly, and can be applied to the view being animated, or any other view define.
 
@@ -203,7 +203,7 @@ The more animations that you append, the more likely you will need to adjust how
 * .Median
 * .Average
 
-Now this leads into the next topic, and that is the primary flag.
+You can also set the timing priority on ``triggerAtTimeProgress()``  or ``triggerAtValueProgress()``. Now this leads into the next topic, and that is the primary flag.
 
 #####Primary Flag
 

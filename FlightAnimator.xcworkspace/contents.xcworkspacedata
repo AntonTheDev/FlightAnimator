@@ -50,10 +50,10 @@
          location = "group:FAInterpolation"
          name = "FAInterpolation">
          <FileRef
-            location = "group:FAEasing.swift">
+            location = "group:FAInterpolation.swift">
          </FileRef>
          <FileRef
-            location = "group:FAInterpolation.swift">
+            location = "group:FAEasing.swift">
          </FileRef>
          <FileRef
             location = "group:FASpring.swift">
