@@ -100,7 +100,7 @@ view.animate { (animator) in
     })
 }
 ```
-##Cache and Reuse Animations
+##Cache & Reuse Animations
 
 You can define animation states up fron using keys, and triggers then at any other time in your application flow. When the animation is applied, if the view is in mid flight, it will synchronize itself accordingly, and animate to it's final destination. To register an animation, you can call a glabally defined method, and just as you did earlier define the property animations within the maker block.
 
@@ -138,6 +138,32 @@ view.applyAnimation(forKey: AnimationKeys.CenterStateFrameAnimation, animated : 
 
 ##Advanced Use
 
+###.SpringDecay w/ Initial Velocity
+
+If you are using a UIPanGestureRecognizer to move a view around on the screen by adjusting it's position, and say you want to smoothly animate the view to the final destination right as you let go of the gesture. This is where the .SpringDecay easing comes into play. The .SpringDecay easing will slow the view down easily into place, all that need to be configured is the initial velocity, and it will calculate it's own time relative to the velocity en route to it's destination.
+
+Below is an example of how you would handle the handoff and use ``.SpringDecay(velocity: velocity)`` easing to perform the animation.
+
+```
+func respondToPanRecognizer(recognizer : UIPanGestureRecognizer) {
+    switch recognizer.state {
+    ........
+    
+    case .Ended:
+    	let currentVelocity = recognizer.velocityInView(view)
+        
+      	dragView.animate { (animator) in
+         	animator.bounds(finalBounds).duration(0.5).easing(.EaseOutCubic)
+  			animator.position(finalPositon).duration(0.5).easing(.SpringDecay(velocity: velocity))
+      	}
+    default:
+        break
+    }
+}
+```
+
+###Timing Adjustments
+
 Due to the dynamic nature of the framework, it won't always perform the way that you expect at first, and may take a few tweaks to get it just right. FlightAnimator has a few settings that allow for customization your animation duration.
 
 The options you have are the following:
@@ -145,7 +171,7 @@ The options you have are the following:
 * Designating timing priority during synchronization for the overall animation
 * Designating a primary driver on individual property animations within a group
 
-####Timing Priority
+#####Timing Priority
 
 First a little background, the framework basically does some magic so synchronize the time by prioritizing the maximun time remaining based on progress if redirected in mid flight.
 
@@ -179,7 +205,7 @@ The more animations that you append, the more likely you will need to adjust how
 
 Now this leads into the next topic, and that is the primary flag.
 
-####Primary Flag
+#####Primary Flag
 
 As in the example prior, there is a mention that animations can get quite complex, and the more property animtions we append, the more likely the animation will have a hick-up in the timing, especially when synchronizing 4+ animations with different curves and durations.
 
