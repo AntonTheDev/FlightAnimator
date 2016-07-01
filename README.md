@@ -1,6 +1,6 @@
 #FlightAnimator
 
-[![Cocoapods Compatible](https://img.shields.io/badge/pod-v0.5.0-blue.svg)]()
+[![Cocoapods Compatible](https://img.shields.io/badge/pod-v0.6.0-blue.svg)]()
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)]()
 [![Platform](https://img.shields.io/badge/platform-ios-lightgrey.svg)]()
 [![License](https://img.shields.io/badge/license-MIT-343434.svg)](/LICENSE.md)
