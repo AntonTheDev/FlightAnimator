@@ -19,30 +19,29 @@ enum PropertyConfigType : Int {
 
 var functionTypes : [String] = ["SpringDecay", "SpringCustom",
                                 "Linear", "LinearSmooth", "LinearSmoother",
-                                "EaseInSine", "EaseOutSine", "EaseInOutSine",
-                                "EaseInQuadratic", "EaseOutQuadratic", "EaseInOutQuadratic",
-                                "EaseInCubic", "EaseOutCubic", "EaseInOutCubic",
-                                "EaseInQuartic",  "EaseOutQuartic", "EaseInOutQuartic",
-                                "EaseInQuintic", "EaseOutQuintic", "EaseInOutQuintic",
-                                "EaseInExponential", "EaseOutExponential", "EaseInOutExponential",
-                                "EaseInCircular", "EaseOutCircular", "EaseInOutCircular",
-                                "EaseInBack",  "EaseOutBack", "EaseInOutBack",
-                                "EaseInElastic", "EaseOutElastic", "EaseInOutElastic",
-                                "EaseInBounce", "EaseOutBounce", "EaseInOutBounce"]
+                                "InSine", "OutSine", "InOutSine", "OutInSine",
+                                "InQuadratic", "OutQuadratic", "InOutQuadratic", "OutInQuadratic",
+                                "InCubic", "OutCubic", "InOutCubic", "OutInCubic",
+                                "InQuartic",  "OutQuartic", "InOutQuartic", "OutInQuartic",
+                                "InQuintic", "OutQuintic", "InOutQuintic", "OutInQuintic",
+                                "InExponential", "OutExponential", "InOutExponential", "OutInExponential",
+                                "InCircular", "OutCircular", "InOutCircular", "OutInCircular",
+                                "InBack",  "OutBack", "InOutBack", "OutInBack",
+                                "InElastic", "OutElastic", "InOutElastic", "OutInElastic",
+                                "InBounce", "OutBounce", "InOutBounce", "OutInBounce"]
 
 var functions : [FAEasing]    = [.SpringDecay(velocity : CGPointZero), .SpringCustom(velocity: CGPointZero, frequency: 21, ratio: 0.99),
                                  .Linear, .LinearSmooth, .LinearSmoother,
-                                 .InSine, .OutSine, .InOutSine,
-                                 .InQuadratic, .OutQuadratic, .InOutQuadratic,
-                                 .InCubic, .OutCubic, .InOutCubic,
-                                 .InQuartic, .OutQuartic, .InOutQuartic,
-                                 .InQuintic, .OutQuintic, .InOutQuintic,
-                                 .InExponential, .OutExponential, .InOutExponential,
-                                 .InCircular, .OutCircular, .InOutCircular,
-                                 .InBack,  .OutBack, .InOutBack,
+                                 .InSine, .OutSine, .InOutSine, .OutInSine,
+                                 .InQuadratic, .OutQuadratic, .InOutQuadratic, .OutInQuadratic,
+                                 .InCubic, .OutCubic, .InOutCubic, .OutInCubic,
+                                 .InQuartic, .OutQuartic, .InOutQuartic, .OutInQuartic,
+                                 .InQuintic, .OutQuintic, .InOutQuintic, .OutInQuintic,
+                                 .InExponential, .OutExponential, .InOutExponential, .OutInExponential,
+                                 .InCircular, .OutCircular, .InOutCircular, .OutInCircular,
+                                 .InBack,  .OutBack, .InOutBack, .OutInBack,
                                  .InElastic, .OutElastic, .InOutElastic,
-                                 .InBounce, .OutBounce, .InOutBounce]
-
+                                 .InBounce, .OutBounce, .InOutBounce, .OutInBounce]
 
 protocol ConfigurationViewDelegate {
     func configCellDidSelectEasingFuntion(function: FAEasing, propertyType : PropertyConfigType, functionTitle: String)

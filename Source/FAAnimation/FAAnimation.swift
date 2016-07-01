@@ -124,7 +124,7 @@ final public class FAAnimation : CAKeyframeAnimation {
             
             let previousFromValue = (oldAnimation?.fromValue as? NSValue)?.typeValue() as? T
     
-            let interpolator  = FAInterpolator(toValue : typedToValue,
+            var interpolator  = FAInterpolator(toValue : typedToValue,
                                        fromValue: currentValue,
                                        previousFromValue : previousFromValue,
                                        duration: CGFloat(duration),
