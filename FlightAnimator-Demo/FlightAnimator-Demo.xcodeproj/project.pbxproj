@@ -62,7 +62,7 @@
 		3A62C6331D261DDF0015FAAA /* FAAnimation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FAAnimation.swift; sourceTree = "<group>"; };
 		3A62C6341D261DDF0015FAAA /* FAAnimationGroup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FAAnimationGroup.swift; sourceTree = "<group>"; };
 		3A62C6351D261DDF0015FAAA /* FAAnimationMaker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FAAnimationMaker.swift; sourceTree = "<group>"; };
-		3A62C6361D261DDF0015FAAA /* FlightAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlightAnimator.swift; sourceTree = "<group>"; };
+		3A62C6361D261DDF0015FAAA /* FlightAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FlightAnimator.swift; path = FAAnimation/FlightAnimator.swift; sourceTree = "<group>"; };
 		3A62C6381D261DDF0015FAAA /* FAEasing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FAEasing.swift; sourceTree = "<group>"; };
 		3A62C6391D261DDF0015FAAA /* FAInterpolation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FAInterpolation.swift; sourceTree = "<group>"; };
 		3A62C63A1D261DDF0015FAAA /* FASpring.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FASpring.swift; sourceTree = "<group>"; };
@@ -156,11 +156,12 @@
 		3A62C6221D261DDF0015FAAA /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				3A62C6361D261DDF0015FAAA /* FlightAnimator.swift */,
+				3A62C6321D261DDF0015FAAA /* FAAnimation */,
+				3A62C62A1D261DDF0015FAAA /* FAAnimatable */,
+				3A62C6371D261DDF0015FAAA /* FAInterpolation */,
 				3A62C6231D261DDF0015FAAA /* Extensions */,
 				3A62C6271D261DDF0015FAAA /* Extras */,
-				3A62C62A1D261DDF0015FAAA /* FAAnimatable */,
-				3A62C6321D261DDF0015FAAA /* FAAnimation */,
-				3A62C6371D261DDF0015FAAA /* FAInterpolation */,
 			);
 			name = Source;
 			path = ../../Source;
@@ -212,7 +213,6 @@
 				3A62C6331D261DDF0015FAAA /* FAAnimation.swift */,
 				3A62C6341D261DDF0015FAAA /* FAAnimationGroup.swift */,
 				3A62C6351D261DDF0015FAAA /* FAAnimationMaker.swift */,
-				3A62C6361D261DDF0015FAAA /* FlightAnimator.swift */,
 			);
 			path = FAAnimation;
 			sourceTree = "<group>";

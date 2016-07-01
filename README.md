@@ -152,7 +152,7 @@ func respondToPanRecognizer(recognizer : UIPanGestureRecognizer) {
     case .Ended:
     	let currentVelocity = recognizer.velocityInView(view)
         
-      	dragView.animate { (animator) in
+      	view.animate { (animator) in
          	animator.bounds(finalBounds).duration(0.5).easing(.EaseOutCubic)
   			animator.position(finalPositon).duration(0.5).easing(.SpringDecay(velocity: velocity))
       	}

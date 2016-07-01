@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-public class FAAnimation : CAKeyframeAnimation {
+final public class FAAnimation : CAKeyframeAnimation {
     
     weak var weakLayer : CALayer?
     

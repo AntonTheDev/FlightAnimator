@@ -7,7 +7,6 @@
 //
 
 import Foundation
-
 import UIKit
 import QuartzCore
 
@@ -18,7 +17,7 @@ internal class SegmentItem {
     weak var animatedView : UIView?
 }
 
-public class FAAnimationGroup : CAAnimationGroup {
+final public class FAAnimationGroup : CAAnimationGroup {
     
     var segmentArray = [CGFloat : SegmentItem]()
     private var primaryEasingFunction : FAEasing = FAEasing.Linear
@@ -191,7 +190,6 @@ public class FAAnimationGroup : CAAnimationGroup {
 extension FAAnimationGroup {
     
     func updateLoop() {
-
         if segmentArray.keys.count <= 0 {
             stopUpdateLoop()
             return

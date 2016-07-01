@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-public class FlightAnimator {
+public class FAAnimationMaker {
     
     internal weak var associatedView : UIView?
     internal var animationKey : String?
@@ -38,7 +38,8 @@ public class FlightAnimator {
         associatedView!.cachedAnimations![animationKey!] = newGroup
     }
     
-    internal func triggerAnimation(timeBased : Bool,
+    internal func triggerAnimation(timingPriority : FAPrimaryTimingPriority = .MaxTime,
+                                   timeBased : Bool,
                                    key: String,
                                    view: UIView,
                                    progress: CGFloat = 0.0,
@@ -55,7 +56,7 @@ public class FlightAnimator {
         }
         
         
-        let newAnimator = FlightAnimator(withView: view, forKey : animationKey!)
+        let newAnimator = FlightAnimator(withView: view, forKey : animationKey!, priority : timingPriority)
         animator(animator : newAnimator)
     }
 }
@@ -69,7 +70,7 @@ public protocol PropertyConfiguration {
     func primary(primary : Bool) -> PropertyConfiguration
 }
 
-public class Configuration {
+private class Configuration {
     var value: PropertyConfiguration
     
     init<T : FAAnimatable>(value: T, forKeyPath key : String, view : UIView, animationKey : String) {
@@ -85,7 +86,7 @@ public class Configuration {
     }
 }
 
-class ConfigurationValue<T : FAAnimatable> : PropertyConfiguration {
+internal class ConfigurationValue<T : FAAnimatable> : PropertyConfiguration {
     
     private weak var associatedView : UIView?
     private var animationKey : String?
