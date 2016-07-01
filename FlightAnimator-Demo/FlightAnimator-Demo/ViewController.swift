@@ -29,7 +29,7 @@ class ViewController: UIViewController {
         gradient.frame = view.bounds
         
         view.layer.addSublayer(gradient)
-   
+        
         view.addSubview(bottomBottomLeftButton)
         view.addSubview(bottomBottomCenterButton)
         view.addSubview(bottomBottomRightButton)
@@ -57,7 +57,7 @@ class ViewController: UIViewController {
     }
     
     func layoutInterface() {
- 
+        
         dimmerView.frame = view.bounds
         configView.frame = CGRectMake(20, self.view.bounds.height + 20, self.view.bounds.width - 40, self.view.bounds.height - 40)
         closeButton.alignWithSize(CGSizeMake(200, 50),
@@ -138,8 +138,8 @@ class ViewController: UIViewController {
                                              vertical: HGVerticalAlign.Above,
                                              horizontalOffset:0)
         
-     
- 
+        
+        
         settingsButton.alignWithSize(CGSizeMake(100, 100),
                                      toFrame: animateToTopButton.frame,
                                      horizontal: HGHorizontalAlign.Right,
@@ -162,12 +162,12 @@ class ViewController: UIViewController {
                                 verticalOffset :0)
         
         titleLabel.alignWithSize(CGSizeMake(300, 50),
-                                  toFrame: separator.frame,
-                                  horizontal: HGHorizontalAlign.Center,
-                                  vertical: HGVerticalAlign.Center,
-                                  verticalOffset : 120)
+                                 toFrame: separator.frame,
+                                 horizontal: HGHorizontalAlign.Center,
+                                 vertical: HGVerticalAlign.Center,
+                                 verticalOffset : 120)
         
-
+        
         
     }
     
@@ -231,7 +231,7 @@ class ViewController: UIViewController {
         button.addTarget(self, action: #selector(ViewController.tappedCloseConfig), forControlEvents: .TouchUpInside)
         return button
     }()
-        
+    
     lazy var titleLabel: UILabel = {
         var label = UILabel()
         label.textColor = UIColor.whiteColor()
@@ -307,7 +307,7 @@ class ViewController: UIViewController {
         button.addTarget(self, action:  #selector(ViewController.animateToBottom), forControlEvents: .TouchUpInside)
         return button
     }()
-
+    
     
     lazy var bottomBottomCenterButton: UIButton = {
         return self.newButton(withTitle: "", action: #selector(ViewController.bottomCenter))
@@ -494,7 +494,6 @@ extension ViewController : ConfigurationViewDelegate, CurveCollectionViewCellDel
     }
     
     
-    
     func cell(cell : CurveSelectionCollectionViewCell , didSelectPrimary isPrimary : Bool) {
         if let index = self.configView.contentCollectionView.indexPathForCell(cell) {
             switch index.row {
@@ -531,25 +530,24 @@ extension ViewController : ConfigurationViewDelegate, CurveCollectionViewCellDel
             return animConfig.transformPrimary
         }
     }
+    
     func currentEAsingFuntion(atIndex : Int) -> FAEasing {
-       switch atIndex {
-            case 0:
-                //size
-                return animConfig.sizeFunction
-            case 1:
-                // position
-                return animConfig.positionFunction
-            case 2:
-                // alpha
-                return animConfig.alphaFunction
-            default:
-                // transform
-                return animConfig.transformFunction
-            }
-
+        switch atIndex {
+        case 0:
+            //size
+            return animConfig.sizeFunction
+        case 1:
+            // position
+            return animConfig.positionFunction
+        case 2:
+            // alpha
+            return animConfig.alphaFunction
+        default:
+            // transform
+            return animConfig.transformFunction
+        }
     }
     
- 
     func configCellDidSelectEasingFuntion(function: FAEasing, propertyType : PropertyConfigType, functionTitle: String) {
         
         switch propertyType {
@@ -562,6 +560,13 @@ extension ViewController : ConfigurationViewDelegate, CurveCollectionViewCellDel
         case .Transform:
             animConfig.transformFunction = function
         }
+    }
+    
+    func toggleSecondaryView(enabled : Bool) {
+        self.animConfig.enableSecondaryView = enabled
+        
+        self.dragView2.alpha = enabled ? 1.0 : 0.0
+        self.dragView2.hidden = !enabled
     }
     
     func primaryValueFor(propertyType : PropertyConfigType) -> Bool {

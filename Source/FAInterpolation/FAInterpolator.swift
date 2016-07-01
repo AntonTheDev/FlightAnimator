@@ -9,20 +9,12 @@
 import Foundation
 import UIKit
 
-/**
- The timing priority effect how the time is resynchronized across the animation group.
- If the FAAnimation is marked as primary
- 
- - MaxTime: <#MaxTime description#>
- - MinTime: <#MinTime description#>
- - Median:  <#Median description#>
- - Average: <#Average description#>
- */
-public enum FAPrimaryTimingPriority : Int {
-    case MaxTime
-    case MinTime
-    case Median
-    case Average
+struct FAAnimationConfig {
+    static let InterpolationFrameCount  : CGFloat = 60.0
+    
+    static let SpringDecayFrequency     : CGFloat = 18.0
+    static let SpringDecayDamping       : CGFloat = 1.12
+    static let SpringCustomBounceCount  : Int = 12
 }
 
 public struct FAInterpolator<T : FAAnimatable> {
@@ -41,8 +33,8 @@ public struct FAInterpolator<T : FAAnimatable> {
             
             let newSprings = fromValue.interpolationSprings(toValue,
                                                      initialVelocity: velocity,
-                                                     angularFrequency: 18,
-                                                     dampingRatio: 1.12)
+                                                     angularFrequency: FAAnimationConfig.SpringDecayFrequency,
+                                                     dampingRatio: FAAnimationConfig.SpringDecayDamping)
             
             return interpolatedSpringValues(newSprings)
             
@@ -91,7 +83,7 @@ public struct FAInterpolator<T : FAAnimatable> {
         newArray.append(newValue)
         
         repeat {
-            animationTime += 1.0 / 60.0
+            animationTime += 1.0 / FAAnimationConfig.InterpolationFrameCount
             let progress = easingFunction.parametricProgress(CGFloat(animationTime / duration))
             let newValue = fromValue.interpolatedValue(toValue, progress: progress)
             newArray.append(newValue)
@@ -119,7 +111,7 @@ public struct FAInterpolator<T : FAAnimatable> {
                 animationComplete = toValue.magnitudeToValue(currentAnimatableValue)  < 1.2
                 
                 valueArray.append(newValue)
-                animationTime += 1.0 / 60.0
+                animationTime += 1.0 / FAAnimationConfig.InterpolationFrameCount
             } while (animationComplete == false)
             
         default:
@@ -134,14 +126,14 @@ public struct FAInterpolator<T : FAAnimatable> {
                 }
                 
                 valueArray.append(newValue)
-                animationTime += 1.0 / 60.0
-            } while (bouncCount < 12)
+                animationTime += 1.0 / FAAnimationConfig.InterpolationFrameCount
+            } while (bouncCount < FAAnimationConfig.SpringCustomBounceCount)
             
             break
         }
         
         valueArray.append(toValue.valueRepresentation())
-        animationTime += 2.0 / 60.0
+        animationTime += 2.0 / FAAnimationConfig.InterpolationFrameCount
         
         return (Double(animationTime),  values : valueArray, springs)
     }

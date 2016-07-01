@@ -17,6 +17,9 @@ enum PropertyConfigType : Int {
     case Transform
 }
 
+let timingPrioritySegments = ["MaxTime", "MinTime", "Median", "Average"]
+let sequenceTypeSegments = ["Instantly", "Time Progress", "Value Progress"]
+
 
 var functionTypes : [String] = ["SpringDecay", "SpringCustom",
                                 "Linear", "LinearSmooth", "LinearSmoother",
@@ -48,6 +51,7 @@ var functions : [FAEasing]    = [.SpringDecay(velocity : CGPointZero), .SpringCu
 
 protocol ConfigurationViewDelegate {
     func selectedTimingPriority(priority : FAPrimaryTimingPriority)
+    func toggleSecondaryView(enabled : Bool)
     
     func currentPrimaryFlagValue(atIndex : Int) -> Bool
     func currentEAsingFuntion(atIndex : Int) -> FAEasing
@@ -59,7 +63,7 @@ class ConfigurationView : UIView {
     weak var cellDelegate : CurveCollectionViewCellDelegate?
    
     var selectedIndex: NSIndexPath = NSIndexPath(forRow: 0, inSection: 0)
-    
+    var initialCenter = CGPointZero
     var propertyConfigType : PropertyConfigType = PropertyConfigType.Bounds {
         didSet {
             self.contentCollectionView.reloadData()
@@ -86,6 +90,12 @@ class ConfigurationView : UIView {
         addSubview(titleLabel)
         addSubview(segnmentedControl)
         addSubview(secondSeparator)
+        addSubview(enableSecondaryViewLabel)
+        addSubview(secondaryViewSwitch)
+        addSubview(delaySegnmentedControl)
+        addSubview(progressTriggerSlider)
+        addSubview(atProgressLabel)
+        addSubview(progressLabel)
     }
     
     override func layoutSubviews() {
@@ -123,42 +133,84 @@ class ConfigurationView : UIView {
                                       horizontal: HGHorizontalAlign.Center,
                                       vertical: HGVerticalAlign.Below,
                                       verticalOffset :0)
-
-
         
         backgroundView.frame = self.bounds
+
+    
+        enableSecondaryViewLabel.alignWithSize(CGSizeMake(self.bounds.width - 32, 24),
+                                 toFrame: separator.frame,
+                                 horizontal: HGHorizontalAlign.LeftEdge,
+                                 vertical: HGVerticalAlign.Below,
+                                 horizontalOffset:  16,
+                                 verticalOffset: 20)
+        
+        initialCenter = enableSecondaryViewLabel.center
+    
+        atProgressLabel.alignWithSize(CGSizeMake(180, 24),
+                                               toFrame: enableSecondaryViewLabel.frame,
+                                               horizontal: HGHorizontalAlign.LeftEdge,
+                                               vertical: HGVerticalAlign.Below,
+                                               horizontalOffset:  0,
+                                               verticalOffset: 4)
+        
+        secondaryViewSwitch.sizeToFit()
+        secondaryViewSwitch.alignWithSize(secondaryViewSwitch.bounds.size,
+                                    toFrame: separator.frame,
+                                    horizontal: HGHorizontalAlign.RightEdge,
+                                    vertical: HGVerticalAlign.Below,
+                                    horizontalOffset: -16,
+                                    verticalOffset:28)
+        
+        
+        delaySegnmentedControl.sizeToFit()
+        delaySegnmentedControl.alignWithSize(CGSizeMake(self.bounds.width - 32, delaySegnmentedControl.bounds.height),
+                                        toFrame: atProgressLabel.frame,
+                                        horizontal: HGHorizontalAlign.LeftEdge,
+                                        vertical: HGVerticalAlign.Below,
+                                        verticalOffset : 22)
+        
+        
+        progressTriggerSlider.alignWithSize(CGSizeMake(delaySegnmentedControl.bounds.width, progressTriggerSlider.bounds.height),
+                                             toFrame: delaySegnmentedControl.frame,
+                                             horizontal: HGHorizontalAlign.LeftEdge,
+                                             vertical: HGVerticalAlign.Below,
+                                             verticalOffset : 32)
+        
+        var adjustedPosition = enableSecondaryViewLabel.center
+        adjustedPosition.y =  adjustedPosition.y + 16
+        
+        enableSecondaryViewLabel.center = adjustedPosition
     }
     
     func registerCells() {
-        contentCollectionView.registerClass(CurveSelectionCollectionViewCell.self, forCellWithReuseIdentifier: "PropertyCell0")
+         contentCollectionView.registerClass(CurveSelectionCollectionViewCell.self, forCellWithReuseIdentifier: "PropertyCell0")
          contentCollectionView.registerClass(CurveSelectionCollectionViewCell.self, forCellWithReuseIdentifier: "PropertyCell1")
          contentCollectionView.registerClass(CurveSelectionCollectionViewCell.self, forCellWithReuseIdentifier: "PropertyCell2")
          contentCollectionView.registerClass(CurveSelectionCollectionViewCell.self, forCellWithReuseIdentifier: "PropertyCell3")
     }
     
-    func setupAnimation() {
-        if let cell = contentCollectionView.cellForItemAtIndexPath(selectedIndex) as? CurveSelectionCollectionViewCell {
-            cell.startFade()
-        }
-    }
-    
     // MARK: - Lazy Loaded Views
     
-    
     lazy var segnmentedControl : UISegmentedControl = {
-        let items = ["MaxTime", "MinTime", "Median", "Average"]
-        
-        var segmentedControl = UISegmentedControl(items: items)
+        var segmentedControl = UISegmentedControl(items: timingPrioritySegments)
         segmentedControl.selectedSegmentIndex = 0
         segmentedControl.tintColor = UIColor.whiteColor()
         segmentedControl.addTarget(self, action: #selector(ConfigurationView.changedPriority(_:)), forControlEvents: .ValueChanged)
         return segmentedControl
-
     }()
     
     func changedPriority(segmentedControl : UISegmentedControl) {
         self.interactionDelegate?.selectedTimingPriority(FAPrimaryTimingPriority(rawValue: segmentedControl.selectedSegmentIndex)!)
     }
+    
+    lazy var delaySegnmentedControl : UISegmentedControl = {
+        var segmentedControl = UISegmentedControl(items: sequenceTypeSegments)
+        segmentedControl.selectedSegmentIndex = 0
+        segmentedControl.tintColor = UIColor.whiteColor()
+        segmentedControl.addTarget(self, action: #selector(ConfigurationView.changedTrigger(_:)), forControlEvents: .ValueChanged)
+        return segmentedControl
+        
+    }()
     
     lazy var titleLabel: UILabel = {
         var label = UILabel()
@@ -207,6 +259,116 @@ class ConfigurationView : UIView {
         tempCollectionView.pagingEnabled = false
         return tempCollectionView
         }()
+    
+    lazy var enableSecondaryViewLabel: UILabel = {
+        var label = UILabel()
+        label.textColor = UIColor.whiteColor()
+        label.text = "Enable Seconday View"
+        label.backgroundColor = UIColor.clearColor()
+        label.font = UIFont(name: "Helvetica", size: 15)
+        label.textAlignment = .Left
+        return label
+    }()
+    
+    lazy var atProgressLabel: UILabel = {
+        var label = UILabel()
+        label.textColor = UIColor.whiteColor()
+        label.text = "Trigger at progress : "
+        label.backgroundColor = UIColor.clearColor()
+        label.font = UIFont(name: "Helvetica", size: 15)
+        label.textAlignment = .Left
+        label.alpha = 0.0
+        return label
+    }()
+    
+    lazy var progressLabel: UILabel = {
+        var label = UILabel()
+        label.textColor = UIColor.whiteColor()
+        label.text = "Trigger at progress : "
+        label.backgroundColor = UIColor.clearColor()
+        label.font = UIFont(name: "Helvetica", size: 15)
+        label.alpha = 0.0
+        label.textAlignment = .Left
+        return label
+    }()
+    
+    lazy var secondaryViewSwitch: UISwitch = {
+        var tempSwitch = UISwitch()
+        tempSwitch.on = true
+        tempSwitch.backgroundColor = UIColor.clearColor()
+        tempSwitch.addTarget(self, action: #selector(ConfigurationView.secondary_view_value_changed(_:)), forControlEvents: UIControlEvents.ValueChanged)
+        return tempSwitch
+    }()
+    
+    lazy var progressTriggerSlider : UISlider = {
+        var slider = UISlider(frame:CGRectMake(20, 260, 280, 20))
+        slider.minimumValue = 0
+        slider.maximumValue = 100
+        slider.continuous = true
+        slider.tintColor = UIColor(rgba: "#444444")
+        slider.value = 0
+        slider.alpha = 0.0
+        slider.addTarget(self, action: #selector(ConfigurationView.progress_value_changed(_:)), forControlEvents: .ValueChanged)
+        return slider
+    }()
+    
+    func progress_value_changed(sender : UISlider) {
+        
+
+    }
+    
+    func changedTrigger(segmentedControl : UISegmentedControl) {
+    
+        if segmentedControl.selectedSegmentIndex == 0 {
+           
+            progressTriggerSlider.animate { (animator) in
+                animator.alpha(0.0).duration(0.5).easing(.OutSine)
+            }
+            
+            var adjustedPosition = enableSecondaryViewLabel.center
+            adjustedPosition.y =  adjustedPosition.y + 16
+        
+            atProgressLabel.animate { (animator) in
+                animator.alpha(0.0).duration(0.5).easing(.OutSine)
+                
+                animator.triggerAtTimeProgress(atProgress: 0.7, onView: self.enableSecondaryViewLabel, animator: { (animator) in
+                    animator.position(adjustedPosition).duration(0.5).easing(.OutSine)
+                })
+                
+                animator.triggerAtTimeProgress(atProgress: 0.0, onView: self.progressTriggerSlider, animator: { (animator) in
+                    animator.alpha(0.0).duration(0.5).easing(.OutSine)
+                })
+            }
+
+        } else  {
+
+            
+            enableSecondaryViewLabel.animate { (animator) in
+                animator.position(initialCenter).duration(0.5).easing(.OutSine)
+                
+                animator.triggerAtTimeProgress(atProgress: 0.6, onView: self.atProgressLabel, animator: { (animator) in
+                    animator.alpha(1.0).duration(0.5).easing(.OutSine)
+                })
+                
+                animator.triggerAtTimeProgress(atProgress: 0.7, onView: self.progressTriggerSlider, animator: { (animator) in
+                    animator.alpha(1.0).duration(0.5).easing(.OutSine)
+                })
+            }
+        }
+        
+        self.interactionDelegate?.selectedTimingPriority(FAPrimaryTimingPriority(rawValue: segmentedControl.selectedSegmentIndex)!)
+    }
+    
+    
+    func secondary_view_value_changed(sender : UISwitch) {
+       
+        delaySegnmentedControl.animate { (animator) in
+            animator.alpha(sender.on ? 1.0 : 0.5).duration(0.6).easing(.OutSine)
+        }
+        
+        delaySegnmentedControl.userInteractionEnabled = sender.on
+        self.interactionDelegate?.toggleSecondaryView(sender.on)
+    }
 }
 
 extension ConfigurationView : UICollectionViewDelegate, UICollectionViewDataSource {
@@ -223,20 +385,11 @@ extension ConfigurationView : UICollectionViewDelegate, UICollectionViewDataSour
         return 4
     }
     
-    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-        
-        /*
-        selectedIndex = indexPath
-        propertyConfigType = PropertyConfigType(rawValue:indexPath.row)!
-        let title = interactionDelegate?.selectedEasingFunctionTitleFor(PropertyConfigType(rawValue : indexPath.row)!)
-        pickerView.selectRow(functionTypes.indexOf(title!)!, inComponent: 0, animated: true)
-         */
-    }
+    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) { }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         return cellAtIndex(indexPath)
     }
-    
     
     func cellAtIndex(indexPath: NSIndexPath) -> UICollectionViewCell {
         if let cell = contentCollectionView.dequeueReusableCellWithReuseIdentifier("PropertyCell\(indexPath.row)" as String, forIndexPath: indexPath) as? CurveSelectionCollectionViewCell {

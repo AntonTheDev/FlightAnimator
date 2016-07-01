@@ -9,6 +9,22 @@
 import Foundation
 import UIKit
 
+/**
+ The timing priority effect how the time is resynchronized across the animation group.
+ If the FAAnimation is marked as primary
+ 
+ - MaxTime: <#MaxTime description#>
+ - MinTime: <#MinTime description#>
+ - Median:  <#Median description#>
+ - Average: <#Average description#>
+ */
+public enum FAPrimaryTimingPriority : Int {
+    case MaxTime
+    case MinTime
+    case Median
+    case Average
+}
+
 public func registerAnimation(onView view : UIView,
                               forKey key: String,
                               timingPriority : FAPrimaryTimingPriority = .MaxTime,

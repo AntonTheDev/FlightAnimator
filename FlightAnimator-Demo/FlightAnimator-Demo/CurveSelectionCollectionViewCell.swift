@@ -90,24 +90,13 @@ class CurveSelectionCollectionViewCell : UICollectionViewCell {
                                  toFrame: contentView.bounds,
                                  horizontal: HGHorizontalAlign.LeftEdge,
                                  vertical: HGVerticalAlign.Center,
-                                 horizontalOffset : 80)
+                                 horizontalOffset : 90)
         
         for subview in pickerView.subviews{
             subview.backgroundColor = UIColor.clearColor()
         }
     }
-    
-    func startFade() {
-        UIView.animateWithDuration(0.5, delay:0, options: [.Repeat, .Autoreverse], animations: {
-            self.titleLabel.alpha = 0.4
-            }, completion: nil)
-    }
-    
-    func stopFade() {
-        titleLabel.layer.removeAllAnimations()
-        titleLabel.alpha = 1.0
-    }
-        
+ 
     lazy var titleLabel: UILabel = {
         var label = UILabel()
         label.textColor = UIColor.whiteColor()
@@ -162,22 +151,28 @@ extension CurveSelectionCollectionViewCell: UIPickerViewDataSource, UIPickerView
         return functionTypes.count
     }
     
-    func pickerView(pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
-        let string = functionTypes[row]
-        return NSAttributedString(string: string, attributes: [NSForegroundColorAttributeName:UIColor.whiteColor()])
-    }
-    
     func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
 
        
         self.delegate?.cell(self, didSelectEasing : functions[row])
-        /*
-        interactionDelegate?.configCellDidSelectEasingFuntion(functions[row], propertyType : propertyConfigType, functionTitle: functionTypes[row])
+    }
+    
+    func pickerView(pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusingView view: UIView?) -> UIView {
         
-        if let cell = contentCollectionView.cellForItemAtIndexPath(NSIndexPath(forRow : propertyConfigType.rawValue , inSection: 0)) as? CurveSelectionCollectionViewCell {
-            cell.curveSelectionLabel.text = "Easing Curve : " + (interactionDelegate?.selectedEasingFunctionTitleFor(propertyConfigType))!
+        var pickerLabel = view as? UILabel
+        
+        if (pickerLabel == nil)
+        {
+            pickerLabel = UILabel()
+            
+            pickerLabel?.font = UIFont(name: "MenloiPhoneiPad", size: 14)
+            pickerLabel?.textColor = UIColor.whiteColor()
+            pickerLabel?.textAlignment = NSTextAlignment.Center
         }
-         */
+        
+        pickerLabel?.text = functionTypes[row]
+        
+        return pickerLabel!
     }
     
     func primarySelectionUpdated(propertyType : PropertyConfigType,  isPrimary : Bool) {

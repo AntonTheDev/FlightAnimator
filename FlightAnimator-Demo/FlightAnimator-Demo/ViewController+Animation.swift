@@ -27,6 +27,8 @@ struct AnimationConfiguration {
     var alphaPrimary : Bool = false
     var transformPrimary : Bool = false
     
+    var enableSecondaryView  : Bool = true
+    
     static func titleForFunction(function : FAEasing) -> String {
         return functionTypes[functions.indexOf(function)!]
     }
@@ -124,12 +126,16 @@ extension ViewController {
             animator.alpha(toAlpha).duration(duration).easing(self.animConfig.alphaFunction).primary(self.animConfig.alphaPrimary)
             animator.transform(transform).duration(duration).easing(self.animConfig.transformFunction).primary(self.animConfig.transformPrimary)
             
+            if self.animConfig.enableSecondaryView {
+            
             animator.triggerAtTimeProgress(atProgress: 0.5, onView: self.dragView2, animator: { (animator) in
                 animator.bounds(currentBounds).duration(duration).easing(self.animConfig.sizeFunction).primary(self.animConfig.sizePrimary)
                 animator.position(currentPosition).duration(duration).easing(self.animConfig.positionFunction).primary(self.animConfig.positionPrimary)
                 animator.alpha(currentAlpha).duration(duration).easing(self.animConfig.alphaFunction).primary(self.animConfig.alphaPrimary)
                 animator.transform(currentTransform).duration(duration).easing(self.animConfig.transformFunction).primary(self.animConfig.transformPrimary)
             })
+                
+            }
         }
 
         dragView.applyAnimation(forKey: AnimationKeys.TapStageOneAnimationKey)
@@ -161,12 +167,18 @@ extension ViewController {
             animator.bounds(finalBounds).duration(1.0).easing(.Linear).primary(self.animConfig.sizePrimary)
             animator.position(finalCenter).duration(0.0).easing(easingFuntion).primary(true)
 
+            
+            if self.animConfig.enableSecondaryView {
+                
+            
             animator.triggerAtTimeProgress(atProgress: 0.5, onView: self.dragView2, animator: { (animator) in
                 animator.bounds(currentBounds).duration(0.5).easing(self.animConfig.sizeFunction).primary(self.animConfig.sizePrimary)
                 animator.position(currentPosition).duration(0.5).easing(self.animConfig.positionFunction).primary(self.animConfig.positionPrimary)
                 animator.alpha(currentAlpha).duration(0.5).easing(self.animConfig.alphaFunction).primary(self.animConfig.alphaPrimary)
                 animator.transform(currentTransform).duration(0.5).easing(self.animConfig.transformFunction).primary(self.animConfig.transformPrimary)
             })
+                
+            }
         }
 
         dragView.applyAnimation(forKey: AnimationKeys.PanGestureKey)
