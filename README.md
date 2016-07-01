@@ -45,7 +45,7 @@ When creating or registering an animation, the frame work uses a blocks based sy
 
 To perform a simple animation  call the `animate(:)` method on the view to animate. Let's look at a simple example below.
 
-```
+```swift
 view.animate { (animator) in
       animator.bounds(newBounds).duration(0.5).easing(.EaseOutCubic)
       animator.position(newPositon).duration(0.5).easing(.EaseInSine)
@@ -55,7 +55,7 @@ The closure returns an instance of an FAAnimationMaker, which can be used to bui
 
 In the case there is a need to animate a custom defined NSManaged animatable property, i.e progress to draw a circle. Use the `value(value:forKeyPath:)` method on the animator to animate that property.
 
-```
+```swift
 view.animate { (animator) in
       animator.value(value, forKeyPath : "progress").duration(0.5).easing(.EaseOutCubic)
 }
@@ -71,7 +71,7 @@ Let's look at how to nest some animations using time and value based progress tr
 
 A time based trigger will apply the next animation based on the progressed time of the overall parent animation. Below is an examples that will trigger the second animation at the halfway point in time of the parent animation by calling `triggerAtTimeProgress(...)`
 
-```
+```swift
 view.animate { (animator) in
 	animator.bounds(newBounds).duration(0.5).easing(.EaseOutCubic)
     animator.position(newPositon).duration(0.5).easing(.EaseOutCubic)
@@ -87,7 +87,7 @@ view.animate { (animator) in
 
 A value based progress trigger will apply the next animation based on the value progress of the overall parent animation. Below is an examples that will trigger the second animation at the halfway point of the value progress on the parent animation by calling `animator.triggerAtValueProgress(...)`
 
-```
+```swift
 view.animate { (animator) in
 	animator.bounds(newBounds).duration(0.5).easing(.EaseOutCubic)
     animator.position(newPositon).duration(0.5).easing(.EaseOutCubic)
@@ -106,7 +106,7 @@ FlighAnimator allows for defining animations (aka states) up front using keys, a
 
 The following example shows how to register, and cache it for a key on a specified view. This animation is only cached, and is not performed until it is manually triggered at a later point.
 
-```
+```swift
 struct AnimationKeys {
 	static let CenterStateFrameAnimation  = "CenterStateFrameAnimation"
 }
@@ -129,7 +129,7 @@ view.applyAnimation(forKey: AnimationKeys.CenterStateFrameAnimation)
 
 In the case there is a need to apply the final values without actually animating the view, override the default animated flag to false, and it will apply all the final values to the model layer of the associated view.
 
-```
+```swift
 view.applyAnimation(forKey: AnimationKeys.CenterStateFrameAnimation, animated : false)
 ```
 
@@ -142,7 +142,7 @@ When using a UIPanGestureRecognizer to move a view around on the screen by adjus
 
 Below is an example of how to handle the handoff and use ``.SpringDecay(velocity: velocity)`` easing to perform the animation.
 
-```
+```swift
 func respondToPanRecognizer(recognizer : UIPanGestureRecognizer) {
     switch recognizer.state {
     ........
@@ -176,7 +176,7 @@ First a little background, the framework basically does some magic so synchroniz
 
 Lets look at the following example of setting the timingPriority on a group animation to .MaxTime, which is the default value for FlightAnimator.
 
-```
+```swift
 func animateView(toFrame : CGRect) {
 	
 	let newBounds = CGRectMake(0,0, toFrame.width, toFrame.height)
@@ -214,7 +214,7 @@ If we need only some specific property animations to define the progress accordi
 
 Let's look at an example below of a simple view that is being animated from its current position to a new frame using bounds and position.
 
-```
+```swift
 view.animate(.MaxTime) { (animator) in
       animator.bounds(newBounds).duration(0.5).easing(.EaseOutCubic).primary(true)
       animator.position(newPositon).duration(0.5).easing(.EaseInSine).primary(true)
