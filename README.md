@@ -1,11 +1,28 @@
 #FlightAnimator
 
-[![Cocoapods Compatible](https://img.shields.io/badge/pod-v0.6.1-blue.svg)]()
+[![Cocoapods Compatible](https://img.shields.io/badge/pod-v0.7.0-blue.svg)]()
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)]()
 [![Platform](https://img.shields.io/badge/platform-ios-lightgrey.svg)]()
 [![License](https://img.shields.io/badge/license-MIT-343434.svg)](/LICENSE.md)
 
 ![alt tag](/Documentation/FlightBanner.jpg?raw=true)
+
+
+##Features
+
+- [x] [Support for 46+ parametric curves](/Documentation/parametric_easings.md)
+- [x] Spring and Decay animations 
+- [x] Blocks-based animation builder
+- [x] Muti-Curve group synchronization
+- [x] Progress based animation sequencing
+- [x] Support for triggering cached animations
+- [x] Easing curve synchronization
+
+##Installation
+
+
+* [Release Notes](/Documentation/release_notes.md)
+* [Installation Documentation](/Documentation/installation.md)
 
 ##Introduction
 
@@ -15,25 +32,6 @@ FlightAnimator uses CAKeyframeAnimation(s) and CoreAnimationGroup(s) under the h
 
 Before beginning the tutorial feel free to clone the repository, and checkout the demo app included with the project. In the project one can set different timing curves for bounds, position, alpha, and transform. Feel free to experiment by adjusting the timing curves to explore the resulting effects.
 
-<br>
-
-
-##Features
-
-* [Support for 46+ parametric curves](/Documentation/parametric_easings.md)
-* Spring and Decay animations 
-* Blocks-based animation builder
-* Muti-Curve group synchronization
-* Progress based animation sequencing
-* Support for triggering cached animations
-* Easing curve synchronization
-
-
-##Installation
-
-
-* [Release Notes](/Documentation/release_notes.md)
-* [Installation Documentation](/Documentation/installation.md)
 
 ##Basic Use 
 
@@ -47,8 +45,8 @@ To perform a simple animation  call the `animate(:)` method on the view to anima
 
 ```swift
 view.animate { (animator) in
-      animator.bounds(newBounds).duration(0.5).easing(.EaseOutCubic)
-      animator.position(newPositon).duration(0.5).easing(.EaseInSine)
+      animator.bounds(newBounds).duration(0.5).easing(.OutCubic)
+      animator.position(newPositon).duration(0.5).easing(.InSine)
 }
 ```
 The closure returns an instance of an FAAnimationMaker, which can be used to build a complex animation to perform, one property at a time. Apply different durations, and timing curves for each individual property in the animation. And that's it, the animation kicks itself off, applies the final animation to the layer, and sets all the final layers values on the model layer.
@@ -57,7 +55,7 @@ In the case there is a need to animate a custom defined NSManaged animatable pro
 
 ```swift
 view.animate { (animator) in
-      animator.value(value, forKeyPath : "progress").duration(0.5).easing(.EaseOutCubic)
+      animator.value(value, forKeyPath : "progress").duration(0.5).easing(.OutCubic)
 }
 ```
 
@@ -73,12 +71,12 @@ A time based trigger will apply the next animation based on the progressed time 
 
 ```swift
 view.animate { (animator) in
-	animator.bounds(newBounds).duration(0.5).easing(.EaseOutCubic)
-    animator.position(newPositon).duration(0.5).easing(.EaseOutCubic)
+	animator.bounds(newBounds).duration(0.5).easing(.OutCubic)
+    animator.position(newPositon).duration(0.5).easing(.OutCubic)
     
     animator.triggerAtTimeProgress(atProgress: 0.5, onView: self.secondaryView, animator: { (animator) in
-         animator.bounds(newSecondaryBounds).duration(0.5).easing(.EaseOutCubic)
-         animator.position(newSecondaryCenter).duration(0.5).easing(.EaseOutCubic)
+         animator.bounds(newSecondaryBounds).duration(0.5).easing(.OutCubic)
+         animator.position(newSecondaryCenter).duration(0.5).easing(.OutCubic)
     })
 }
 ```
@@ -93,8 +91,8 @@ view.animate { (animator) in
     animator.position(newPositon).duration(0.5).easing(.EaseOutCubic)
     
     animator.triggerAtValueProgress(atProgress: 0.5, onView: self.secondaryView, animator: { (animator) in
-         animator.bounds(newSecondaryBounds).duration(0.5).easing(.EaseOutCubic)
-         animator.position(newSecondaryCenter).duration(0.5).easing(.EaseOutCubic)
+         animator.bounds(newSecondaryBounds).duration(0.5).easing(.OutCubic)
+         animator.position(newSecondaryCenter).duration(0.5).easing(.OutCubic)
     })
 }
 ```
@@ -113,8 +111,8 @@ struct AnimationKeys {
 ...
 
 registerAnimation(onView : view, forKey : AnimationKeys.CenterStateFrameAnimation) { (animator) in
-      animator.bounds(newBounds).duration(0.5).easing(.EaseOutCubic)
-      animator.position(newPositon).duration(0.5).easing(.EaseOutCubic)
+      animator.bounds(newBounds).duration(0.5).easing(.OutCubic)
+      animator.position(newPositon).duration(0.5).easing(.OutCubic)
 })
 ```
 
@@ -151,7 +149,7 @@ func respondToPanRecognizer(recognizer : UIPanGestureRecognizer) {
     	let currentVelocity = recognizer.velocityInView(view)
         
       	view.animate { (animator) in
-         	animator.bounds(finalBounds).duration(0.5).easing(.EaseOutCubic)
+         	animator.bounds(finalBounds).duration(0.5).easing(.OutCubic)
   			animator.position(finalPositon).duration(0.5).easing(.SpringDecay(velocity: velocity))
       	}
     default:
@@ -183,8 +181,8 @@ func animateView(toFrame : CGRect) {
 	let newPosition = CGPointMake(toFrame.midX, toFrame.midY)
 	
 	view.animate(.MaxTime) { (animator) in
-      	animator.bounds(newBounds).duration(0.5).easing(.EaseOutCubic)
-      	animator.position(newPositon).duration(0.5).easing(.EaseInSine)
+      	animator.bounds(newBounds).duration(0.5).easing(.OutCubic)
+      	animator.position(newPositon).duration(0.5).easing(.InSine)
 	}
 }
 ```
@@ -216,10 +214,10 @@ Let's look at an example below of a simple view that is being animated from its 
 
 ```swift
 view.animate(.MaxTime) { (animator) in
-      animator.bounds(newBounds).duration(0.5).easing(.EaseOutCubic).primary(true)
-      animator.position(newPositon).duration(0.5).easing(.EaseInSine).primary(true)
-      animator.alpha(0.0).duration(0.5).easing(.EaseOutCubic)
-      animator.transform(newTransform).duration(0.5).easing(.EaseInSine)
+      animator.bounds(newBounds).duration(0.5).easing(.OutCubic).primary(true)
+      animator.position(newPositon).duration(0.5).easing(.InSine).primary(true)
+      animator.alpha(0.0).duration(0.5).easing(.OutCubic)
+      animator.transform(newTransform).duration(0.5).easing(.InSine)
 }
 ```
 

@@ -21,7 +21,7 @@ let timingPrioritySegments = ["MaxTime", "MinTime", "Median", "Average"]
 let sequenceTypeSegments = ["Instantly", "Time Progress", "Value Progress"]
 
 var functionTypes : [String] = ["SpringDecay", "SpringCustom",
-                                "Linear", "LinearSmooth", "LinearSmoother",
+                                "Linear", "SmoothStep", "SmootherStep",
                                 "InSine", "OutSine", "InOutSine", "OutInSine",
                                 "InAtan", "OutAtan", "InOutAtan",
                                 "InQuadratic", "OutQuadratic", "InOutQuadratic", "OutInQuadratic",
@@ -35,7 +35,7 @@ var functionTypes : [String] = ["SpringDecay", "SpringCustom",
                                 "InBounce", "OutBounce", "InOutBounce", "OutInBounce"]
 
 var functions : [FAEasing]    = [.SpringDecay(velocity : CGPointZero), .SpringCustom(velocity: CGPointZero, frequency: 21, ratio: 0.99),
-                                 .Linear, .LinearSmooth, .LinearSmoother,
+                                 .Linear, .SmoothStep, .SmootherStep,
                                  .InSine, .OutSine, .InOutSine, .OutInSine,
                                  .InAtan, .OutAtan, .InOutAtan,
                                  .InQuadratic, .OutQuadratic, .InOutQuadratic, .OutInQuadratic,

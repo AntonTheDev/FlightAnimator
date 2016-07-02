@@ -13,8 +13,8 @@ let overshoot : CGFloat = 1.70158
 
 public enum FAEasing : Equatable {
     case Linear
-    case LinearSmooth
-    case LinearSmoother
+    case SmoothStep
+    case SmootherStep
     case InAtan
     case OutAtan
     case InOutAtan
@@ -65,9 +65,9 @@ public enum FAEasing : Equatable {
         switch self {
         case .Linear:
             return p
-        case .LinearSmooth:
+        case .SmoothStep:
             return p * p * (3.0 - 2.0 * p)
-        case .LinearSmoother:
+        case .SmootherStep:
             return  p * p * p * (p * (p * 6.0 - 15.0) + 10.0)
         case .InAtan:
             let m: CGFloat = atan(15.0)
@@ -273,10 +273,10 @@ public func ==(lhs : FAEasing, rhs : FAEasing) -> Bool {
     switch lhs {
     case .Linear:
         switch rhs { case .Linear: return true default: return false }
-    case .LinearSmooth:
-        switch rhs { case .LinearSmooth: return true default: return false }
-    case .LinearSmoother:
-        switch rhs { case .LinearSmoother: return true default: return false }
+    case .SmoothStep:
+        switch rhs { case .SmoothStep: return true default: return false }
+    case .SmootherStep:
+        switch rhs { case .SmootherStep: return true default: return false }
     case .InSine:
         switch rhs { case .InSine: return true default: return false }
     case .OutSine:
