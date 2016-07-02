@@ -43,13 +43,31 @@ extension CALayer {
             animation.weakLayer = self
             animation.animationKey = key
             animation.startTime = self.convertTime(CACurrentMediaTime(), fromLayer: nil)
-            animation.synchronizeAnimationGroup((self.animationForKey(key!) as? FAAnimationGroup))
+
+            if let animationKeys = self.animationKeys() {
+                for key in animationKeys {
+                    if let oldAnimation = self.animationForKey(key) as? FAAnimationGroup {
+                        animation.synchronizeAnimationGroup(oldAnimation)
+                    }
+                }
+            } else {
+                animation.synchronizeAnimationGroup((self.animationForKey(key!) as? FAAnimationGroup))
+            }
         }
         
         if let animation = anim as? FAAnimation {
             animation.weakLayer = self
             animation.startTime = self.convertTime(CACurrentMediaTime(), fromLayer: nil)
-            animation.synchronizeWithAnimation((self.animationForKey(key!) as? FAAnimation))
+        
+            if let animationKeys = self.animationKeys() {
+                for key in animationKeys {
+                    if let oldAnimation = self.animationForKey(key) as? FAAnimation {
+                        animation.synchronizeWithAnimation(oldAnimation)
+                    }
+                }
+            } else {
+                animation.synchronizeWithAnimation((self.animationForKey(key!) as? FAAnimation))
+            }
         }
 
         removeAllAnimations()

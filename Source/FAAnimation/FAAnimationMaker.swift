@@ -51,10 +51,9 @@ public class FAAnimationMaker {
         newSegment.animatedView = view
         
         if let animationGroup = associatedView!.cachedAnimations![animationKey!] {
-            animationGroup.segmentArray[progress] = newSegment
+            animationGroup.segmentDictionary[progress] = newSegment
             associatedView!.attachAnimation(animationGroup, forKey: animationKey!)
         }
-        
         
         let newAnimator = FlightAnimator(withView: view, forKey : animationKey!, priority : timingPriority)
         animator(animator : newAnimator)

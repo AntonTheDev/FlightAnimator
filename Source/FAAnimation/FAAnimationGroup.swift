@@ -10,16 +10,46 @@ import Foundation
 import UIKit
 import QuartzCore
 
-internal class SegmentItem {
+internal class SegmentItem : Copying {
     var timedProgress = true
     var animationKey : String?
     var easingFunction : String?
     weak var animatedView : UIView?
+    
+    required init(original: SegmentItem) {
+        timedProgress = original.timedProgress
+        animationKey = original.animationKey
+        easingFunction = original.easingFunction
+        animatedView = original.animatedView
+    }
+    
+    init() {
+        
+    }
+}
+
+
+protocol Copying {
+    init(original: Self)
+}
+
+extension Copying {
+    func copy() -> Self {
+        return Self.init(original: self)
+    }
 }
 
 final public class FAAnimationGroup : CAAnimationGroup {
+
+    var _segmentDictionary = [CGFloat : SegmentItem]()
+    var segmentDictionary = [CGFloat : SegmentItem]() {
+        didSet {
+            for (key, value) in segmentDictionary {
+                _segmentDictionary[key] = value.copy()
+            }
+        }
+    }
     
-    var segmentArray = [CGFloat : SegmentItem]()
     private var primaryEasingFunction : FAEasing = FAEasing.Linear
     
     var primaryTimingPriority : FAPrimaryTimingPriority = .MaxTime
@@ -39,7 +69,7 @@ final public class FAAnimationGroup : CAAnimationGroup {
             }
         }
     }
-
+    
     // The start time of the animation, set by the current time of
     // the layer when it is added. Used by the springs to find the
     // current velocity in motion
@@ -71,27 +101,31 @@ final public class FAAnimationGroup : CAAnimationGroup {
         animationGroup.weakLayer                = weakLayer
         animationGroup.startTime                = startTime
         animationGroup.animationKey             = animationKey
-        animationGroup.segmentArray             = segmentArray
+        animationGroup.segmentDictionary        = segmentDictionary
         animationGroup.primaryTimingPriority    = primaryTimingPriority
         return animationGroup
     }
     
-    func synchronizeAnimationGroup(oldAnimationGroup : FAAnimationGroup?) {     
+    func synchronizeAnimationGroup(oldAnimationGroup : FAAnimationGroup?) {
         
         dispatch_async(dispatch_get_main_queue()) {
             oldAnimationGroup?.stopUpdateLoop()
         }
         
-        let relativeAnimationGroup = oldAnimationGroup != nil ? oldAnimationGroup : self
+        for (key, value) in _segmentDictionary {
+            segmentDictionary[key] = value.copy()
+        }
+
         var durationArray =  [Double]()
         
-        var oldAnimations = animationDictionaryForGroup(relativeAnimationGroup)
+        var oldAnimations = animationDictionaryForGroup(oldAnimationGroup)
         var newAnimations = animationDictionaryForGroup(self)
         
         for key in newAnimations.keys {
+            
             if  let newAnimation = newAnimations[key] {
-                
                 let oldAnimation : FAAnimation? = oldAnimations[key]
+                
                 newAnimation.synchronizeWithAnimation(oldAnimation)
                 
                 if newAnimation.isAnimationPrimary() && newAnimation.duration > 0 {
@@ -110,7 +144,7 @@ final public class FAAnimationGroup : CAAnimationGroup {
         animations = newAnimations.map {$1}
         adjustGroupDurationWith(primaryDurationsArray: durationArray)
     }
-
+    
     private func adjustGroupDurationWith(primaryDurationsArray durationArray: Array<CFTimeInterval>) {
         switch primaryTimingPriority {
         case .MaxTime:
@@ -192,59 +226,49 @@ final public class FAAnimationGroup : CAAnimationGroup {
 extension FAAnimationGroup {
     
     func updateLoop() {
-        if segmentArray.keys.count <= 0 {
+        if segmentDictionary.keys.count <= 0 {
             stopUpdateLoop()
             return
         }
         
-        if let presentationLayer = weakLayer?.presentationLayer(),
-           let animationStartTime = startTime {
-            
-            let currentTime = presentationLayer.convertTime(CACurrentMediaTime(), toLayer: nil)
-            let difference = CGFloat(currentTime - animationStartTime)
-       
-            let totalTimeProgress = CGFloat(round(100 * (difference / CGFloat(duration)))/100)
-            var progress = totalTimeProgress //primaryEasingFunction.parametricProgress(CGFloat(totalTimeProgress))
-
-            if let firstProgressKey = self.segmentArray.keys.first,
-               let firstSegment = segmentArray[firstProgressKey] {
-                
-                if firstSegment.timedProgress {
-                    if CGFloat(totalTimeProgress) > firstProgressKey {
-                        let segment = segmentArray[firstProgressKey]
-                        segment!.animatedView!.applyAnimation(forKey: segment!.animationKey!)
-                        segmentArray.removeValueForKey(firstProgressKey)
+        for (key, _) in _segmentDictionary {
+            if let segment = segmentDictionary[key] {
+                if segment.timedProgress {
+                    if timeProgressed() > key {
+                        segment.animatedView!.applyAnimation(forKey: segment.animationKey!)
+                        segmentDictionary.removeValueForKey(key)
                     }
                 } else {
-                    
                     switch self.primaryEasingFunction {
                     case .SpringDecay:
                         break
                     case .SpringCustom(_, _, _):
                         break
                     default:
-                        progress = primaryEasingFunction.parametricProgress(CGFloat(totalTimeProgress))
-                    }
-                    
-                   ///  print("AnimationProgress duration", duration, "\nDifference", difference, "\ntotalTimeProgress", totalTimeProgress, "\nprogress", progress, "\n\n")
-                   
-                    if CGFloat(progress) > firstProgressKey {
-                        let segment = segmentArray[firstProgressKey]
-                        segment!.animatedView!.applyAnimation(forKey: segment!.animationKey!)
-                        segmentArray.removeValueForKey(firstProgressKey)
+                        let progress = primaryEasingFunction.parametricProgress(timeProgressed())
+                        if progress > key {
+                            segment.animatedView!.applyAnimation(forKey: segment.animationKey!)
+                            segmentDictionary.removeValueForKey(key)
+                        }
                     }
                 }
             }
-            
-            if segmentArray.keys.count <= 0 {
-                stopUpdateLoop()
-                return
-            }
+        }
+        
+        if segmentDictionary.keys.count <= 0 {
+            stopUpdateLoop()
+            return
         }
     }
     
+    func timeProgressed() -> CGFloat {
+        let currentTime = weakLayer?.presentationLayer()!.convertTime(CACurrentMediaTime(), toLayer: nil)
+        let difference = CGFloat(currentTime! - startTime!)
+        return CGFloat(round(100 * (difference / CGFloat(duration)))/100)
+    }
+    
     func startUpdateLoop() {
-        if self.segmentArray.keys.count == 0 {
+        if segmentDictionary.keys.count == 0 {
             return
         }
         

@@ -95,11 +95,11 @@ extension ViewController {
     }
     
     func tappedShowConfig() {
-        view.applyAnimationTree(forKey: AnimationKeys.ShowConfigAnimation)
+        configView.applyAnimation(forKey: AnimationKeys.ShowConfigAnimation)
     }
     
     func tappedCloseConfig() {
-        view.applyAnimationTree(forKey: AnimationKeys.HideConfigAnimation)
+        configView.applyAnimation(forKey: AnimationKeys.HideConfigAnimation)
     }
     
     func animateView(toFrame : CGRect,
@@ -154,23 +154,22 @@ extension ViewController {
         let currentAlpha = self.dragView.alpha
         let currentTransform = self.dragView.layer.transform
         
-        var easingFuntion :FAEasing = .SpringDecay(velocity: velocity)
+        var easingFunction :FAEasing = .SpringDecay(velocity: velocity)
         
         switch animConfig.positionFunction {
         case let .SpringCustom(_, frequency, ratio):
-            easingFuntion = .SpringCustom(velocity: velocity, frequency: frequency, ratio: ratio)
+            easingFunction = .SpringCustom(velocity: velocity, frequency: frequency, ratio: ratio)
         default:
             break
         }
         
         registerAnimation(onView : dragView, forKey : AnimationKeys.PanGestureKey, timingPriority: self.animConfig.primaryTimingPriority) { (animator) in
-            animator.bounds(finalBounds).duration(1.0).easing(.Linear).primary(self.animConfig.sizePrimary)
-            animator.position(finalCenter).duration(0.0).easing(easingFuntion).primary(true)
+            animator.bounds(finalBounds).duration(0.6).easing(.Linear).primary(false)
+            animator.position(finalCenter).duration(0.0).easing(easingFunction).primary(true)
 
             
             if self.animConfig.enableSecondaryView {
-                
-            
+
             animator.triggerAtTimeProgress(atProgress: 0.5, onView: self.dragView2, animator: { (animator) in
                 animator.bounds(currentBounds).duration(0.5).easing(self.animConfig.sizeFunction).primary(self.animConfig.sizePrimary)
                 animator.position(currentPosition).duration(0.5).easing(self.animConfig.positionFunction).primary(self.animConfig.positionPrimary)

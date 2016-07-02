@@ -177,7 +177,7 @@ class ConfigurationView : UIView {
                                              verticalOffset : 32)
         
         var adjustedPosition = enableSecondaryViewLabel.center
-        adjustedPosition.y =  adjustedPosition.y + 16
+        adjustedPosition.y =  adjustedPosition.y + 14
         
         enableSecondaryViewLabel.center = adjustedPosition
     }

@@ -12,9 +12,11 @@ import UIKit
 struct FAAnimationConfig {
     static let InterpolationFrameCount  : CGFloat = 60.0
     
-    static let SpringDecayFrequency     : CGFloat = 18.0
-    static let SpringDecayDamping       : CGFloat = 1.12
+    static let SpringDecayFrequency     : CGFloat = 14.0
+    static let SpringDecayDamping       : CGFloat = 0.97
     static let SpringCustomBounceCount  : Int = 12
+    
+    static let SpringDecayMagnitudeThreshold  : CGFloat = 1.2
 }
 
 public struct FAInterpolator<T : FAAnimatable> {
@@ -78,12 +80,13 @@ public struct FAInterpolator<T : FAAnimatable> {
         
         var newArray = [AnyObject]()
         var animationTime : CGFloat = 0.0
+        let frameRateTimeUnit = 1.0 / FAAnimationConfig.InterpolationFrameCount
         
         let newValue = fromValue.interpolatedValue(toValue, progress: 0.0)
         newArray.append(newValue)
         
         repeat {
-            animationTime += 1.0 / FAAnimationConfig.InterpolationFrameCount
+            animationTime += frameRateTimeUnit
             let progress = easingFunction.parametricProgress(CGFloat(animationTime / duration))
             let newValue = fromValue.interpolatedValue(toValue, progress: progress)
             newArray.append(newValue)
@@ -100,6 +103,7 @@ public struct FAInterpolator<T : FAAnimatable> {
         
         var valueArray: Array<AnyObject> = Array<AnyObject>()
         var animationTime : CGFloat = 0.0
+        let frameRateTimeUnit = 1.0 / FAAnimationConfig.InterpolationFrameCount
         
         var animationComplete = false
         
@@ -108,10 +112,10 @@ public struct FAInterpolator<T : FAAnimatable> {
             repeat {
                 let newValue = toValue.interpolatedSpringValue(toValue, springs : springs, deltaTime: animationTime)
                 let currentAnimatableValue  = newValue.typeValue() as! T
-                animationComplete = toValue.magnitudeToValue(currentAnimatableValue)  < 1.2
+                animationComplete = toValue.magnitudeToValue(currentAnimatableValue)  < FAAnimationConfig.SpringDecayMagnitudeThreshold
                 
                 valueArray.append(newValue)
-                animationTime += 1.0 / FAAnimationConfig.InterpolationFrameCount
+                animationTime += frameRateTimeUnit
             } while (animationComplete == false)
             
         default:
@@ -126,14 +130,14 @@ public struct FAInterpolator<T : FAAnimatable> {
                 }
                 
                 valueArray.append(newValue)
-                animationTime += 1.0 / FAAnimationConfig.InterpolationFrameCount
+                animationTime += frameRateTimeUnit
             } while (bouncCount < FAAnimationConfig.SpringCustomBounceCount)
             
             break
         }
         
         valueArray.append(toValue.valueRepresentation())
-        animationTime += 2.0 / FAAnimationConfig.InterpolationFrameCount
+        animationTime += frameRateTimeUnit
         
         return (Double(animationTime),  values : valueArray, springs)
     }
