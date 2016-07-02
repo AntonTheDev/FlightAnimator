@@ -54,21 +54,6 @@ extension CALayer {
                 animation.synchronizeAnimationGroup((self.animationForKey(key!) as? FAAnimationGroup))
             }
         }
-        
-        if let animation = anim as? FAAnimation {
-            animation.weakLayer = self
-            animation.startTime = self.convertTime(CACurrentMediaTime(), fromLayer: nil)
-        
-            if let animationKeys = self.animationKeys() {
-                for key in animationKeys {
-                    if let oldAnimation = self.animationForKey(key) as? FAAnimation {
-                        animation.synchronizeWithAnimation(oldAnimation)
-                    }
-                }
-            } else {
-                animation.synchronizeWithAnimation((self.animationForKey(key!) as? FAAnimation))
-            }
-        }
 
         removeAllAnimations()
         FA_addAnimation(anim, forKey: key)
