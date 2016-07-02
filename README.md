@@ -20,7 +20,7 @@ Before beginning the tutorial feel free to clone the repository, and checkout th
 
 ##Features
 
-* [Support for 43+ parametric curves](/Documentation/parametric_easings.md)
+* [Support for 46+ parametric curves](/Documentation/parametric_easings.md)
 * Spring and Decay animations 
 * Blocks-based animation builder
 * Muti-Curve group synchronization

@@ -63,10 +63,12 @@ These are the supported parametric curves that you can apply to the property ani
       		OutBounce<br>
       		OutInBounce</td>
       <td>
+          	InAtan<br>
+    		InOutAtan<br>OutAtan<br>*</td>
+      <td>	
       		Linear<br>
-      		LinearSmooth<br>
-      		LinearSmoother</td>
-      <td></td>
+      		SmoothStep<br>
+      		SmootherStep<br>*</td>
     </tr> 
   </tbody>
 </table>
