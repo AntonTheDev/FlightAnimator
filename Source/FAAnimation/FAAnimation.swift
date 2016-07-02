@@ -71,7 +71,7 @@ final public class FAAnimation : CAKeyframeAnimation {
         
         calculationMode = kCAAnimationLinear
         fillMode = kCAFillModeForwards
-        removedOnCompletion = false
+        removedOnCompletion = true
     }
     
     required public init?(coder aDecoder: NSCoder) {

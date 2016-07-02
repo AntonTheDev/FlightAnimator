@@ -40,7 +40,7 @@ extension Copying {
 }
 
 final public class FAAnimationGroup : CAAnimationGroup {
-
+    
     var _segmentDictionary = [CGFloat : SegmentItem]()
     
     var segmentDictionary = [CGFloat : SegmentItem]() {
@@ -113,7 +113,7 @@ final public class FAAnimationGroup : CAAnimationGroup {
     }
     
     func applyFinalState(animated : Bool = false) {
-        stopUpdateLoop()
+        stopTriggerTimer()
         
         if let animationLayer = weakLayer {
             if animated {
@@ -127,13 +127,21 @@ final public class FAAnimationGroup : CAAnimationGroup {
                 for animation in subAnimations {
                     if let subAnimation = animation as? FAAnimation,
                         let toValue = subAnimation.toValue {
-                        animationLayer.setValue(toValue, forKeyPath: subAnimation.keyPath!)
+                        
+                        //TODO: Figure out why the opacity is not reflected on the UIView
+                        //All properties work correctly, but to ensure that the opacity is reflected
+                        //I am setting the alpha on the UIView itsel ?? WTF
+                        if subAnimation.keyPath! == "opacity" {
+                            animationLayer.owningView()!.setValue(toValue, forKeyPath: "alpha")
+                        } else {
+                            animationLayer.modelLayer().setValue(toValue, forKeyPath: subAnimation.keyPath!)
+                        }
                     }
                 }
             }
         }
         
-        startUpdateLoop()
+        startTriggerTimer()
     }
 }
 
@@ -141,38 +149,41 @@ final public class FAAnimationGroup : CAAnimationGroup {
 //MARK: Synchronization Logic
 
 extension FAAnimationGroup {
-   
+    
     func synchronizeAnimationGroup(oldAnimationGroup : FAAnimationGroup?) {
         
-        dispatch_async(dispatch_get_main_queue()) {
-            oldAnimationGroup?.stopUpdateLoop()
-        }
-        
-        for (key, value) in _segmentDictionary {
-            segmentDictionary[key] = value.copy()
-        }
+        preconfigureTimer(oldAnimationGroup)
         
         var durationArray =  [Double]()
         
         var oldAnimations = animationDictionaryForGroup(oldAnimationGroup)
         var newAnimations = animationDictionaryForGroup(self)
         
-        for key in newAnimations.keys {
-            
-            if  let newAnimation = newAnimations[key] {
-                let oldAnimation : FAAnimation? = oldAnimations[key]
-                
-                newAnimation.synchronizeWithAnimation(oldAnimation)
-                
-                if newAnimation.isAnimationPrimary() && newAnimation.duration > 0 {
-                    durationArray.append(newAnimation.duration)
-                    primaryEasingFunction = newAnimation.easingFunction
-                }
-                
-                newAnimations[key] = newAnimation
-            }
+        // Find all Primary Animations
+        let filteredAnimation = newAnimations.filter({ $0.1.isAnimationPrimary() == true })
+        var primaryAnimations = [String : FAAnimation]()
+        
+        for result in filteredAnimation {
+            primaryAnimations[result.0] = result.1
+        }
+
+        //If not animation is primary, all animations become primary
+        if primaryAnimations.count == 0 {
+            primaryAnimations = newAnimations
         }
         
+        for key in newAnimations.keys {
+            
+            if  let newPrimaryAnimation = primaryAnimations[key] {
+                let oldAnimation : FAAnimation? = oldAnimations[key]
+                
+                newPrimaryAnimation.synchronizeWithAnimation(oldAnimation)
+               
+                durationArray.append(newPrimaryAnimation.duration)
+                newAnimations[key] = newPrimaryAnimation
+            }
+        }
+
         if durationArray.count == 0 {
             durationArray = newAnimations.map { $1.duration }.filter { $0 > 0 }
         }
@@ -180,7 +191,6 @@ extension FAAnimationGroup {
         animations = newAnimations.map {$1}
         adjustGroupDurationWith(primaryDurationsArray: durationArray)
     }
-    
     
     private func adjustGroupDurationWith(primaryDurationsArray durationArray: Array<CFTimeInterval>) {
         switch primaryTimingPriority {
@@ -192,6 +202,12 @@ extension FAAnimationGroup {
             duration = durationArray.sort(<)[durationArray.count / 2]
         case .Average:
             duration = durationArray.reduce(0, combine: +) / Double(durationArray.count)
+        }
+        
+        let filteredAnimation = animations!.filter({ $0.duration == duration })
+        
+        if let primaryDrivingAnimation = filteredAnimation.first as? FAAnimation {
+            primaryEasingFunction = primaryDrivingAnimation.easingFunction
         }
         
         guard animations != nil else {
@@ -213,7 +229,7 @@ extension FAAnimationGroup {
             }
         }
     }
-
+    
     private func animationDictionaryForGroup(animationGroup : FAAnimationGroup?) -> [String : FAAnimation] {
         var animationDictionary = [String: FAAnimation]()
         
@@ -233,12 +249,18 @@ extension FAAnimationGroup {
 
 extension FAAnimationGroup {
     
-    func updateLoop() {
-        if segmentDictionary.keys.count <= 0 {
-            stopUpdateLoop()
-            return
+    
+    private func preconfigureTimer(oldAnimationGroup : FAAnimationGroup?) {
+        dispatch_async(dispatch_get_main_queue()) {
+            oldAnimationGroup?.stopTriggerTimer()
         }
         
+        for (key, value) in _segmentDictionary {
+            segmentDictionary[key] = value.copy()
+        }
+    }
+    
+    func updateLoop() {
         for (key, _) in _segmentDictionary {
             if let segment = segmentDictionary[key] {
                 if segment.timedProgress {
@@ -264,18 +286,12 @@ extension FAAnimationGroup {
         }
         
         if segmentDictionary.keys.count <= 0 {
-            stopUpdateLoop()
+            stopTriggerTimer()
             return
         }
     }
     
-    func timeProgressed() -> CGFloat {
-        let currentTime = weakLayer?.presentationLayer()!.convertTime(CACurrentMediaTime(), toLayer: nil)
-        let difference = CGFloat(currentTime! - startTime!)
-        return CGFloat(round(100 * (difference / CGFloat(duration)))/100)
-    }
-    
-    func startUpdateLoop() {
+    func startTriggerTimer() {
         if segmentDictionary.keys.count == 0 {
             return
         }
@@ -288,10 +304,16 @@ extension FAAnimationGroup {
         }
     }
     
-    func stopUpdateLoop() {
+    private func stopTriggerTimer() {
         displayLink?.paused = true
         displayLink?.removeFromRunLoop(NSRunLoop.mainRunLoop(), forMode: NSDefaultRunLoopMode)
         displayLink = nil
+    }
+    
+    private func timeProgressed() -> CGFloat {
+        let currentTime = weakLayer?.presentationLayer()!.convertTime(CACurrentMediaTime(), toLayer: nil)
+        let difference = CGFloat(currentTime! - startTime!)
+        return CGFloat(round(100 * (difference / CGFloat(duration)))/100)
     }
 }
 

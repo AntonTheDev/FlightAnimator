@@ -20,7 +20,6 @@ enum PropertyConfigType : Int {
 let timingPrioritySegments = ["MaxTime", "MinTime", "Median", "Average"]
 let sequenceTypeSegments = ["Instantly", "Time Progress", "Value Progress"]
 
-
 var functionTypes : [String] = ["SpringDecay", "SpringCustom",
                                 "Linear", "LinearSmooth", "LinearSmoother",
                                 "InSine", "OutSine", "InOutSine", "OutInSine",
@@ -304,8 +303,7 @@ class ConfigurationView : UIView {
         var slider = UISlider(frame:CGRectMake(20, 260, 280, 20))
         slider.minimumValue = 0
         slider.maximumValue = 100
-        slider.continuous = true
-        slider.tintColor = UIColor(rgba: "#444444")
+        slider.tintColor = UIColor.greenColor()
         slider.value = 0
         slider.alpha = 0.0
         slider.addTarget(self, action: #selector(ConfigurationView.progress_value_changed(_:)), forControlEvents: .ValueChanged)
@@ -321,10 +319,6 @@ class ConfigurationView : UIView {
     
         if segmentedControl.selectedSegmentIndex == 0 {
            
-            progressTriggerSlider.animate { (animator) in
-                animator.alpha(0.0).duration(0.5).easing(.OutSine)
-            }
-            
             var adjustedPosition = enableSecondaryViewLabel.center
             adjustedPosition.y =  adjustedPosition.y + 16
         
@@ -332,11 +326,11 @@ class ConfigurationView : UIView {
                 animator.alpha(0.0).duration(0.5).easing(.OutSine)
                 
                 animator.triggerAtTimeProgress(atProgress: 0.7, onView: self.enableSecondaryViewLabel, animator: { (animator) in
-                    animator.position(adjustedPosition).duration(0.5).easing(.OutSine)
+                    animator.position(adjustedPosition).duration(0.5).easing(.InSine)
                 })
                 
-                animator.triggerAtTimeProgress(atProgress: 0.0, onView: self.progressTriggerSlider, animator: { (animator) in
-                    animator.alpha(0.0).duration(0.5).easing(.OutSine)
+                animator.triggerAtTimeProgress(atProgress: 0.1, onView: self.progressTriggerSlider, animator: { (animator) in
+                    animator.alpha(0.0).duration(0.5).easing(.InSine)
                 })
             }
 
@@ -367,7 +361,7 @@ class ConfigurationView : UIView {
         }
         
         delaySegnmentedControl.userInteractionEnabled = sender.on
-        self.interactionDelegate?.toggleSecondaryView(sender.on)
+        interactionDelegate?.toggleSecondaryView(sender.on)
     }
 }
 

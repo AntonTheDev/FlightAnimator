@@ -77,9 +77,9 @@ extension UIView {
                                   forKey key: String) {
         
         if cachedAnimations != nil {
-            if let animation = cachedAnimations![key] {
-                animation.stopUpdateLoop()
-            }
+          //  if let animation = cachedAnimations![key] {
+          //      animation.stopUpdateLoop()
+          //  }
         }
         
         self.appendAnimation(animation, forKey : key)

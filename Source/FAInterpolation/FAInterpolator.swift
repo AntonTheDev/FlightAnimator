@@ -32,7 +32,6 @@ public struct FAInterpolator<T : FAAnimatable> {
         
         switch easingFunction {
         case let .SpringDecay(velocity):
-            
             let newSprings = fromValue.interpolationSprings(toValue,
                                                      initialVelocity: velocity,
                                                      angularFrequency: FAAnimationConfig.SpringDecayFrequency,
@@ -41,7 +40,6 @@ public struct FAInterpolator<T : FAAnimatable> {
             return interpolatedSpringValues(newSprings)
             
         case let .SpringCustom(velocity, frequency, damping):
-            
             let newSprings = fromValue.interpolationSprings(toValue,
                                                      initialVelocity: velocity,
                                                      angularFrequency: frequency,
@@ -73,7 +71,7 @@ public struct FAInterpolator<T : FAAnimatable> {
             }
         }
         
-        return  CGFloat(duration) * progress
+        return CGFloat(duration) * progress
     }
 
     private func interpolatedParametricValues(adjustedDuration : CGFloat, easingFunction : FAEasing) -> [AnyObject] {

@@ -21,7 +21,7 @@
          </FileRef>
          <Group
             location = "group:Extensions"
-            name = "Core Extensions">
+            name = "Extensions">
             <FileRef
                location = "group:CALayer+FAAnimation.swift">
             </FileRef>
