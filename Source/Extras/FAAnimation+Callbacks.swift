@@ -29,10 +29,6 @@ class FAAnimationDelegate : NSObject {
             stopCallback(complete: flag)
           
         }
-        
-        if let animation = anim as? FAAnimationGroup {
-            //animation.weakLayer?.removeAnimationForKey(animation.animationKey!)
-        }
     }
     
     func setDidStopCallback(stopCallback : FAAnimationDidStop) {

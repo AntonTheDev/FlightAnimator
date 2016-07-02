@@ -51,7 +51,10 @@ public class FAAnimationMaker {
         newSegment.animatedView = view
         
         if let animationGroup = associatedView!.cachedAnimations![animationKey!] {
-            animationGroup.segmentDictionary[progress] = newSegment
+            var segmentDictionary =  animationGroup.segmentDictionary
+            segmentDictionary[progress] = newSegment
+            animationGroup.segmentDictionary = segmentDictionary
+            
             associatedView!.attachAnimation(animationGroup, forKey: animationKey!)
         }
         

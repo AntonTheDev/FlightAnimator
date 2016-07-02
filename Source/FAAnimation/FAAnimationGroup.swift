@@ -42,6 +42,7 @@ extension Copying {
 final public class FAAnimationGroup : CAAnimationGroup {
 
     var _segmentDictionary = [CGFloat : SegmentItem]()
+    
     var segmentDictionary = [CGFloat : SegmentItem]() {
         didSet {
             for (key, value) in segmentDictionary {
@@ -106,6 +107,41 @@ final public class FAAnimationGroup : CAAnimationGroup {
         return animationGroup
     }
     
+    func scrubToProgress(progress : CGFloat) {
+        weakLayer?.speed = 0.0
+        weakLayer?.timeOffset = CFTimeInterval(duration * Double(progress))
+    }
+    
+    func applyFinalState(animated : Bool = false) {
+        stopUpdateLoop()
+        
+        if let animationLayer = weakLayer {
+            if animated {
+                animationLayer.speed = 1.0
+                animationLayer.timeOffset = 0.0
+                startTime = animationLayer.convertTime(CACurrentMediaTime(), fromLayer: nil)
+                animationLayer.addAnimation(self, forKey: self.animationKey)
+            }
+            
+            if let subAnimations = animations {
+                for animation in subAnimations {
+                    if let subAnimation = animation as? FAAnimation,
+                        let toValue = subAnimation.toValue {
+                        animationLayer.setValue(toValue, forKeyPath: subAnimation.keyPath!)
+                    }
+                }
+            }
+        }
+        
+        startUpdateLoop()
+    }
+}
+
+
+//MARK: Synchronization Logic
+
+extension FAAnimationGroup {
+   
     func synchronizeAnimationGroup(oldAnimationGroup : FAAnimationGroup?) {
         
         dispatch_async(dispatch_get_main_queue()) {
@@ -115,7 +151,7 @@ final public class FAAnimationGroup : CAAnimationGroup {
         for (key, value) in _segmentDictionary {
             segmentDictionary[key] = value.copy()
         }
-
+        
         var durationArray =  [Double]()
         
         var oldAnimations = animationDictionaryForGroup(oldAnimationGroup)
@@ -144,6 +180,7 @@ final public class FAAnimationGroup : CAAnimationGroup {
         animations = newAnimations.map {$1}
         adjustGroupDurationWith(primaryDurationsArray: durationArray)
     }
+    
     
     private func adjustGroupDurationWith(primaryDurationsArray durationArray: Array<CFTimeInterval>) {
         switch primaryTimingPriority {
@@ -176,35 +213,7 @@ final public class FAAnimationGroup : CAAnimationGroup {
             }
         }
     }
-    
-    func scrubToProgress(progress : CGFloat) {
-        weakLayer?.speed = 0.0
-        weakLayer?.timeOffset = CFTimeInterval(duration * Double(progress))
-    }
-    
-    func applyFinalState(animated : Bool = false) {
-        stopUpdateLoop()
-        
-        if let animationLayer = weakLayer {
-            if animated {
-                animationLayer.speed = 1.0
-                animationLayer.timeOffset = 0.0
-                startTime = animationLayer.convertTime(CACurrentMediaTime(), fromLayer: nil)
-                animationLayer.addAnimation(self, forKey: self.animationKey)
-            }
-            
-            if let subAnimations = animations {
-                for animation in subAnimations {
-                    if let subAnimation = animation as? FAAnimation,
-                        let toValue = subAnimation.toValue {
-                        animationLayer.setValue(toValue, forKeyPath: subAnimation.keyPath!)
-                    }
-                }
-            }
-        }
-        startUpdateLoop()
-    }
-    
+
     private func animationDictionaryForGroup(animationGroup : FAAnimationGroup?) -> [String : FAAnimation] {
         var animationDictionary = [String: FAAnimation]()
         
@@ -221,7 +230,6 @@ final public class FAAnimationGroup : CAAnimationGroup {
         return animationDictionary
     }
 }
-
 
 extension FAAnimationGroup {
     
