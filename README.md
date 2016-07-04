@@ -41,16 +41,16 @@ FlightAnimator uses CAKeyframeAnimation(s) and CoreAnimationGroup(s) under the h
 
 #####Demo App
 
-The project includes a highly configurable demo app that allows for experimentation to explore the resulting effects of unlimited configurations. Feel free to experiment by adjusting the timing curves, triggers, and timing priorities to explore the resulting effects.
+The project includes a highly configurable demo app that allows for experimentation to explore resulting effects of the unlimited configurations FlightAnimator supports.
 
 Demo Features Included:
 
-* Animate a view to different locations on the screen
-* Drag and release view to apply Decay to the final destination
-* Adjusting the timing curves for bounds, position, alpha, and transform.
+* Animate a view to different location on the screen
+* Drag and release view to apply Decay easing to the final destination
+* Adjust timing curves for bounds, position, alpha, and transform.
 * Enable a secondary view, which follows the main view to it's last location
-* Adjust the progress for time based/value based triggers on the secondary view
-* Adjust group timing priority
+* Adjust group timing priority to test synchronization
+* Adjust progress for time based/value based triggers on the secondary view
  
  
 ##Basic Use 
