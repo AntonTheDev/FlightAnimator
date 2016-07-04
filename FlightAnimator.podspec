@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "FlightAnimator"
-  s.version      = "0.7.1"
+  s.version      = "0.7.2"
   s.summary      = "Natural Animation Engine on Top of Core Animation"
   s.homepage     = "https://github.com/AntonTheDev/FlightAnimator/"
   s.license      = 'MIT'
