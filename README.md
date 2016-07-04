@@ -61,11 +61,33 @@ view.animate { (animator) in
 
 ##Sequence
 
-Chaining animations together in FlightAnimator is very easy, and allows for triggering another animation based on the time progress, or the value progress of an animation. Nest a trigger on a parent animation at a specified progress, and trigger which will perform the animation enclosed in the created block accordingly. These can be applied to the view being animated, or any other view defined in the heirarchy.
+Chaining animations together in FlightAnimator is very easy. You can nest animations using three different types triggers:
 
-Let's look at how to nest some animations using time and value based progress triggers.
+* Simultaneously
+* Time progress based
+* Value progress of the animation
+ 
+
+Let's look at how to nest some animations using triggers.
+
+####Trigger On Start
+
+If you want to chain animations together without value progress, or time progress, there is a specific method that will trigger an animation as the parent animation begins to animation. Below is an examples that will trigger the second animation as the the parent begins animating by calling `animator.triggerOnStart(...)`
+
+```swift
+view.animate { (animator) in
+	animator.bounds(newBounds).duration(0.5).easing(.EaseOutCubic)
+    animator.position(newPositon).duration(0.5).easing(.EaseOutCubic)
+    
+    animatortriggerOnStart(onView: self.secondaryView, animator: { (animator) in
+         animator.bounds(newSecondaryBounds).duration(0.5).easing(.OutCubic)
+         animator.position(newSecondaryCenter).duration(0.5).easing(.OutCubic)
+    })
+```
 
 ####Time Progress Trigger
+
+When nest a trigger on a parent animation at a specified progress, and trigger which will perform the animation enclosed in the created block accordingly. These can be applied to the view being animated, or any other view defined in the heirarchy.
 
 A time based trigger will apply the next animation based on the progressed time of the overall parent animation. Below is an examples that will trigger the second animation at the halfway point in time of the parent animation by calling `triggerAtTimeProgress(...)`
 
