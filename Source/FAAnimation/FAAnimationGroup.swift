@@ -279,7 +279,6 @@ extension FAAnimationGroup {
                     }
                     break
                 case .SpringCustom(_, _, _):
-                    print(primaryAnimation?.springValueProgress())
                     if primaryAnimation?.springValueProgress() >= segment.triggerProgessValue {
                         segment.animatedView!.applyAnimation(forKey: segment.animationKey!)
                         segmentArray.removeObject(segment)

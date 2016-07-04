@@ -96,6 +96,24 @@ view.animate { (animator) in
     })
 }
 ```
+
+####Trigger On Start
+
+If you want to chain animations together without value progress, or time progress, there is a specific method that will trigger an animation as the parent animation begins to animation. Below is an examples that will trigger the second animation as the the parent begins animating by calling `animator.triggerOnStart(...)`
+
+```swift
+view.animate { (animator) in
+	animator.bounds(newBounds).duration(0.5).easing(.EaseOutCubic)
+    animator.position(newPositon).duration(0.5).easing(.EaseOutCubic)
+    
+    animatortriggerOnStart(onView: self.secondaryView, animator: { (animator) in
+         animator.bounds(newSecondaryBounds).duration(0.5).easing(.OutCubic)
+         animator.position(newSecondaryCenter).duration(0.5).easing(.OutCubic)
+    })
+
+
+```
+
 ##Cache & Reuse Animations
 
 FlighAnimator allows for defining animations (aka states) up front using keys, and triggers them at any time in the application flow. When the animation is applied, if the view is in mid flight, it will synchronize itself accordingly, and animate to its final destination. To register an animation, call a globally defined method, and create an animations just as defined earlier examples within the maker block.
@@ -133,30 +151,6 @@ view.applyAnimation(forKey: AnimationKeys.CenterStateFrameAnimation, animated : 
 
 
 ##Advanced Use
-
-###.SpringDecay w/ Initial Velocity
-
-When using a UIPanGestureRecognizer to move a view around on the screen by adjusting its position, and say there is a need to smoothly animate the view to the final destination right as the user lets go of the gesture. This is where the .SpringDecay easing comes into play. The .SpringDecay easing will slow the view down easily into place, all that need to be configured is the initial velocity, and it will calculate its own time relative to the velocity en route to its destination.
-
-Below is an example of how to handle the handoff and use ``.SpringDecay(velocity: velocity)`` easing to perform the animation.
-
-```swift
-func respondToPanRecognizer(recognizer : UIPanGestureRecognizer) {
-    switch recognizer.state {
-    ........
-    
-    case .Ended:
-    	let currentVelocity = recognizer.velocityInView(view)
-        
-      	view.animate { (animator) in
-         	animator.bounds(finalBounds).duration(0.5).easing(.OutCubic)
-  			animator.position(finalPositon).duration(0.5).easing(.SpringDecay(velocity: velocity))
-      	}
-    default:
-        break
-    }
-}
-```
 
 ###Timing Adjustments
 
@@ -222,6 +216,32 @@ view.animate(.MaxTime) { (animator) in
 ```
 
 Simple as that, now when the view is redirected during an animation in mid flight, only the bounds and position animations will be considered as part of the timing synchronization.
+
+
+###.SpringDecay w/ Initial Velocity
+
+When using a UIPanGestureRecognizer to move a view around on the screen by adjusting its position, and say there is a need to smoothly animate the view to the final destination right as the user lets go of the gesture. This is where the .SpringDecay easing comes into play. The .SpringDecay easing will slow the view down easily into place, all that need to be configured is the initial velocity, and it will calculate its own time relative to the velocity en route to its destination.
+
+Below is an example of how to handle the handoff and use ``.SpringDecay(velocity: velocity)`` easing to perform the animation.
+
+```swift
+func respondToPanRecognizer(recognizer : UIPanGestureRecognizer) {
+    switch recognizer.state {
+    ........
+    
+    case .Ended:
+    	let currentVelocity = recognizer.velocityInView(view)
+        
+      	view.animate { (animator) in
+         	animator.bounds(finalBounds).duration(0.5).easing(.OutCubic)
+  			animator.position(finalPositon).duration(0.5).easing(.SpringDecay(velocity: velocity))
+      	}
+    default:
+        break
+    }
+}
+```
+
 
 
 ##Reference 
