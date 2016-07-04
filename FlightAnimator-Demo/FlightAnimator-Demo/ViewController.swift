@@ -208,7 +208,8 @@ class ViewController: UIViewController {
     
     lazy var dragView2: UIView = {
         var view = UIView(frame : CGRectZero)
-        view.alpha = 1.0
+        view.alpha = 0.0
+        view.hidden =  true
         view.backgroundColor = UIColor(rgba: "#006258")
         return view
     }()
@@ -424,8 +425,15 @@ extension ViewController {
     
 }
 
-
 extension ViewController : ConfigurationViewDelegate, CurveCollectionViewCellDelegate {
+    
+    func didUpdateTriggerType(type : Int) {
+        animConfig.triggerType = type
+    }
+    
+    func didUpdateTriggerProgressPriority(progress : CGFloat) {
+        animConfig.triggerProgress = progress
+    }
     
     func selectedTimingPriority(priority : FAPrimaryTimingPriority) {
         animConfig.primaryTimingPriority = priority

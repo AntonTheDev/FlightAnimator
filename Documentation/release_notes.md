@@ -1,5 +1,13 @@
 #Release Notes
 
+####Version 0.7.
+
+* Refactored some of the code:
+	* Created an FAInterpolator for all the interpolation logic
+* Accidentally removed OutIn easings in version 0.6.0, fixed 
+
+
+
 ####Version 0.6.1
 
 * Refactored some of the code:

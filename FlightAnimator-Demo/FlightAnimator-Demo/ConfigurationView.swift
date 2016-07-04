@@ -50,6 +50,9 @@ var functions : [FAEasing]    = [.SpringDecay(velocity : CGPointZero), .SpringCu
 
 protocol ConfigurationViewDelegate {
     func selectedTimingPriority(priority : FAPrimaryTimingPriority)
+    func didUpdateTriggerProgressPriority(progress : CGFloat)
+    func didUpdateTriggerType(type : Int)
+
     func toggleSecondaryView(enabled : Bool)
     
     func currentPrimaryFlagValue(atIndex : Int) -> Bool
@@ -118,7 +121,7 @@ class ConfigurationView : UIView {
                                         toFrame: segnmentedControl.frame,
                                         horizontal: HGHorizontalAlign.Center,
                                         vertical: HGVerticalAlign.Below,
-                                        verticalOffset :18)
+                                        verticalOffset :24)
         
         contentCollectionView.alignWithSize(CGSizeMake(self.bounds.width, 336),
                                       toFrame: secondSeparator.frame,
@@ -152,6 +155,13 @@ class ConfigurationView : UIView {
                                                horizontalOffset:  0,
                                                verticalOffset: 4)
         
+        progressLabel.alignWithSize(CGSizeMake(60, 24),
+                                      toFrame: atProgressLabel.frame,
+                                      horizontal: HGHorizontalAlign.Right,
+                                      vertical: HGVerticalAlign.Center,
+                                      horizontalOffset:  10,
+                                      verticalOffset: 0)
+        
         secondaryViewSwitch.sizeToFit()
         secondaryViewSwitch.alignWithSize(secondaryViewSwitch.bounds.size,
                                     toFrame: separator.frame,
@@ -173,7 +183,7 @@ class ConfigurationView : UIView {
                                              toFrame: delaySegnmentedControl.frame,
                                              horizontal: HGHorizontalAlign.LeftEdge,
                                              vertical: HGVerticalAlign.Below,
-                                             verticalOffset : 32)
+                                             verticalOffset : 40)
         
         var adjustedPosition = enableSecondaryViewLabel.center
         adjustedPosition.y =  adjustedPosition.y + 14
@@ -205,6 +215,8 @@ class ConfigurationView : UIView {
     lazy var delaySegnmentedControl : UISegmentedControl = {
         var segmentedControl = UISegmentedControl(items: sequenceTypeSegments)
         segmentedControl.selectedSegmentIndex = 0
+        segmentedControl.alpha = 0.5
+        segmentedControl.userInteractionEnabled = false
         segmentedControl.tintColor = UIColor.whiteColor()
         segmentedControl.addTarget(self, action: #selector(ConfigurationView.changedTrigger(_:)), forControlEvents: .ValueChanged)
         return segmentedControl
@@ -283,7 +295,7 @@ class ConfigurationView : UIView {
     lazy var progressLabel: UILabel = {
         var label = UILabel()
         label.textColor = UIColor.whiteColor()
-        label.text = "Trigger at progress : "
+        label.text = "0.0"
         label.backgroundColor = UIColor.clearColor()
         label.font = UIFont(name: "Helvetica", size: 15)
         label.alpha = 0.0
@@ -293,7 +305,7 @@ class ConfigurationView : UIView {
     
     lazy var secondaryViewSwitch: UISwitch = {
         var tempSwitch = UISwitch()
-        tempSwitch.on = true
+        tempSwitch.on = false
         tempSwitch.backgroundColor = UIColor.clearColor()
         tempSwitch.addTarget(self, action: #selector(ConfigurationView.secondary_view_value_changed(_:)), forControlEvents: UIControlEvents.ValueChanged)
         return tempSwitch
@@ -302,7 +314,7 @@ class ConfigurationView : UIView {
     lazy var progressTriggerSlider : UISlider = {
         var slider = UISlider(frame:CGRectMake(20, 260, 280, 20))
         slider.minimumValue = 0
-        slider.maximumValue = 100
+        slider.maximumValue = 1
         slider.tintColor = UIColor.greenColor()
         slider.value = 0
         slider.alpha = 0.0
@@ -312,11 +324,17 @@ class ConfigurationView : UIView {
     
     func progress_value_changed(sender : UISlider) {
         
-
+        let y = Double(round(100 * sender.value) / 100)
+        progressLabel.text = String(format: "%.2f", y)
+        self.interactionDelegate?.didUpdateTriggerProgressPriority(CGFloat(sender.value))
     }
     
     func changedTrigger(segmentedControl : UISegmentedControl) {
-    
+        
+        
+        self.interactionDelegate?.didUpdateTriggerType(segmentedControl.selectedSegmentIndex)
+        
+        
         if segmentedControl.selectedSegmentIndex == 0 {
            
             var adjustedPosition = enableSecondaryViewLabel.center
@@ -324,6 +342,10 @@ class ConfigurationView : UIView {
         
             atProgressLabel.animate { (animator) in
                 animator.alpha(0.0).duration(0.5).easing(.OutSine)
+                
+                animator.triggerAtTimeProgress(atProgress: 0.01, onView: self.progressLabel, animator: { (animator) in
+                    animator.alpha(0.0).duration(0.5).easing(.OutSine)
+                })
                 
                 animator.triggerAtTimeProgress(atProgress: 0.7, onView: self.enableSecondaryViewLabel, animator: { (animator) in
                     animator.position(adjustedPosition).duration(0.5).easing(.InSine)
@@ -336,17 +358,26 @@ class ConfigurationView : UIView {
 
         } else  {
 
-            
             enableSecondaryViewLabel.animate { (animator) in
                 animator.position(initialCenter).duration(0.5).easing(.OutSine)
                 
-                animator.triggerAtTimeProgress(atProgress: 0.6, onView: self.atProgressLabel, animator: { (animator) in
+                animator.triggerAtTimeProgress(atProgress: 0.61, onView: self.atProgressLabel, animator: { (animator) in
+                    animator.alpha(1.0).duration(0.5).easing(.OutSine)
+                })
+                
+                animator.triggerAtTimeProgress(atProgress: 0.6, onView: self.progressLabel, animator: { (animator) in
                     animator.alpha(1.0).duration(0.5).easing(.OutSine)
                 })
                 
                 animator.triggerAtTimeProgress(atProgress: 0.7, onView: self.progressTriggerSlider, animator: { (animator) in
                     animator.alpha(1.0).duration(0.5).easing(.OutSine)
                 })
+            }
+            
+            if segmentedControl.selectedSegmentIndex == 1 {
+                atProgressLabel.text = "Trigger @ Time Progress:  "
+            } else {
+                atProgressLabel.text = "Trigger @ Value Progress: "
             }
         }
         

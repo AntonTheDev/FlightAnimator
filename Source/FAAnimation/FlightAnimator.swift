@@ -61,20 +61,22 @@ public extension UIView {
 
 public class FlightAnimator : FAAnimationMaker {
     
-    public func triggerOnStart(timingPriority : FAPrimaryTimingPriority = .MaxTime, onView view: UIView,
+    public func triggerOnStart(timingPriority : FAPrimaryTimingPriority = .MaxTime,
+                               onView view: UIView,
                                @noescape animator: (animator : FlightAnimator) -> Void) {
         triggerAnimation(timingPriority, timeBased : true, key: animationKey!, view: view, progress: 0.0, animator: animator)
     }
     
     public func triggerAtTimeProgress(timingPriority : FAPrimaryTimingPriority = .MaxTime,
                                       atProgress progress: CGFloat,
-                                                 onView view: UIView,
-                                                        @noescape animator: (animator : FlightAnimator) -> Void) {
+                                      onView view: UIView,
+                                      @noescape animator: (animator : FlightAnimator) -> Void) {
         triggerAnimation(timingPriority, timeBased : true, key: animationKey!, view: view, progress: progress, animator: animator)
     }
     
     public func triggerAtValueProgress(timingPriority : FAPrimaryTimingPriority = .MaxTime,
-                                       progress: CGFloat, onView view: UIView,
+                                       atProgress progress: CGFloat,
+                                       onView view: UIView,
                                        @noescape animator: (animator : FlightAnimator) -> Void) {
         triggerAnimation(timingPriority, timeBased : false, key: animationKey!, view: view, progress: progress, animator: animator)
     }

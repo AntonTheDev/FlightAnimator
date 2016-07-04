@@ -44,17 +44,14 @@ public class FAAnimationMaker {
                                    view: UIView,
                                    progress: CGFloat = 0.0,
                                    @noescape animator: (animator : FlightAnimator) -> Void) {
-        
-        let newSegment = SegmentItem()
-        newSegment.animationKey = animationKey!
-        newSegment.timedProgress = timeBased
-        newSegment.animatedView = view
-        
+
         if let animationGroup = associatedView!.cachedAnimations![animationKey!] {
-            var segmentDictionary =  animationGroup.segmentDictionary
-            segmentDictionary[progress] = newSegment
-            animationGroup.segmentDictionary = segmentDictionary
             
+            animationGroup._segmentArray.append(SegmentItem(isTimedBased: timeBased,
+                                                            triggerProgessValue: progress,
+                                                            animationKey: animationKey!,
+                                                            animatedView: view))
+
             associatedView!.attachAnimation(animationGroup, forKey: animationKey!)
         }
         

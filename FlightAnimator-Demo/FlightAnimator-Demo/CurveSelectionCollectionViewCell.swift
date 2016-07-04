@@ -161,8 +161,7 @@ extension CurveSelectionCollectionViewCell: UIPickerViewDataSource, UIPickerView
         
         var pickerLabel = view as? UILabel
         
-        if (pickerLabel == nil)
-        {
+        if (pickerLabel == nil) {
             pickerLabel = UILabel()
             
             pickerLabel?.font = UIFont(name: "MenloiPhoneiPad", size: 14)

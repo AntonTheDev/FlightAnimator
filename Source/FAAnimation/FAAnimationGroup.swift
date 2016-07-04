@@ -10,54 +10,26 @@ import Foundation
 import UIKit
 import QuartzCore
 
-internal class SegmentItem : Copying {
-    var timedProgress = true
+func ==(lhs:SegmentItem, rhs:SegmentItem) -> Bool {
+    return lhs.animatedView == rhs.animatedView &&
+        lhs.isTimedBased == rhs.isTimedBased &&
+        lhs.triggerProgessValue == rhs.triggerProgessValue &&
+        lhs.animationKey == rhs.animationKey
+}
+
+internal struct SegmentItem : Equatable {
+    var isTimedBased = true
+    
+    var triggerProgessValue : CGFloat?
     var animationKey : String?
-    var easingFunction : String?
+    
     weak var animatedView : UIView?
-    
-    required init(original: SegmentItem) {
-        timedProgress = original.timedProgress
-        animationKey = original.animationKey
-        easingFunction = original.easingFunction
-        animatedView = original.animatedView
-    }
-    
-    init() {
-        
-    }
-}
-
-
-protocol Copying {
-    init(original: Self)
-}
-
-extension Copying {
-    func copy() -> Self {
-        return Self.init(original: self)
-    }
 }
 
 final public class FAAnimationGroup : CAAnimationGroup {
     
-    var _segmentDictionary = [CGFloat : SegmentItem]()
-    
-    var segmentDictionary = [CGFloat : SegmentItem]() {
-        didSet {
-            for (key, value) in segmentDictionary {
-                _segmentDictionary[key] = value.copy()
-            }
-        }
-    }
-    
-    private var primaryEasingFunction : FAEasing = FAEasing.Linear
-    
     var primaryTimingPriority : FAPrimaryTimingPriority = .MaxTime
     var animationKey : String?
-    
-    private var timeProgress: CGFloat = 0.0
-    private var displayLink : CADisplayLink?
     
     weak var weakLayer : CALayer? {
         didSet {
@@ -86,6 +58,16 @@ final public class FAAnimationGroup : CAAnimationGroup {
         }
     }
     
+    // This is used to
+    private var primaryEasingFunction : FAEasing = FAEasing.Linear
+    private var primaryAnimation : FAAnimation?
+    
+    private var timeProgress: CGFloat = 0.0
+    private var displayLink : CADisplayLink?
+    
+    var _segmentArray = [SegmentItem]()
+    var segmentArray = [SegmentItem]()
+    
     override init() {
         super.init()
         animations = [CAAnimation]()
@@ -102,9 +84,22 @@ final public class FAAnimationGroup : CAAnimationGroup {
         animationGroup.weakLayer                = weakLayer
         animationGroup.startTime                = startTime
         animationGroup.animationKey             = animationKey
-        animationGroup.segmentDictionary        = segmentDictionary
+        animationGroup.segmentArray             = segmentArray
+        
+        animationGroup._segmentArray            = _segmentArray
+        
         animationGroup.primaryTimingPriority    = primaryTimingPriority
         return animationGroup
+    }
+}
+
+
+//MARK: Public API
+
+extension FAAnimationGroup {
+    
+    func synchronizeAnimationGroup(oldAnimationGroup : FAAnimationGroup?) {
+        synchronizeAnimations(oldAnimationGroup)
     }
     
     func scrubToProgress(progress : CGFloat) {
@@ -146,13 +141,11 @@ final public class FAAnimationGroup : CAAnimationGroup {
 }
 
 
-//MARK: Synchronization Logic
+//MARK: - Animation Synchronization
 
 extension FAAnimationGroup {
     
-    func synchronizeAnimationGroup(oldAnimationGroup : FAAnimationGroup?) {
-        
-        preconfigureTimer(oldAnimationGroup)
+    private func synchronizeAnimations(oldAnimationGroup : FAAnimationGroup?) {
         
         var durationArray =  [Double]()
         
@@ -160,39 +153,45 @@ extension FAAnimationGroup {
         var newAnimations = animationDictionaryForGroup(self)
         
         // Find all Primary Animations
-        let filteredAnimation = newAnimations.filter({ $0.1.isAnimationPrimary() == true })
-        var primaryAnimations = [String : FAAnimation]()
+        let filteredPrimaryAnimations = newAnimations.filter({ $0.1.isAnimationPrimary() == true })
+        let filteredNonPrimaryAnimations = newAnimations.filter({ $0.1.isAnimationPrimary() == false })
         
-        for result in filteredAnimation {
+        var primaryAnimations = [String : FAAnimation]()
+        var nonPrimaryAnimations = [String : FAAnimation]()
+        
+        for result in filteredPrimaryAnimations {
             primaryAnimations[result.0] = result.1
         }
-
-        //If not animation is primary, all animations become primary
-        if primaryAnimations.count == 0 {
-            primaryAnimations = newAnimations
+        
+        for result in filteredNonPrimaryAnimations {
+            nonPrimaryAnimations[result.0] = result.1
         }
         
-        for key in newAnimations.keys {
+        //If no animation is primary, all animations become primary
+        if primaryAnimations.count == 0 {
+            primaryAnimations = newAnimations
+            nonPrimaryAnimations = [String : FAAnimation]()
+        }
+        
+        for key in primaryAnimations.keys {
             
             if  let newPrimaryAnimation = primaryAnimations[key] {
                 let oldAnimation : FAAnimation? = oldAnimations[key]
                 
                 newPrimaryAnimation.synchronizeWithAnimation(oldAnimation)
-               
+                
                 durationArray.append(newPrimaryAnimation.duration)
                 newAnimations[key] = newPrimaryAnimation
             }
         }
-
-        if durationArray.count == 0 {
-            durationArray = newAnimations.map { $1.duration }.filter { $0 > 0 }
-        }
         
         animations = newAnimations.map {$1}
-        adjustGroupDurationWith(primaryDurationsArray: durationArray)
+        
+        updateGroupDurationBasedOnTimePriority(durationArray)
+        synchronizeRemaingAnimationValues()
     }
     
-    private func adjustGroupDurationWith(primaryDurationsArray durationArray: Array<CFTimeInterval>) {
+    private func updateGroupDurationBasedOnTimePriority(durationArray: Array<CFTimeInterval>) {
         switch primaryTimingPriority {
         case .MaxTime:
             duration = durationArray.maxElement()!
@@ -203,10 +202,14 @@ extension FAAnimationGroup {
         case .Average:
             duration = durationArray.reduce(0, combine: +) / Double(durationArray.count)
         }
+    }
+    
+    private func synchronizeRemaingAnimationValues() {
         
         let filteredAnimation = animations!.filter({ $0.duration == duration })
         
         if let primaryDrivingAnimation = filteredAnimation.first as? FAAnimation {
+            primaryAnimation = primaryDrivingAnimation
             primaryEasingFunction = primaryDrivingAnimation.easingFunction
         }
         
@@ -245,56 +248,66 @@ extension FAAnimationGroup {
         
         return animationDictionary
     }
+    
 }
+
+//MARK: - Sequence Configuration and Timing
 
 extension FAAnimationGroup {
     
-    
-    private func preconfigureTimer(oldAnimationGroup : FAAnimationGroup?) {
+    private func preconfigureSequence(oldAnimationGroup : FAAnimationGroup?) {
         dispatch_async(dispatch_get_main_queue()) {
             oldAnimationGroup?.stopTriggerTimer()
         }
         
-        for (key, value) in _segmentDictionary {
-            segmentDictionary[key] = value.copy()
-        }
     }
     
-    func updateLoop() {
-        for (key, _) in _segmentDictionary {
-            if let segment = segmentDictionary[key] {
-                if segment.timedProgress {
-                    if timeProgressed() > key {
+    internal func updateLoop() {
+        for segment in segmentArray {
+            if segment.isTimedBased {
+                if timeProgressed() >= segment.triggerProgessValue {
+                    segment.animatedView!.applyAnimation(forKey: segment.animationKey!)
+                    segmentArray.removeObject(segment)
+                }
+            } else {
+                
+                switch self.primaryEasingFunction {
+                case .SpringDecay:
+                    if primaryAnimation?.springValueProgress() >= segment.triggerProgessValue {
                         segment.animatedView!.applyAnimation(forKey: segment.animationKey!)
-                        segmentDictionary.removeValueForKey(key)
+                        segmentArray.removeObject(segment)
                     }
-                } else {
-                    switch self.primaryEasingFunction {
-                    case .SpringDecay:
-                        break
-                    case .SpringCustom(_, _, _):
-                        break
-                    default:
-                        let progress = primaryEasingFunction.parametricProgress(timeProgressed())
-                        if progress > key {
-                            segment.animatedView!.applyAnimation(forKey: segment.animationKey!)
-                            segmentDictionary.removeValueForKey(key)
-                        }
+                    break
+                case .SpringCustom(_, _, _):
+                    print(primaryAnimation?.springValueProgress())
+                    if primaryAnimation?.springValueProgress() >= segment.triggerProgessValue {
+                        segment.animatedView!.applyAnimation(forKey: segment.animationKey!)
+                        segmentArray.removeObject(segment)
+                    }
+                    
+                    break
+                default:
+                    let progress = primaryEasingFunction.parametricProgress(timeProgressed())
+                    if progress > segment.triggerProgessValue {
+                        segment.animatedView!.applyAnimation(forKey: segment.animationKey!)
+                        segmentArray.removeObject(segment)
                     }
                 }
             }
         }
         
-        if segmentDictionary.keys.count <= 0 {
+        if segmentArray.count <= 0 {
             stopTriggerTimer()
             return
         }
     }
     
-    func startTriggerTimer() {
-        if segmentDictionary.keys.count == 0 {
+    private func startTriggerTimer() {
+        if _segmentArray.count == 0 {
             return
         }
+        
+        segmentArray = _segmentArray
         
         if displayLink == nil {
             displayLink = CADisplayLink(target: self, selector: #selector(FAAnimationGroup.updateLoop))
@@ -313,8 +326,27 @@ extension FAAnimationGroup {
     private func timeProgressed() -> CGFloat {
         let currentTime = weakLayer?.presentationLayer()!.convertTime(CACurrentMediaTime(), toLayer: nil)
         let difference = CGFloat(currentTime! - startTime!)
-        return CGFloat(round(100 * (difference / CGFloat(duration)))/100)
+        
+        return CGFloat(round(100 * (difference / CGFloat(duration)))/100) + 0.03333333333
     }
+}
+
+// Calculates spring value progress for the
+func springProgress<T : FAAnimatable>(fromValue : T, toValue : T, springs : Dictionary<String, FASpring>, deltaTime : CGFloat) -> CGFloat {
+    
+    
+    let currentValue = toValue.interpolatedSpringValue(toValue, springs: springs, deltaTime: deltaTime) as! T
+    
+    let overallMagnitude = fromValue.magnitudeToValue(toValue)
+    let remainingMagnitude  = currentValue.magnitudeToValue(toValue)
+    
+    var progress  = remainingMagnitude / overallMagnitude
+    
+    if progress.isNaN {
+        progress = CGFloat(1.0)
+    }
+    
+    return progress
 }
 
 
