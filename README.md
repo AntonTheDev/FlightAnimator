@@ -11,12 +11,12 @@
 ##Features
 
 - [x] [Support for 46+ parametric curves](/Documentation/parametric_easings.md)
-- [x] Spring and Decay animations 
-- [x] Blocks-based animation builder
+- [x] Spring and decay animations 
+- [x] Blocks based animation builder
+- [x] Define easing curve per single property animation
 - [x] Muti-Curve group synchronization
-- [x] Progress based animation sequencing
+- [x] Progress & value based animation sequencing
 - [x] Support for triggering cached animations
-- [x] Easing curve synchronization
 
 ##Installation
 
