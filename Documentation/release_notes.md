@@ -1,5 +1,8 @@
 #Release Notes
 
+####Version 0.7.2
+* Added Build support for iOS 8.0+ (prior was only built via Carthage / Cocoapods for ios 9.3)
+
 ####Version 0.7.1
 
 * Added missing file references for the Carthage Framework Project
