@@ -72,7 +72,7 @@ The Code of Conduct governs how we behave in public or in private
 whenever the project will be judged by our actions.
 We expect it to be honored by everyone who contributes to this project.
 
-See [CONDUCT.md](https://github.com/Alamofire/Foundation/blob/master/CONDUCT.md) for details.
+See [CONDUCT.md](https://github.com/AntonTheDev/FlightAnimator/blob/master/Documentation/CONDUCT.md) for details.
 
 ---
 
