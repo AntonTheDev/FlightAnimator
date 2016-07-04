@@ -10,16 +10,23 @@
 
 ##Features
 
-- [x] [Support for 46+ parametric curves](/Documentation/parametric_easings.md)
-- [x] Spring and decay animations 
-- [x] Blocks based animation builder
-- [x] Define easing curve per single property animation
-- [x] Muti-Curve group synchronization
-- [x] Progress & value based animation sequencing
-- [x] Support for triggering cached animations
+- [x] [46+ Parametric Curves, Decay, and Springs](/Documentation/parametric_easings.md) 
+- [x] Blocks Syntax for Building Complex Animations
+- [x] Define, Cache, and Reuse Animations
+- [x] Apply Unique Easing per Property Animation
+- [x] Chain Animations:
+	* Synchronously 
+	* Time Progress Relative
+	* Value Progress Relative
+- [x] Advanced Multi-Curve Group Synchronization
+
+##Communication
+
+- If you **found a bug**, or **have a feature request**, open an issue.
+- If you **need help** or a **general question**, use [Stack Overflow](http://stackoverflow.com/questions/tagged/flight-animator). (tag 'flight-animator')
+- If you **want to contribute**, review the [Contribution Guidelines](/Documentation/CONTRIBUTING.md), and submit a pull request. 
 
 ##Installation
-
 
 * [Release Notes](/Documentation/release_notes.md)
 * [Installation Documentation](/Documentation/installation.md)
@@ -71,7 +78,7 @@ These can be applied to the view being animated, or any other view accessible in
 
 ####Trigger Simultaneously
 
-To trigger an animation right as the parent animation begins, attach a trigger on a parent animator by calling `animator.triggerOnStart(...)`. The trigger will perform the animation enclosed accordingly right as the the parent begins animating. 
+To trigger an animation right as the parent animation begins, attach a trigger on a parent animator by calling `animator.triggerOnStart(...)`. The trigger will perform the animation enclosed accordingly right as the parent begins animating. 
 
 ```swift
 view.animate { (animator) in
@@ -102,7 +109,7 @@ view.animate { (animator) in
 }
 ```
 
-####Trigger Relative Value Progress
+####Trigger Relative to Value Progress
 
 A value based progress trigger will apply the next animation based on the value progress of the overall parent animation. Below is an examples that will trigger the second animation at the halfway point of the value progress on the parent animation by calling `animator.triggerAtValueProgress(...)`
 
@@ -116,23 +123,6 @@ view.animate { (animator) in
          animator.position(newSecondaryCenter).duration(0.5).easing(.OutCubic)
     })
 }
-```
-
-####Trigger On Start
-
-If you want to chain animations together without value progress, or time progress, there is a specific method that will trigger an animation as the parent animation begins to animation. Below is an examples that will trigger the second animation as the the parent begins animating by calling `animator.triggerOnStart(...)`
-
-```swift
-view.animate { (animator) in
-	animator.bounds(newBounds).duration(0.5).easing(.EaseOutCubic)
-    animator.position(newPositon).duration(0.5).easing(.EaseOutCubic)
-    
-    animatortriggerOnStart(onView: self.secondaryView, animator: { (animator) in
-         animator.bounds(newSecondaryBounds).duration(0.5).easing(.OutCubic)
-         animator.position(newSecondaryCenter).duration(0.5).easing(.OutCubic)
-    })
-
-
 ```
 
 ##Cache & Reuse Animations
@@ -166,6 +156,7 @@ view.applyAnimation(forKey: AnimationKeys.CenterStateFrameAnimation)
 
 In the case there is a need to apply the final values without actually animating the view, override the default animated flag to false, and it will apply all the final values to the model layer of the associated view.
 
+
 ```swift
 view.applyAnimation(forKey: AnimationKeys.CenterStateFrameAnimation, animated : false)
 ```
@@ -185,7 +176,6 @@ The following timing options are available:
 ####Timing Priority
 
 First a little background, the framework basically does some magic so synchronize the time by prioritizing the maximum time remaining based on progress if redirected in mid flight.
-
 
 Lets look at the following example of setting the timingPriority on a group animation to .MaxTime, which is the default value for FlightAnimator.
 
@@ -264,8 +254,8 @@ func respondToPanRecognizer(recognizer : UIPanGestureRecognizer) {
 ```
 
 
-
 ##Reference 
+[Contribution Guidelines](/Documentation/CONTRIBUTING.md)
 
 [Supported Parametric Curves](/Documentation/parametric_easings.md)
 
