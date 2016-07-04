@@ -1,5 +1,12 @@
 #Release Notes
 
+####Version 0.7.1
+
+* Added missing file references for the Carthage Framework Project
+* Update parts of the README
+* Added Contibution documentation
+* Added Code of Conduct
+
 ####Version 0.7.0
 
 * Refactored the Interpolator

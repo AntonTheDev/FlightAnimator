@@ -1,6 +1,6 @@
 #FlightAnimator
 
-[![Cocoapods Compatible](https://img.shields.io/badge/pod-v0.7.0-blue.svg)]()
+[![Cocoapods Compatible](https://img.shields.io/badge/pod-v0.7.1-blue.svg)]()
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)]()
 [![Platform](https://img.shields.io/badge/platform-ios-lightgrey.svg)]()
 [![License](https://img.shields.io/badge/license-MIT-343434.svg)](/LICENSE.md)
@@ -255,13 +255,14 @@ func respondToPanRecognizer(recognizer : UIPanGestureRecognizer) {
 
 
 ##Reference 
-[Contribution Guidelines](/Documentation/CONTRIBUTING.md)
 
 [Supported Parametric Curves](/Documentation/parametric_easings.md)
 
 [CALayer's Supported Animatable Property](/Documentation/supported_animatable_properties.md)
 
 [Current Release Notes](/Documentation/release_notes.md)
+
+[Contribution Guidelines](/Documentation/CONTRIBUTING.md)
 
 ## License
 
