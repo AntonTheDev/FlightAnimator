@@ -26,10 +26,12 @@
 - If you **need help** or a **general question**, use [Stack Overflow](http://stackoverflow.com/questions/tagged/flight-animator). (tag 'flight-animator')
 - If you **want to contribute**, review the [Contribution Guidelines](/Documentation/CONTRIBUTING.md), and submit a pull request. 
 
+
 ##Installation
 
+* **Requirements** : XCode 7.3+, iOS 8.0+ 
+* [Installation Instructions](/Documentation/installation.md)
 * [Release Notes](/Documentation/release_notes.md)
-* [Installation Documentation](/Documentation/installation.md)
 
 ##Introduction
 
