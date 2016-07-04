@@ -1,6 +1,6 @@
 #FlightAnimator
 
-[![Cocoapods Compatible](https://img.shields.io/badge/pod-v0.7.0-blue.svg)]()
+[![Cocoapods Compatible](https://img.shields.io/badge/pod-v0.7.1-blue.svg)]()
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)]()
 [![Platform](https://img.shields.io/badge/platform-ios-lightgrey.svg)]()
 [![License](https://img.shields.io/badge/license-MIT-343434.svg)](/LICENSE.md)
@@ -10,16 +10,23 @@
 
 ##Features
 
-- [x] [Support for 46+ parametric curves](/Documentation/parametric_easings.md)
-- [x] Spring and decay animations 
-- [x] Blocks based animation builder
-- [x] Define easing curve per single property animation
-- [x] Muti-Curve group synchronization
-- [x] Progress & value based animation sequencing
-- [x] Support for triggering cached animations
+- [x] [46+ Parametric Curves, Decay, and Springs](/Documentation/parametric_easings.md) 
+- [x] Blocks Syntax for Building Complex Animations
+- [x] Define, Cache, and Reuse Animations
+- [x] Apply Unique Easing per Property Animation
+- [x] Chain Animations:
+	* Synchronously 
+	* Time Progress Relative
+	* Value Progress Relative
+- [x] Advanced Multi-Curve Group Synchronization
+
+##Communication
+
+- If you **found a bug**, or **have a feature request**, open an issue.
+- If you **need help** or a **general question**, use [Stack Overflow](http://stackoverflow.com/questions/tagged/flight-animator). (tag 'flight-animator')
+- If you **want to contribute**, review the [Contribution Guidelines](/Documentation/CONTRIBUTING.md), and submit a pull request. 
 
 ##Installation
-
 
 * [Release Notes](/Documentation/release_notes.md)
 * [Installation Documentation](/Documentation/installation.md)
@@ -61,13 +68,34 @@ view.animate { (animator) in
 
 ##Sequence
 
-Chaining animations together in FlightAnimator is very easy, and allows for triggering another animation based on the time progress, or the value progress of an animation. Nest a trigger on a parent animation at a specified progress, and trigger which will perform the animation enclosed in the created block accordingly. These can be applied to the view being animated, or any other view defined in the heirarchy.
+Chaining animations together in FlightAnimator is very easy. You can nest animations using three different types triggers:
 
-Let's look at how to nest some animations using time and value based progress triggers.
+* Simultaneously
+* Time Progress Based
+* Value Progress Based
+ 
+These can be applied to the view being animated, or any other view accessible in the view heirarchy. Let's look at how to nest some animations using triggers.
 
-####Time Progress Trigger
+####Trigger Simultaneously
 
-A time based trigger will apply the next animation based on the progressed time of the overall parent animation. Below is an examples that will trigger the second animation at the halfway point in time of the parent animation by calling `triggerAtTimeProgress(...)`
+To trigger an animation right as the parent animation begins, attach a trigger on a parent animator by calling `animator.triggerOnStart(...)`. The trigger will perform the animation enclosed accordingly right as the parent begins animating. 
+
+```swift
+view.animate { (animator) in
+	animator.bounds(newBounds).duration(0.5).easing(.EaseOutCubic)
+    animator.position(newPositon).duration(0.5).easing(.EaseOutCubic)
+    
+    animatortriggerOnStart(onView: self.secondaryView, animator: { (animator) in
+         animator.bounds(newSecondaryBounds).duration(0.5).easing(.OutCubic)
+         animator.position(newSecondaryCenter).duration(0.5).easing(.OutCubic)
+    })
+```
+
+####Trigger Relative to Time Progress
+
+A time based trigger will apply the next animation based on the progressed time of the overall parent animation. The progress value is defined with a range from 0.0 - 1.0, if the over all time of an animation is 1.0 second, by setting the atProgress paramter to 0.5, will trigger the animation at the 0.5 seconds into the parent animation. 
+
+Below is an examples that will trigger the second animation at the halfway point in time of the parent animation by calling `triggerAtTimeProgress(...)`
 
 ```swift
 view.animate { (animator) in
@@ -81,7 +109,7 @@ view.animate { (animator) in
 }
 ```
 
-####Value Progress Trigger
+####Trigger Relative to Value Progress
 
 A value based progress trigger will apply the next animation based on the value progress of the overall parent animation. Below is an examples that will trigger the second animation at the halfway point of the value progress on the parent animation by calling `animator.triggerAtValueProgress(...)`
 
@@ -96,6 +124,7 @@ view.animate { (animator) in
     })
 }
 ```
+
 ##Cache & Reuse Animations
 
 FlighAnimator allows for defining animations (aka states) up front using keys, and triggers them at any time in the application flow. When the animation is applied, if the view is in mid flight, it will synchronize itself accordingly, and animate to its final destination. To register an animation, call a globally defined method, and create an animations just as defined earlier examples within the maker block.
@@ -127,36 +156,13 @@ view.applyAnimation(forKey: AnimationKeys.CenterStateFrameAnimation)
 
 In the case there is a need to apply the final values without actually animating the view, override the default animated flag to false, and it will apply all the final values to the model layer of the associated view.
 
+
 ```swift
 view.applyAnimation(forKey: AnimationKeys.CenterStateFrameAnimation, animated : false)
 ```
 
 
 ##Advanced Use
-
-###.SpringDecay w/ Initial Velocity
-
-When using a UIPanGestureRecognizer to move a view around on the screen by adjusting its position, and say there is a need to smoothly animate the view to the final destination right as the user lets go of the gesture. This is where the .SpringDecay easing comes into play. The .SpringDecay easing will slow the view down easily into place, all that need to be configured is the initial velocity, and it will calculate its own time relative to the velocity en route to its destination.
-
-Below is an example of how to handle the handoff and use ``.SpringDecay(velocity: velocity)`` easing to perform the animation.
-
-```swift
-func respondToPanRecognizer(recognizer : UIPanGestureRecognizer) {
-    switch recognizer.state {
-    ........
-    
-    case .Ended:
-    	let currentVelocity = recognizer.velocityInView(view)
-        
-      	view.animate { (animator) in
-         	animator.bounds(finalBounds).duration(0.5).easing(.OutCubic)
-  			animator.position(finalPositon).duration(0.5).easing(.SpringDecay(velocity: velocity))
-      	}
-    default:
-        break
-    }
-}
-```
 
 ###Timing Adjustments
 
@@ -170,7 +176,6 @@ The following timing options are available:
 ####Timing Priority
 
 First a little background, the framework basically does some magic so synchronize the time by prioritizing the maximum time remaining based on progress if redirected in mid flight.
-
 
 Lets look at the following example of setting the timingPriority on a group animation to .MaxTime, which is the default value for FlightAnimator.
 
@@ -224,6 +229,31 @@ view.animate(.MaxTime) { (animator) in
 Simple as that, now when the view is redirected during an animation in mid flight, only the bounds and position animations will be considered as part of the timing synchronization.
 
 
+###.SpringDecay w/ Initial Velocity
+
+When using a UIPanGestureRecognizer to move a view around on the screen by adjusting its position, and say there is a need to smoothly animate the view to the final destination right as the user lets go of the gesture. This is where the .SpringDecay easing comes into play. The .SpringDecay easing will slow the view down easily into place, all that need to be configured is the initial velocity, and it will calculate its own time relative to the velocity en route to its destination.
+
+Below is an example of how to handle the handoff and use ``.SpringDecay(velocity: velocity)`` easing to perform the animation.
+
+```swift
+func respondToPanRecognizer(recognizer : UIPanGestureRecognizer) {
+    switch recognizer.state {
+    ........
+    
+    case .Ended:
+    	let currentVelocity = recognizer.velocityInView(view)
+        
+      	view.animate { (animator) in
+         	animator.bounds(finalBounds).duration(0.5).easing(.OutCubic)
+  			animator.position(finalPositon).duration(0.5).easing(.SpringDecay(velocity: velocity))
+      	}
+    default:
+        break
+    }
+}
+```
+
+
 ##Reference 
 
 [Supported Parametric Curves](/Documentation/parametric_easings.md)
@@ -231,6 +261,8 @@ Simple as that, now when the view is redirected during an animation in mid fligh
 [CALayer's Supported Animatable Property](/Documentation/supported_animatable_properties.md)
 
 [Current Release Notes](/Documentation/release_notes.md)
+
+[Contribution Guidelines](/Documentation/CONTRIBUTING.md)
 
 ## License
 

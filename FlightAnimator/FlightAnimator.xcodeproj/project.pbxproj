@@ -10,24 +10,24 @@
 		13009CED1D0B90C4008419C8 /* FlightAnimator.h in Headers */ = {isa = PBXBuildFile; fileRef = 13009CEC1D0B90C4008419C8 /* FlightAnimator.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		13009CF41D0B90C4008419C8 /* FlightAnimator.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 13009CE91D0B90C3008419C8 /* FlightAnimator.framework */; };
 		13009CF91D0B90C4008419C8 /* FlightAnimatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13009CF81D0B90C4008419C8 /* FlightAnimatorTests.swift */; };
-		3A62C6131D261DCD0015FAAA /* FAAnimation+Callbacks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A62C5FD1D261DCD0015FAAA /* FAAnimation+Callbacks.swift */; };
-		3A62C6141D261DCD0015FAAA /* FAPanGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A62C5FE1D261DCD0015FAAA /* FAPanGestureRecognizer.swift */; };
-		3A62C6151D261DCD0015FAAA /* FAAnimatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A62C6001D261DCD0015FAAA /* FAAnimatable.swift */; };
-		3A62C6161D261DCD0015FAAA /* CATransform3D+FAAnimatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A62C6021D261DCD0015FAAA /* CATransform3D+FAAnimatable.swift */; };
-		3A62C6171D261DCD0015FAAA /* CGFloat+FAAnimatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A62C6031D261DCD0015FAAA /* CGFloat+FAAnimatable.swift */; };
-		3A62C6181D261DCD0015FAAA /* CGPoint+FAAnimatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A62C6041D261DCD0015FAAA /* CGPoint+FAAnimatable.swift */; };
-		3A62C6191D261DCD0015FAAA /* CGRect+FAAnimatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A62C6051D261DCD0015FAAA /* CGRect+FAAnimatable.swift */; };
-		3A62C61A1D261DCD0015FAAA /* CGSize+FAAnimatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A62C6061D261DCD0015FAAA /* CGSize+FAAnimatable.swift */; };
-		3A62C61B1D261DCD0015FAAA /* FAAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A62C6081D261DCD0015FAAA /* FAAnimation.swift */; };
-		3A62C61C1D261DCD0015FAAA /* FAAnimationGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A62C6091D261DCD0015FAAA /* FAAnimationGroup.swift */; };
-		3A62C61D1D261DCD0015FAAA /* FAAnimationMaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A62C60A1D261DCD0015FAAA /* FAAnimationMaker.swift */; };
-		3A62C61E1D261DCD0015FAAA /* FlightAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A62C60B1D261DCD0015FAAA /* FlightAnimator.swift */; };
-		3A62C61F1D261DCD0015FAAA /* FAEasing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A62C60D1D261DCD0015FAAA /* FAEasing.swift */; };
-		3A62C6211D261DCD0015FAAA /* FASpring.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A62C60F1D261DCD0015FAAA /* FASpring.swift */; };
-		3A62C6521D2669240015FAAA /* FAInterpolator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A62C6511D2669240015FAAA /* FAInterpolator.swift */; };
-		3AB7B9201D283C960073B110 /* CALayer+FAAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB7B91D1D283C960073B110 /* CALayer+FAAnimation.swift */; };
-		3AB7B9211D283C960073B110 /* NSValue+FAAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB7B91E1D283C960073B110 /* NSValue+FAAnimation.swift */; };
-		3AB7B9221D283C960073B110 /* UIView+FAAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB7B91F1D283C960073B110 /* UIView+FAAnimation.swift */; };
+		3AEBA4BE1D2AF657008147ED /* FAAnimation+Callbacks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AEBA4A71D2AF657008147ED /* FAAnimation+Callbacks.swift */; };
+		3AEBA4BF1D2AF657008147ED /* FAPanGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AEBA4A81D2AF657008147ED /* FAPanGestureRecognizer.swift */; };
+		3AEBA4C01D2AF657008147ED /* FAAnimatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AEBA4AA1D2AF657008147ED /* FAAnimatable.swift */; };
+		3AEBA4C11D2AF657008147ED /* CATransform3D+FAAnimatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AEBA4AC1D2AF657008147ED /* CATransform3D+FAAnimatable.swift */; };
+		3AEBA4C21D2AF657008147ED /* CGFloat+FAAnimatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AEBA4AD1D2AF657008147ED /* CGFloat+FAAnimatable.swift */; };
+		3AEBA4C31D2AF657008147ED /* CGPoint+FAAnimatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AEBA4AE1D2AF657008147ED /* CGPoint+FAAnimatable.swift */; };
+		3AEBA4C41D2AF657008147ED /* CGRect+FAAnimatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AEBA4AF1D2AF657008147ED /* CGRect+FAAnimatable.swift */; };
+		3AEBA4C51D2AF657008147ED /* CGSize+FAAnimatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AEBA4B01D2AF657008147ED /* CGSize+FAAnimatable.swift */; };
+		3AEBA4C61D2AF657008147ED /* CALayer+FAAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AEBA4B31D2AF657008147ED /* CALayer+FAAnimation.swift */; };
+		3AEBA4C71D2AF657008147ED /* NSValue+FAAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AEBA4B41D2AF657008147ED /* NSValue+FAAnimation.swift */; };
+		3AEBA4C81D2AF657008147ED /* UIView+FAAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AEBA4B51D2AF657008147ED /* UIView+FAAnimation.swift */; };
+		3AEBA4C91D2AF657008147ED /* FAAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AEBA4B61D2AF657008147ED /* FAAnimation.swift */; };
+		3AEBA4CA1D2AF657008147ED /* FAAnimationGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AEBA4B71D2AF657008147ED /* FAAnimationGroup.swift */; };
+		3AEBA4CB1D2AF657008147ED /* FAAnimationMaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AEBA4B81D2AF657008147ED /* FAAnimationMaker.swift */; };
+		3AEBA4CC1D2AF657008147ED /* FlightAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AEBA4B91D2AF657008147ED /* FlightAnimator.swift */; };
+		3AEBA4CD1D2AF657008147ED /* FAEasing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AEBA4BB1D2AF657008147ED /* FAEasing.swift */; };
+		3AEBA4CE1D2AF657008147ED /* FAInterpolator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AEBA4BC1D2AF657008147ED /* FAInterpolator.swift */; };
+		3AEBA4CF1D2AF657008147ED /* FASpring.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AEBA4BD1D2AF657008147ED /* FASpring.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,24 +47,24 @@
 		13009CF31D0B90C4008419C8 /* FlightAnimatorTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FlightAnimatorTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		13009CF81D0B90C4008419C8 /* FlightAnimatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlightAnimatorTests.swift; sourceTree = "<group>"; };
 		13009CFA1D0B90C4008419C8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		3A62C5FD1D261DCD0015FAAA /* FAAnimation+Callbacks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "FAAnimation+Callbacks.swift"; sourceTree = "<group>"; };
-		3A62C5FE1D261DCD0015FAAA /* FAPanGestureRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FAPanGestureRecognizer.swift; sourceTree = "<group>"; };
-		3A62C6001D261DCD0015FAAA /* FAAnimatable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FAAnimatable.swift; sourceTree = "<group>"; };
-		3A62C6021D261DCD0015FAAA /* CATransform3D+FAAnimatable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CATransform3D+FAAnimatable.swift"; sourceTree = "<group>"; };
-		3A62C6031D261DCD0015FAAA /* CGFloat+FAAnimatable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGFloat+FAAnimatable.swift"; sourceTree = "<group>"; };
-		3A62C6041D261DCD0015FAAA /* CGPoint+FAAnimatable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGPoint+FAAnimatable.swift"; sourceTree = "<group>"; };
-		3A62C6051D261DCD0015FAAA /* CGRect+FAAnimatable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGRect+FAAnimatable.swift"; sourceTree = "<group>"; };
-		3A62C6061D261DCD0015FAAA /* CGSize+FAAnimatable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGSize+FAAnimatable.swift"; sourceTree = "<group>"; };
-		3A62C6081D261DCD0015FAAA /* FAAnimation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FAAnimation.swift; sourceTree = "<group>"; };
-		3A62C6091D261DCD0015FAAA /* FAAnimationGroup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FAAnimationGroup.swift; sourceTree = "<group>"; };
-		3A62C60A1D261DCD0015FAAA /* FAAnimationMaker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FAAnimationMaker.swift; sourceTree = "<group>"; };
-		3A62C60B1D261DCD0015FAAA /* FlightAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FlightAnimator.swift; path = FAAnimation/FlightAnimator.swift; sourceTree = "<group>"; };
-		3A62C60D1D261DCD0015FAAA /* FAEasing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FAEasing.swift; sourceTree = "<group>"; };
-		3A62C60F1D261DCD0015FAAA /* FASpring.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FASpring.swift; sourceTree = "<group>"; };
-		3A62C6511D2669240015FAAA /* FAInterpolator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FAInterpolator.swift; sourceTree = "<group>"; };
-		3AB7B91D1D283C960073B110 /* CALayer+FAAnimation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "CALayer+FAAnimation.swift"; path = "../FAAnimation/Extensions/CALayer+FAAnimation.swift"; sourceTree = "<group>"; };
-		3AB7B91E1D283C960073B110 /* NSValue+FAAnimation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "NSValue+FAAnimation.swift"; path = "../FAAnimation/Extensions/NSValue+FAAnimation.swift"; sourceTree = "<group>"; };
-		3AB7B91F1D283C960073B110 /* UIView+FAAnimation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIView+FAAnimation.swift"; path = "../FAAnimation/Extensions/UIView+FAAnimation.swift"; sourceTree = "<group>"; };
+		3AEBA4A71D2AF657008147ED /* FAAnimation+Callbacks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "FAAnimation+Callbacks.swift"; sourceTree = "<group>"; };
+		3AEBA4A81D2AF657008147ED /* FAPanGestureRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FAPanGestureRecognizer.swift; sourceTree = "<group>"; };
+		3AEBA4AA1D2AF657008147ED /* FAAnimatable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FAAnimatable.swift; sourceTree = "<group>"; };
+		3AEBA4AC1D2AF657008147ED /* CATransform3D+FAAnimatable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CATransform3D+FAAnimatable.swift"; sourceTree = "<group>"; };
+		3AEBA4AD1D2AF657008147ED /* CGFloat+FAAnimatable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGFloat+FAAnimatable.swift"; sourceTree = "<group>"; };
+		3AEBA4AE1D2AF657008147ED /* CGPoint+FAAnimatable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGPoint+FAAnimatable.swift"; sourceTree = "<group>"; };
+		3AEBA4AF1D2AF657008147ED /* CGRect+FAAnimatable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGRect+FAAnimatable.swift"; sourceTree = "<group>"; };
+		3AEBA4B01D2AF657008147ED /* CGSize+FAAnimatable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGSize+FAAnimatable.swift"; sourceTree = "<group>"; };
+		3AEBA4B31D2AF657008147ED /* CALayer+FAAnimation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CALayer+FAAnimation.swift"; sourceTree = "<group>"; };
+		3AEBA4B41D2AF657008147ED /* NSValue+FAAnimation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSValue+FAAnimation.swift"; sourceTree = "<group>"; };
+		3AEBA4B51D2AF657008147ED /* UIView+FAAnimation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+FAAnimation.swift"; sourceTree = "<group>"; };
+		3AEBA4B61D2AF657008147ED /* FAAnimation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FAAnimation.swift; sourceTree = "<group>"; };
+		3AEBA4B71D2AF657008147ED /* FAAnimationGroup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FAAnimationGroup.swift; sourceTree = "<group>"; };
+		3AEBA4B81D2AF657008147ED /* FAAnimationMaker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FAAnimationMaker.swift; sourceTree = "<group>"; };
+		3AEBA4B91D2AF657008147ED /* FlightAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlightAnimator.swift; sourceTree = "<group>"; };
+		3AEBA4BB1D2AF657008147ED /* FAEasing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FAEasing.swift; sourceTree = "<group>"; };
+		3AEBA4BC1D2AF657008147ED /* FAInterpolator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FAInterpolator.swift; sourceTree = "<group>"; };
+		3AEBA4BD1D2AF657008147ED /* FASpring.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FASpring.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -108,7 +108,7 @@
 			isa = PBXGroup;
 			children = (
 				13009CEC1D0B90C4008419C8 /* FlightAnimator.h */,
-				3A62C5F71D261DCD0015FAAA /* Source */,
+				3AEBA4A51D2AF657008147ED /* Source */,
 				13009CEE1D0B90C4008419C8 /* Info.plist */,
 			);
 			path = FlightAnimator;
@@ -123,79 +123,77 @@
 			path = FlightAnimatorTests;
 			sourceTree = "<group>";
 		};
-		3A62C5F71D261DCD0015FAAA /* Source */ = {
+		3AEBA4A51D2AF657008147ED /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				3A62C60B1D261DCD0015FAAA /* FlightAnimator.swift */,
-				3A62C5FF1D261DCD0015FAAA /* FAAnimatable */,
-				3A62C6071D261DCD0015FAAA /* FAAnimation */,
-				3A62C60C1D261DCD0015FAAA /* FAInterpolator */,
-				3A62C5FC1D261DCD0015FAAA /* Extras */,
+				3AEBA4A61D2AF657008147ED /* Extras */,
+				3AEBA4A91D2AF657008147ED /* FAAnimatable */,
+				3AEBA4B11D2AF657008147ED /* FAAnimation */,
+				3AEBA4BA1D2AF657008147ED /* FAInterpolation */,
 			);
 			name = Source;
 			path = ../../Source;
 			sourceTree = "<group>";
 		};
-		3A62C5F81D261DCD0015FAAA /* Extensions */ = {
+		3AEBA4A61D2AF657008147ED /* Extras */ = {
 			isa = PBXGroup;
 			children = (
-				3AB7B91D1D283C960073B110 /* CALayer+FAAnimation.swift */,
-				3AB7B91E1D283C960073B110 /* NSValue+FAAnimation.swift */,
-				3AB7B91F1D283C960073B110 /* UIView+FAAnimation.swift */,
-			);
-			name = Extensions;
-			path = ../Extensions;
-			sourceTree = "<group>";
-		};
-		3A62C5FC1D261DCD0015FAAA /* Extras */ = {
-			isa = PBXGroup;
-			children = (
-				3A62C5FD1D261DCD0015FAAA /* FAAnimation+Callbacks.swift */,
-				3A62C5FE1D261DCD0015FAAA /* FAPanGestureRecognizer.swift */,
+				3AEBA4A71D2AF657008147ED /* FAAnimation+Callbacks.swift */,
+				3AEBA4A81D2AF657008147ED /* FAPanGestureRecognizer.swift */,
 			);
 			path = Extras;
 			sourceTree = "<group>";
 		};
-		3A62C5FF1D261DCD0015FAAA /* FAAnimatable */ = {
+		3AEBA4A91D2AF657008147ED /* FAAnimatable */ = {
 			isa = PBXGroup;
 			children = (
-				3A62C6001D261DCD0015FAAA /* FAAnimatable.swift */,
-				3A62C6011D261DCD0015FAAA /* Implementation */,
+				3AEBA4AA1D2AF657008147ED /* FAAnimatable.swift */,
+				3AEBA4AB1D2AF657008147ED /* Implementation */,
 			);
 			path = FAAnimatable;
 			sourceTree = "<group>";
 		};
-		3A62C6011D261DCD0015FAAA /* Implementation */ = {
+		3AEBA4AB1D2AF657008147ED /* Implementation */ = {
 			isa = PBXGroup;
 			children = (
-				3A62C6021D261DCD0015FAAA /* CATransform3D+FAAnimatable.swift */,
-				3A62C6031D261DCD0015FAAA /* CGFloat+FAAnimatable.swift */,
-				3A62C6041D261DCD0015FAAA /* CGPoint+FAAnimatable.swift */,
-				3A62C6051D261DCD0015FAAA /* CGRect+FAAnimatable.swift */,
-				3A62C6061D261DCD0015FAAA /* CGSize+FAAnimatable.swift */,
+				3AEBA4AC1D2AF657008147ED /* CATransform3D+FAAnimatable.swift */,
+				3AEBA4AD1D2AF657008147ED /* CGFloat+FAAnimatable.swift */,
+				3AEBA4AE1D2AF657008147ED /* CGPoint+FAAnimatable.swift */,
+				3AEBA4AF1D2AF657008147ED /* CGRect+FAAnimatable.swift */,
+				3AEBA4B01D2AF657008147ED /* CGSize+FAAnimatable.swift */,
 			);
 			path = Implementation;
 			sourceTree = "<group>";
 		};
-		3A62C6071D261DCD0015FAAA /* FAAnimation */ = {
+		3AEBA4B11D2AF657008147ED /* FAAnimation */ = {
 			isa = PBXGroup;
 			children = (
-				3A62C6081D261DCD0015FAAA /* FAAnimation.swift */,
-				3A62C6091D261DCD0015FAAA /* FAAnimationGroup.swift */,
-				3A62C60A1D261DCD0015FAAA /* FAAnimationMaker.swift */,
-				3A62C5F81D261DCD0015FAAA /* Extensions */,
+				3AEBA4B21D2AF657008147ED /* Extensions */,
+				3AEBA4B61D2AF657008147ED /* FAAnimation.swift */,
+				3AEBA4B71D2AF657008147ED /* FAAnimationGroup.swift */,
+				3AEBA4B81D2AF657008147ED /* FAAnimationMaker.swift */,
+				3AEBA4B91D2AF657008147ED /* FlightAnimator.swift */,
 			);
 			path = FAAnimation;
 			sourceTree = "<group>";
 		};
-		3A62C60C1D261DCD0015FAAA /* FAInterpolator */ = {
+		3AEBA4B21D2AF657008147ED /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				3A62C6511D2669240015FAAA /* FAInterpolator.swift */,
-				3A62C60D1D261DCD0015FAAA /* FAEasing.swift */,
-				3A62C60F1D261DCD0015FAAA /* FASpring.swift */,
+				3AEBA4B31D2AF657008147ED /* CALayer+FAAnimation.swift */,
+				3AEBA4B41D2AF657008147ED /* NSValue+FAAnimation.swift */,
+				3AEBA4B51D2AF657008147ED /* UIView+FAAnimation.swift */,
 			);
-			name = FAInterpolator;
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		3AEBA4BA1D2AF657008147ED /* FAInterpolation */ = {
+			isa = PBXGroup;
+			children = (
+				3AEBA4BB1D2AF657008147ED /* FAEasing.swift */,
+				3AEBA4BC1D2AF657008147ED /* FAInterpolator.swift */,
+				3AEBA4BD1D2AF657008147ED /* FASpring.swift */,
+			);
 			path = FAInterpolation;
 			sourceTree = "<group>";
 		};
@@ -307,24 +305,24 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3A62C6131D261DCD0015FAAA /* FAAnimation+Callbacks.swift in Sources */,
-				3A62C61C1D261DCD0015FAAA /* FAAnimationGroup.swift in Sources */,
-				3AB7B9221D283C960073B110 /* UIView+FAAnimation.swift in Sources */,
-				3A62C6191D261DCD0015FAAA /* CGRect+FAAnimatable.swift in Sources */,
-				3A62C6181D261DCD0015FAAA /* CGPoint+FAAnimatable.swift in Sources */,
-				3A62C6161D261DCD0015FAAA /* CATransform3D+FAAnimatable.swift in Sources */,
-				3A62C61E1D261DCD0015FAAA /* FlightAnimator.swift in Sources */,
-				3A62C61F1D261DCD0015FAAA /* FAEasing.swift in Sources */,
-				3AB7B9211D283C960073B110 /* NSValue+FAAnimation.swift in Sources */,
-				3AB7B9201D283C960073B110 /* CALayer+FAAnimation.swift in Sources */,
-				3A62C6141D261DCD0015FAAA /* FAPanGestureRecognizer.swift in Sources */,
-				3A62C61B1D261DCD0015FAAA /* FAAnimation.swift in Sources */,
-				3A62C6171D261DCD0015FAAA /* CGFloat+FAAnimatable.swift in Sources */,
-				3A62C6151D261DCD0015FAAA /* FAAnimatable.swift in Sources */,
-				3A62C61A1D261DCD0015FAAA /* CGSize+FAAnimatable.swift in Sources */,
-				3A62C6211D261DCD0015FAAA /* FASpring.swift in Sources */,
-				3A62C6521D2669240015FAAA /* FAInterpolator.swift in Sources */,
-				3A62C61D1D261DCD0015FAAA /* FAAnimationMaker.swift in Sources */,
+				3AEBA4C21D2AF657008147ED /* CGFloat+FAAnimatable.swift in Sources */,
+				3AEBA4CA1D2AF657008147ED /* FAAnimationGroup.swift in Sources */,
+				3AEBA4C81D2AF657008147ED /* UIView+FAAnimation.swift in Sources */,
+				3AEBA4C51D2AF657008147ED /* CGSize+FAAnimatable.swift in Sources */,
+				3AEBA4C11D2AF657008147ED /* CATransform3D+FAAnimatable.swift in Sources */,
+				3AEBA4C61D2AF657008147ED /* CALayer+FAAnimation.swift in Sources */,
+				3AEBA4CC1D2AF657008147ED /* FlightAnimator.swift in Sources */,
+				3AEBA4CD1D2AF657008147ED /* FAEasing.swift in Sources */,
+				3AEBA4BF1D2AF657008147ED /* FAPanGestureRecognizer.swift in Sources */,
+				3AEBA4C01D2AF657008147ED /* FAAnimatable.swift in Sources */,
+				3AEBA4C91D2AF657008147ED /* FAAnimation.swift in Sources */,
+				3AEBA4CE1D2AF657008147ED /* FAInterpolator.swift in Sources */,
+				3AEBA4BE1D2AF657008147ED /* FAAnimation+Callbacks.swift in Sources */,
+				3AEBA4C41D2AF657008147ED /* CGRect+FAAnimatable.swift in Sources */,
+				3AEBA4C71D2AF657008147ED /* NSValue+FAAnimation.swift in Sources */,
+				3AEBA4CF1D2AF657008147ED /* FASpring.swift in Sources */,
+				3AEBA4CB1D2AF657008147ED /* FAAnimationMaker.swift in Sources */,
+				3AEBA4C31D2AF657008147ED /* CGPoint+FAAnimatable.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
