@@ -64,15 +64,14 @@ view.animate { (animator) in
 Chaining animations together in FlightAnimator is very easy. You can nest animations using three different types triggers:
 
 * Simultaneously
-* Time progress based
-* Value progress of the animation
+* Time Progress Based
+* Value Progress Based
  
+These can be applied to the view being animated, or any other view accessible in the view heirarchy. Let's look at how to nest some animations using triggers.
 
-Let's look at how to nest some animations using triggers.
+####Trigger Simultaneously
 
-####Trigger On Start
-
-If you want to chain animations together without value progress, or time progress, there is a specific method that will trigger an animation as the parent animation begins to animation. Below is an examples that will trigger the second animation as the the parent begins animating by calling `animator.triggerOnStart(...)`
+To trigger an animation right as the parent animation begins, attach a trigger on a parent animator by calling `animator.triggerOnStart(...)`. The trigger will perform the animation enclosed accordingly right as the the parent begins animating. 
 
 ```swift
 view.animate { (animator) in
@@ -85,11 +84,11 @@ view.animate { (animator) in
     })
 ```
 
-####Time Progress Trigger
+####Trigger Relative to Time Progress
 
-When nest a trigger on a parent animation at a specified progress, and trigger which will perform the animation enclosed in the created block accordingly. These can be applied to the view being animated, or any other view defined in the heirarchy.
+A time based trigger will apply the next animation based on the progressed time of the overall parent animation. The progress value is defined with a range from 0.0 - 1.0, if the over all time of an animation is 1.0 second, by setting the atProgress paramter to 0.5, will trigger the animation at the 0.5 seconds into the parent animation. 
 
-A time based trigger will apply the next animation based on the progressed time of the overall parent animation. Below is an examples that will trigger the second animation at the halfway point in time of the parent animation by calling `triggerAtTimeProgress(...)`
+Below is an examples that will trigger the second animation at the halfway point in time of the parent animation by calling `triggerAtTimeProgress(...)`
 
 ```swift
 view.animate { (animator) in
@@ -103,7 +102,7 @@ view.animate { (animator) in
 }
 ```
 
-####Value Progress Trigger
+####Trigger Relative Value Progress
 
 A value based progress trigger will apply the next animation based on the value progress of the overall parent animation. Below is an examples that will trigger the second animation at the halfway point of the value progress on the parent animation by calling `animator.triggerAtValueProgress(...)`
 
