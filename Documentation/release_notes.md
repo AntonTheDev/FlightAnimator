@@ -1,13 +1,20 @@
 #Release Notes
 
-####Version 0.7.
+####Version 0.7.0
 
-* Refactored some of the code:
-	* Created an FAInterpolator for all the interpolation logic
-* Accidentally removed OutIn easings in version 0.6.0, fixed 
-
-
-
+* Refactored the Interpolator
+* Refactored / Fixed Sequencing Logic
+	* Multiple Sequences for the same progress trigger value should fire correctly
+	* Value Based triggers now work with springs
+* Added 3 more timing curves:
+	* InAtan
+	* OutAtan
+	* InOutAtan
+* Updated the app demo
+	* Added option to enable and disable a secondary view
+	* Added ability to test out time based / value based triggers with secondary view
+	* Moved the picker into individual cells for each property 	
+	
 ####Version 0.6.1
 
 * Refactored some of the code:
