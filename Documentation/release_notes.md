@@ -6,6 +6,9 @@
 * Refactored / Fixed Sequencing Logic
 	* Multiple Sequences for the same progress trigger value should fire correctly
 	* Value Based triggers now work with springs
+* Renamed Linear timing curves:
+	* LinearSmooth -> SmoothStep
+	* LinearSmoother -> SmootherStep
 * Added 3 more timing curves:
 	* InAtan
 	* OutAtan
