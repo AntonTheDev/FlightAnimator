@@ -20,6 +20,12 @@
 	* Value Progress Relative
 - [x] Advanced Multi-Curve Group Synchronization
 
+##Installation
+
+* **Requirements** : XCode 7.3+, iOS 8.0+ 
+* [Installation Instructions](/Documentation/installation.md)
+* [Release Notes](/Documentation/release_notes.md)
+
 ##Communication
 
 - If you **found a bug**, or **have a feature request**, open an issue.
@@ -27,26 +33,31 @@
 - If you **want to contribute**, review the [Contribution Guidelines](/Documentation/CONTRIBUTING.md), and submit a pull request. 
 
 
-##Installation
-
-* **Requirements** : XCode 7.3+, iOS 8.0+ 
-* [Installation Instructions](/Documentation/installation.md)
-* [Release Notes](/Documentation/release_notes.md)
-
 ##Introduction
 
 FlightAnimator is a natural animation engine built on top of CoreAnimation. Implemented with a blocks based approach it is very easy to create, configure, cache, and reuse animations dynamically based on the current state. 
 
 FlightAnimator uses CAKeyframeAnimation(s) and CoreAnimationGroup(s) under the hood. One can apply animations on a view directly, or cache animations to define states, and apply them at a later time. The animations are technically a custom CAAnimationGroup, once applied to the layer, will dynamically synchronize the remaining progress based on the current presentationLayer's values.
 
-Before beginning the tutorial feel free to clone the repository, and checkout the demo app included with the project. In the project one can set different timing curves for bounds, position, alpha, and transform. Feel free to experiment by adjusting the timing curves to explore the resulting effects.
+#####Demo App
 
+The project includes a highly configurable demo app that allows for experimentation to explore the resulting effects of unlimited configurations. Feel free to experiment by adjusting the timing curves, triggers, and timing priorities to explore the resulting effects.
 
+Demo Features Included:
+
+* Animate a view to different locations on the screen
+* Drag and release view to apply Decay to the final destination
+* Adjusting the timing curves for bounds, position, alpha, and transform.
+* Enable a secondary view, which follows the main view to it's last location
+* Adjust the progress for time based/value based triggers on the secondary view
+* Adjust group timing priority
+ 
+ 
 ##Basic Use 
 
-There are two ways  to use this framework, perform an animation on a specific view right away, or register an animation on a view to perform later. 
+There are a many ways to use the framework, allowing for flexibility in defining complex animations with ease. Whether performing an animation, registering and caching an animation, or chaining animations, the framework follows a common blocks based builder approach to define property animations within an animation group. 
 
-When creating or registering an animation, the frame work uses a blocks based syntax to build the animation. During the build process, for each property animation, one can apply a value, the timing curve, and a the primary flag, which will be discussed at a later point in the documentation.
+During the build process, for each property animation, one can apply the final value, the timing curve, and a the primary flag to adjust synchronization of the animation when it is applied.
 
 ###Simple Animation
 
@@ -68,7 +79,7 @@ view.animate { (animator) in
 }
 ```
 
-##Sequence
+##Chaining Animations
 
 Chaining animations together in FlightAnimator is very easy. You can nest animations using three different types triggers:
 
@@ -131,7 +142,7 @@ view.animate { (animator) in
 
 FlighAnimator allows for defining animations (aka states) up front using keys, and triggers them at any time in the application flow. When the animation is applied, if the view is in mid flight, it will synchronize itself accordingly, and animate to its final destination. To register an animation, call a globally defined method, and create an animations just as defined earlier examples within the maker block.
 
-####Register Animation
+####Register/Cache Animation
 
 The following example shows how to register, and cache it for a key on a specified view. This animation is only cached, and is not performed until it is manually triggered at a later point.
 
@@ -147,7 +158,7 @@ registerAnimation(onView : view, forKey : AnimationKeys.CenterStateFrameAnimatio
 })
 ```
 
-####Trigger Keyed Animation
+####Apply Registered Animation
 
 
 To trigger the animation call the following 
@@ -256,7 +267,7 @@ func respondToPanRecognizer(recognizer : UIPanGestureRecognizer) {
 ```
 
 
-##Reference 
+##Reference
 
 [Supported Parametric Curves](/Documentation/parametric_easings.md)
 
@@ -266,6 +277,7 @@ func respondToPanRecognizer(recognizer : UIPanGestureRecognizer) {
 
 [Contribution Guidelines](/Documentation/CONTRIBUTING.md)
 
+
 ## License
 
-FlightAnimator is released under the MIT license. See [License](/LICENSE.md) for details.
+*FlightAnimator is released under the MIT license. See [License](/LICENSE.md) for details.*
