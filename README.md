@@ -13,6 +13,9 @@ FlightAnimator is a natural animation engine built on top of CoreAnimation. Impl
 
 Under the hood, FlightAnimator uses CAKeyframeAnimation(s) and CoreAnimationGroup(s). The animations are created as a custom CAAnimationGroup, then configured with multiple property animations. Once the animation is applied to the layer, it will dynamically synchronize the remaining progress based on the current presentationLayer's values. The animations can be applied directly on a view, or registered/cached as states, and be applied at a later time.
 
+Check out the [Framework Demo App](#demoApp) packaged with the project to experiment with all the different capabilities of FlightAnimator.
+
+
 ##Features
 
 - [x] [46+ Parametric Curves, Decay, and Springs](/Documentation/parametric_easings.md) 
@@ -262,7 +265,7 @@ func respondToPanRecognizer(recognizer : UIPanGestureRecognizer) {
 [Contribution Guidelines](/Documentation/CONTRIBUTING.md)
 
 
-###Demo App
+###<a name="demoApp"></a>Framework Demo App
 
 The project includes a highly configurable demo app that allows for experimentation to explore resulting effects of the unlimited configurations FlightAnimator supports.
 
