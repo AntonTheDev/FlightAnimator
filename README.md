@@ -7,15 +7,6 @@
 
 ![alt tag](/Documentation/FlightBanner.jpg?raw=true)
 
-##Introduction
-
-FlightAnimator is a natural animation engine built on top of CoreAnimation. Implemented with a blocks based approach, it provides a very simple syntax to create, configure, cache, and reuse animations dynamically based on the current state. 
-
-Under the hood, FlightAnimator uses CAKeyframeAnimation(s) and CoreAnimationGroup(s). The animations are created as a custom CAAnimationGroup, then configured with multiple property animations. Once the animation is applied to the layer, it will dynamically synchronize the remaining progress based on the current presentationLayer's values. The animations can be applied directly on a view, or registered/cached as states, and be applied at a later time.
-
-Check out the [Framework Demo App](#demoApp) packaged with the project to experiment with all the different capabilities of FlightAnimator.
-
-
 ##Features
 
 - [x] [46+ Parametric Curves, Decay, and Springs](/Documentation/parametric_easings.md) 
@@ -28,13 +19,23 @@ Check out the [Framework Demo App](#demoApp) packaged with the project to experi
 	* Value Progress Relative
 - [x] Advanced Multi-Curve Group Synchronization
 
+
+##Introduction
+
+FlightAnimator is a natural animation engine built on top of CoreAnimation. Implemented with a blocks based approach, it provides a very simple syntax to create, configure, cache, and reuse animations dynamically based on the current state. 
+
+Under the hood, FlightAnimator uses CAKeyframeAnimation(s) and CoreAnimationGroup(s). The animations are created as a custom CAAnimationGroup, then configured with multiple property animations. Once the animation is applied to the layer, it will dynamically synchronize the remaining progress based on the current presentationLayer's values. The animations can be applied directly on a view, or registered/cached as states, and be applied at a later time.
+
+Check out the [Framework Demo App](#demoApp) packaged with the project to experiment with all the different capabilities of FlightAnimator.
+
+
 ##Installation
 
 * **Requirements** : XCode 7.3+, iOS 8.0+ 
 * [Installation Instructions](/Documentation/installation.md)
 * [Release Notes](/Documentation/release_notes.md)
 
-####Communication
+##Communication
 
 - If you **found a bug**, or **have a feature request**, open an issue.
 - If you **need help** or a **general question**, use [Stack Overflow](http://stackoverflow.com/questions/tagged/flight-animator). (tag 'flight-animator')
