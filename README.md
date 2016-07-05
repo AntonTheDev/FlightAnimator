@@ -7,6 +7,11 @@
 
 ![alt tag](/Documentation/FlightBanner.jpg?raw=true)
 
+##Introduction
+
+FlightAnimator is a natural animation engine built on top of CoreAnimation. Implemented with a blocks based approach, it provides a very simple syntax to create, configure, cache, and reuse animations dynamically based on the current state. 
+
+Under the hood, FlightAnimator uses CAKeyframeAnimation(s) and CoreAnimationGroup(s). The animations are created as a custom CAAnimationGroup, then configured with multiple property animations. Once the animation is applied to the layer, it will dynamically synchronize the remaining progress based on the current presentationLayer's values. The animations can be applied directly on a view, or registered/cached as states, and be applied at a later time.
 
 ##Features
 
@@ -26,36 +31,15 @@
 * [Installation Instructions](/Documentation/installation.md)
 * [Release Notes](/Documentation/release_notes.md)
 
-##Communication
+####Communication
 
 - If you **found a bug**, or **have a feature request**, open an issue.
 - If you **need help** or a **general question**, use [Stack Overflow](http://stackoverflow.com/questions/tagged/flight-animator). (tag 'flight-animator')
 - If you **want to contribute**, review the [Contribution Guidelines](/Documentation/CONTRIBUTING.md), and submit a pull request. 
 
-
-##Introduction
-
-FlightAnimator is a natural animation engine built on top of CoreAnimation. Implemented with a blocks based approach it is very easy to create, configure, cache, and reuse animations dynamically based on the current state. 
-
-FlightAnimator uses CAKeyframeAnimation(s) and CoreAnimationGroup(s) under the hood. One can apply animations on a view directly, or cache animations to define states, and apply them at a later time. The animations are technically a custom CAAnimationGroup, once applied to the layer, will dynamically synchronize the remaining progress based on the current presentationLayer's values.
-
-#####Demo App
-
-The project includes a highly configurable demo app that allows for experimentation to explore resulting effects of the unlimited configurations FlightAnimator supports.
-
-Demo Features Included:
-
-* Animate a view to different location on the screen
-* Drag and release view to apply Decay easing to the final destination
-* Adjust timing curves for bounds, position, alpha, and transform.
-* Enable a secondary view, which follows the main view to it's last location
-* Adjust group timing priority to test synchronization
-* Adjust progress for time based/value based triggers on the secondary view
- 
- 
 ##Basic Use 
 
-There are a many ways to use the framework, allowing for flexibility in defining complex animations with ease. Whether performing an animation, registering and caching an animation, or chaining animations, the framework follows a common blocks based builder approach to define property animations within an animation group. 
+There are a many ways to use FlightAnimator as it provides a very flexible syntax for defining animations ranging in completexy with ease. Whether performing an animation,  chaining animations, or registering/caching an animation, the framework follows a common blocks based builder approach to define property animations within an animation group. 
 
 During the build process, for each property animation, one can apply the final value, the timing curve, and a the primary flag to adjust synchronization of the animation when it is applied.
 
@@ -277,6 +261,20 @@ func respondToPanRecognizer(recognizer : UIPanGestureRecognizer) {
 
 [Contribution Guidelines](/Documentation/CONTRIBUTING.md)
 
+
+###Demo App
+
+The project includes a highly configurable demo app that allows for experimentation to explore resulting effects of the unlimited configurations FlightAnimator supports.
+
+Demo Features Included:
+
+* Animate a view to different location on the screen
+* Drag and release view to apply Decay easing to the final destination
+* Adjust timing curves for bounds, position, alpha, and transform.
+* Enable a secondary view, which follows the main view to it's last location
+* Adjust group timing priority to test synchronization
+* Adjust progress for time based/value based triggers on the secondary view
+ 
 
 ## License
 
