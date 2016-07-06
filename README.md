@@ -1,6 +1,5 @@
 #FlightAnimator
 
-[![Awesome](https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg)](https://github.com/sindresorhus/awesome)
 [![Cocoapods Compatible](https://img.shields.io/badge/pod-v0.7.3-blue.svg)]()
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)]()
 [![Platform](https://img.shields.io/badge/platform-ios-lightgrey.svg)]()
