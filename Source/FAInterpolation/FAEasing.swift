@@ -10,6 +10,8 @@ import Foundation
 import UIKit
 
 let overshoot : CGFloat = 1.70158
+let CGM_PI_2 = CGFloat(M_PI_2)
+let CGM_PI = CGFloat(M_PI)
 
 public enum FAEasing : Equatable {
     case Linear
@@ -79,16 +81,16 @@ public enum FAEasing : Equatable {
             let m: CGFloat = atan(0.5 * 15.0)
             return atan((p - 0.5) * 15.0) / (2.0 * m) + 0.5
         case .InSine:
-            return sin((p - 1.0) * CGFloat(M_PI_2)) + 1.0
+            return sin((p - 1.0) * CGM_PI_2) + 1.0
         case .OutSine:
-            return sin(p * CGFloat(M_PI_2))
+            return sin(p * CGM_PI_2)
         case .InOutSine:
-            return 0.5 * (1.0 - cos(p * CGFloat(M_PI)))
+            return 0.5 * (1.0 - cos(p * CGM_PI))
         case .OutInSine:
             if (p < 0.5) {
-                return 0.5 * sin(p * 2 * (CGFloat(M_PI) / 2.0))
+                return 0.5 * sin(p * 2 * (CGM_PI / 2.0))
             } else {
-                return -0.5 * cos(((p * 2) - 1.0) * (CGFloat(M_PI) / 2.0)) + 1.0
+                return -0.5 * cos(((p * 2) - 1.0) * (CGM_PI / 2.0)) + 1.0
             }
         case .InQuadratic:
             return p * p
@@ -204,36 +206,36 @@ public enum FAEasing : Equatable {
         case .InOutBack:
             if p < 0.5  {
                 let f : CGFloat = 2 * p
-                return 0.5 * (f * f * f - f * sin(f * CGFloat(M_PI)))
+                return 0.5 * (f * f * f - f * sin(f * CGM_PI))
             } else {
                 let f : CGFloat = (1.0 - (2.0 * p - 1.0))
-                let calculated = (f * f * f - f * sin(f * CGFloat(M_PI)))
+                let calculated = (f * f * f - f * sin(f * CGM_PI))
                 return 0.5 * (1.0 - calculated) + 0.5
             }
         case .OutInBack:
             if p < 0.5  {
                 let f : CGFloat =  p / 2.0
-                return 0.5 * (f * f * f - f * sin(f * CGFloat(M_PI)))
+                return 0.5 * (f * f * f - f * sin(f * CGM_PI))
             } else {
                 let f : CGFloat = (1.0 - (2.0 * p - 1.0))
-                let calculated = (f * f * f - f * sin(f * CGFloat(M_PI)))
+                let calculated = (f * f * f - f * sin(f * CGM_PI))
                 return 0.5 * (1.0 - calculated) + 0.5
             }
         case .InElastic:
-            return sin(13 * CGFloat(M_PI_2) * p) * pow(2, 10 * (p - 1))
+            return sin(13 * CGM_PI_2 * p) * pow(2, 10 * (p - 1))
         case .OutElastic:
-            return sin(-13 * CGFloat(M_PI_2) * (p + 1)) * pow(2, -10 * p) + 1
+            return sin(-13 * CGM_PI_2 * (p + 1)) * pow(2, -10 * p) + 1
         case .InOutElastic:
             if p < 0.5  {
-                return 0.5 * sin(13.0 * CGFloat(M_PI_2) * (2.0 * p)) * pow(2, 10.0 * ((2.0 * p) - 1.0))
+                return 0.5 * sin(13.0 * CGM_PI_2 * (2.0 * p)) * pow(2, 10.0 * ((2.0 * p) - 1.0))
             } else {
-                return 0.5 * (sin(-13.0 * CGFloat(M_PI_2) * ((2.0 * p - 1.0) + 1.0)) * pow(2, -10.0 * (2.0 * p - 1.0)) + 2.0)
+                return 0.5 * (sin(-13.0 * CGM_PI_2 * ((2.0 * p - 1.0) + 1.0)) * pow(2, -10.0 * (2.0 * p - 1.0)) + 2.0)
             }
         case .OutInElastic:
             if p < 0.5  {
-                return 0.5 * (sin(-13.0 * CGFloat(M_PI_2) * ((2.0 * p - 1.0) + 1.0)) * pow(2, -10.0 * (2.0 * p - 1.0)) + 2.0)
+                return 0.5 * (sin(-13.0 * CGM_PI_2 * ((2.0 * p - 1.0) + 1.0)) * pow(2, -10.0 * (2.0 * p - 1.0)) + 2.0)
             } else {
-                return 0.5 * sin(13.0 * CGFloat(M_PI_2) * (2.0 * p)) * pow(2, 10.0 * ((2.0 * p) - 1.0))
+                return 0.5 * sin(13.0 * CGM_PI_2 * (2.0 * p)) * pow(2, 10.0 * ((2.0 * p) - 1.0))
             }
         case .InBounce:
             return 1.0 - FAEasing.OutBounce.parametricProgress(1.0 - p)

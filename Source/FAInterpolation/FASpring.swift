@@ -9,8 +9,10 @@
 import Foundation
 import UIKit
 
+let CGFLT_EPSILON = CGFloat(FLT_EPSILON)
+
 public struct FASpring {
-    
+
     private var equilibriumPosition : CGFloat
     private var angularFrequency    : CGFloat  = 10.0
     private var dampingRatio        : CGFloat  = 1.0
@@ -53,7 +55,7 @@ public struct FASpring {
         self.positionValue = initialValue
         self.positionVelocity = velocity
         
-        if self.angularFrequency < CGFloat(FLT_EPSILON) {
+        if self.angularFrequency < CGFLT_EPSILON {
             print("No motion")
         }
         
@@ -62,7 +64,7 @@ public struct FASpring {
         }
         
         // Over Damped
-        if self.dampingRatio > 1.0 + CGFloat(FLT_EPSILON) {
+        if self.dampingRatio > 1.0 + CGFLT_EPSILON {
             za = -angularFrequency * dampingRatio
             zb = angularFrequency * sqrt(dampingRatio * dampingRatio - 1.0)
             z1 = za - zb
@@ -71,7 +73,7 @@ public struct FASpring {
             c2 = (positionValue - equilibriumPosition) - c1
         }
             // Critically Damped
-        else if (self.dampingRatio > 1.0 - CGFloat(FLT_EPSILON)) {
+        else if (self.dampingRatio > 1.0 - CGFLT_EPSILON) {
             c1 = positionVelocity + angularFrequency * (positionValue - equilibriumPosition)
             c2 = (positionValue - equilibriumPosition)
         }
@@ -95,19 +97,19 @@ public struct FASpring {
     func updatedValue(deltaTime: CGFloat) -> CGFloat {
         
         // Over Damped
-        if dampingRatio > 1.0 + CGFloat(FLT_EPSILON) {
+        if dampingRatio > 1.0 + CGFLT_EPSILON {
             let expTerm1 = exp(z1 * deltaTime)
             let expTerm2 = exp(z2 * deltaTime)
             let position = equilibriumPosition + c1 * expTerm1 + c2 * expTerm2
             
-            return CGFloat(position)
+            return position
         }
             // Critically Damped
-        else if (dampingRatio > 1.0 - CGFloat(FLT_EPSILON)) {
+        else if (dampingRatio > 1.0 - CGFLT_EPSILON) {
             let expTerm = exp( -angularFrequency * deltaTime )
             let c3 = (c1 * deltaTime + c2) * expTerm
             let p = equilibriumPosition + c3
-            return  CGFloat(ceil(p))
+            return ceil(p)
         }
             // Under Damped
         else {
@@ -116,7 +118,7 @@ public struct FASpring {
             let cosTerm  = cos(change)
             let sinTerm  = sin(change)
             let exp2 =  expTerm * (c1 * cosTerm + c2 * sinTerm)
-            return CGFloat(equilibriumPosition + exp2)
+            return equilibriumPosition + exp2
         }
     }
     
@@ -133,13 +135,13 @@ public struct FASpring {
      */
     func velocity(deltaTime : CGFloat) -> CGFloat {
         // Over Damped
-        if dampingRatio > 1.0 + CGFloat(FLT_EPSILON) {
+        if dampingRatio > 1.0 + CGFLT_EPSILON {
             let expTerm1 = exp(z1 * deltaTime)
             let expTerm2 = exp(z2 * deltaTime)
             return c1 * z1 *  expTerm1 + c2 * z2 * expTerm2
         }
             // Critically Damped
-        else if (dampingRatio > 1.0 - CGFloat(FLT_EPSILON)) {
+        else if (dampingRatio > 1.0 - CGFLT_EPSILON) {
             let expTerm = exp( -angularFrequency * deltaTime )
             let c3 = (c1 * deltaTime + c2) * expTerm
             return (c1 * expTerm) - (c3 * self.angularFrequency)

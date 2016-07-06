@@ -62,7 +62,6 @@ final public class FAAnimationGroup : CAAnimationGroup {
     private var primaryEasingFunction : FAEasing = FAEasing.Linear
     private var primaryAnimation : FAAnimation?
     
-    private var timeProgress: CGFloat = 0.0
     private var displayLink : CADisplayLink?
     
     var _segmentArray = [SegmentItem]()
@@ -178,7 +177,7 @@ extension FAAnimationGroup {
             if  let newPrimaryAnimation = primaryAnimations[key] {
                 let oldAnimation : FAAnimation? = oldAnimations[key]
                 
-                newPrimaryAnimation.synchronizeWithAnimation(oldAnimation)
+                newPrimaryAnimation.synchronize(runningAnimation: oldAnimation)
                 
                 durationArray.append(newPrimaryAnimation.duration)
                 newAnimations[key] = newPrimaryAnimation
@@ -227,7 +226,7 @@ extension FAAnimationGroup {
                 case .SpringCustom(_, _, _):
                     break
                 default:
-                    customAnimation.configureValues()
+                    customAnimation.synchronize()
                 }
             }
         }
@@ -248,50 +247,20 @@ extension FAAnimationGroup {
         
         return animationDictionary
     }
-    
 }
 
 //MARK: - Sequence Configuration and Timing
 
 extension FAAnimationGroup {
     
-    private func preconfigureSequence(oldAnimationGroup : FAAnimationGroup?) {
-        dispatch_async(dispatch_get_main_queue()) {
-            oldAnimationGroup?.stopTriggerTimer()
-        }
-        
-    }
-    
     internal func updateLoop() {
         for segment in segmentArray {
-            if segment.isTimedBased {
-                if timeProgressed() >= segment.triggerProgessValue {
-                    segment.animatedView!.applyAnimation(forKey: segment.animationKey!)
-                    segmentArray.removeObject(segment)
-                }
-            } else {
-                
-                switch self.primaryEasingFunction {
-                case .SpringDecay:
-                    if primaryAnimation?.springValueProgress() >= segment.triggerProgessValue {
-                        segment.animatedView!.applyAnimation(forKey: segment.animationKey!)
-                        segmentArray.removeObject(segment)
-                    }
-                    break
-                case .SpringCustom(_, _, _):
-                    if primaryAnimation?.springValueProgress() >= segment.triggerProgessValue {
-                        segment.animatedView!.applyAnimation(forKey: segment.animationKey!)
-                        segmentArray.removeObject(segment)
-                    }
-                    
-                    break
-                default:
-                    let progress = primaryEasingFunction.parametricProgress(timeProgressed())
-                    if progress > segment.triggerProgessValue {
-                        segment.animatedView!.applyAnimation(forKey: segment.animationKey!)
-                        segmentArray.removeObject(segment)
-                    }
-                }
+            
+            if segment.isTimedBased && primaryAnimation?.timeProgress() >= segment.triggerProgessValue ||
+              !segment.isTimedBased && primaryAnimation?.valueProgress() >= segment.triggerProgessValue  {
+               
+                segment.animatedView!.applyAnimation(forKey: segment.animationKey!)
+                segmentArray.removeObject(segment)
             }
         }
         
@@ -311,7 +280,6 @@ extension FAAnimationGroup {
         if displayLink == nil {
             displayLink = CADisplayLink(target: self, selector: #selector(FAAnimationGroup.updateLoop))
             displayLink!.addToRunLoop(NSRunLoop.mainRunLoop(), forMode: NSDefaultRunLoopMode)
-            timeProgress = 0.0
             displayLink!.paused = false
         }
     }
@@ -321,31 +289,4 @@ extension FAAnimationGroup {
         displayLink?.removeFromRunLoop(NSRunLoop.mainRunLoop(), forMode: NSDefaultRunLoopMode)
         displayLink = nil
     }
-    
-    private func timeProgressed() -> CGFloat {
-        let currentTime = weakLayer?.presentationLayer()!.convertTime(CACurrentMediaTime(), toLayer: nil)
-        let difference = CGFloat(currentTime! - startTime!)
-        
-        return CGFloat(round(100 * (difference / CGFloat(duration)))/100) + 0.03333333333
-    }
 }
-
-// Calculates spring value progress for the
-func springProgress<T : FAAnimatable>(fromValue : T, toValue : T, springs : Dictionary<String, FASpring>, deltaTime : CGFloat) -> CGFloat {
-    
-    
-    let currentValue = toValue.interpolatedSpringValue(toValue, springs: springs, deltaTime: deltaTime) as! T
-    
-    let overallMagnitude = fromValue.magnitudeToValue(toValue)
-    let remainingMagnitude  = currentValue.magnitudeToValue(toValue)
-    
-    var progress  = remainingMagnitude / overallMagnitude
-    
-    if progress.isNaN {
-        progress = CGFloat(1.0)
-    }
-    
-    return progress
-}
-
-

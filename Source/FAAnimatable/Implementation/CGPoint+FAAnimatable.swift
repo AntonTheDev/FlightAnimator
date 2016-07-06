@@ -55,8 +55,8 @@ extension CGPoint : FAAnimatable {
     }
     
     public func interpolatedSpringValue<T : FAAnimatable>(toValue : T, springs : Dictionary<String, FASpring>, deltaTime : CGFloat) -> NSValue {
-        let adjustedx : CGFloat = CGFloat(springs[SpringAnimationKey.CGPointX]!.updatedValue(deltaTime))
-        let adjustedy : CGFloat = CGFloat(springs[SpringAnimationKey.CGPointY]!.updatedValue(deltaTime))
+        let adjustedx : CGFloat = springs[SpringAnimationKey.CGPointX]!.updatedValue(deltaTime)
+        let adjustedy : CGFloat = springs[SpringAnimationKey.CGPointY]!.updatedValue(deltaTime)
         return CGPointMake(adjustedx, adjustedy).valueRepresentation()
     }
     

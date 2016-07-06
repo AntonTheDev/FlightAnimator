@@ -324,16 +324,14 @@ class ConfigurationView : UIView {
     
     func progress_value_changed(sender : UISlider) {
         
-        let y = Double(round(100 * sender.value) / 100)
+        let y = round(100 * sender.value) / 100
         progressLabel.text = String(format: "%.2f", y)
         self.interactionDelegate?.didUpdateTriggerProgressPriority(CGFloat(sender.value))
     }
     
     func changedTrigger(segmentedControl : UISegmentedControl) {
         
-        
         self.interactionDelegate?.didUpdateTriggerType(segmentedControl.selectedSegmentIndex)
-        
         
         if segmentedControl.selectedSegmentIndex == 0 {
            

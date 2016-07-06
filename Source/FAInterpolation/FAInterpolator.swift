@@ -55,11 +55,11 @@ public struct FAInterpolator<T : FAAnimatable> {
     }
     
     private func relativeDuration() -> CGFloat {
-        var progress : CGFloat  = CGFloat(1.0)
+        var progress : CGFloat  = 1.0
         
         if previousFromValue == toValue ||
             previousFromValue == nil {
-            progress = CGFloat(1.0)
+            progress = 1.0
         } else {
             let progressedDiff = previousFromValue!.magnitudeToValue(fromValue)
             let remainingDiff  = fromValue.magnitudeToValue(toValue)
@@ -67,11 +67,11 @@ public struct FAInterpolator<T : FAAnimatable> {
             progress  = remainingDiff / (remainingDiff + progressedDiff)
             
             if progress.isNaN {
-                progress = CGFloat(1.0)
+                progress = 1.0
             }
         }
         
-        return CGFloat(duration) * progress
+        return duration * progress
     }
 
     private func interpolatedParametricValues(adjustedDuration : CGFloat, easingFunction : FAEasing) -> [AnyObject] {
