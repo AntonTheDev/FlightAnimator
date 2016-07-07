@@ -100,7 +100,7 @@ extension CGColor : FAAnimatable {
         var toHue: CGFloat = 0, toSaturation: CGFloat = 0, finalbrightness: CGFloat = 0, toAlphaHSB: CGFloat = 0
         
         if UIColor(CGColor:self).getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &alphaHSB) &&
-            UIColor(CGColor:(toValue as! CGColor)).getHue(&toHue, saturation: &toSaturation, brightness: &finalbrightness, alpha: &toAlphaHSB) {
+           UIColor(CGColor:(toValue as! CGColor)).getHue(&toHue, saturation: &toSaturation, brightness: &finalbrightness, alpha: &toAlphaHSB) {
             
             let interpolatedHue         = interpolateCGFloat(hue, end: toHue, progress: progress)
             let interpolatedSaturation  = interpolateCGFloat(saturation, end: toSaturation, progress: progress)
@@ -122,37 +122,117 @@ extension CGColor : FAAnimatable {
         let interpolatedWhite  = interpolateCGFloat(white, end: toWhite, progress: progress)
         let interpolatedAlpha  = interpolateCGFloat(alphaWhite, end: toAlphaWhite, progress: progress)
         
-        return UIColor(white: interpolatedWhite, alpha: interpolatedAlpha)
+        return UIColor(white: interpolatedWhite, alpha: interpolatedAlpha).CGColor
     }
     
     public func interpolatedSpringValue<T : FAAnimatable>(toValue : T, springs : Dictionary<String, FASpring>, deltaTime : CGFloat) -> AnyObject {
-        let size = CGSizeMake(springs[SpringAnimationKey.CGSizeWidth]!.updatedValue(deltaTime),
-                              springs[SpringAnimationKey.CGSizeHeight]!.updatedValue(deltaTime))
-        return size.valueRepresentation()
+       
+        var red: CGFloat = 0, green: CGFloat = 0, blue: CGFloat = 0, alphaRGB: CGFloat = 0
+        var toRed: CGFloat = 0, toGreen: CGFloat = 0, toBlue: CGFloat = 0, toAlphaRGB: CGFloat = 0
+        
+        if  UIColor(CGColor: self).getRed(&red, green: &green, blue: &blue, alpha: &alphaRGB) &&
+            UIColor(CGColor:(toValue as! CGColor)).getRed(&toRed, green: &toGreen, blue: &toBlue, alpha: &toAlphaRGB) {
+         
+            return UIColor(red : springs[SpringAnimationKey.CGColorRed]!.updatedValue(deltaTime),
+                           green : springs[SpringAnimationKey.CGColorGreen]!.updatedValue(deltaTime),
+                           blue : springs[SpringAnimationKey.CGColorBlue]!.updatedValue(deltaTime),
+                           alpha : springs[SpringAnimationKey.CGColorRGBAlpha]!.updatedValue(deltaTime)).CGColor
+        }
+        
+        var hue: CGFloat = 0, saturation: CGFloat = 0, brightness: CGFloat = 0, alphaHSB: CGFloat = 0
+        var toHue: CGFloat = 0, toSaturation: CGFloat = 0, finalbrightness: CGFloat = 0, toAlphaHSB: CGFloat = 0
+        
+        if UIColor(CGColor:self).getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &alphaHSB) &&
+            UIColor(CGColor:(toValue as! CGColor)).getHue(&toHue, saturation: &toSaturation, brightness: &finalbrightness, alpha: &toAlphaHSB) {
+
+            
+            return UIColor(red : springs[SpringAnimationKey.CGColorHue]!.updatedValue(deltaTime),
+                           green : springs[SpringAnimationKey.CGColorSaturation]!.updatedValue(deltaTime),
+                           blue : springs[SpringAnimationKey.CGColorBrightness]!.updatedValue(deltaTime),
+                           alpha : springs[SpringAnimationKey.CGColorHSBAlpha]!.updatedValue(deltaTime)).CGColor
+        }
+        
+        return UIColor(white: springs[SpringAnimationKey.CGColorWhite]!.updatedValue(deltaTime),
+                       alpha: springs[SpringAnimationKey.CGColorWhiteAlpha]!.updatedValue(deltaTime)).CGColor
+    
     }
     
     public func springVelocity(springs : Dictionary<String, FASpring>, deltaTime : CGFloat) -> CGPoint {
         
-        if let currentWidthVelocity = springs[SpringAnimationKey.CGSizeWidth]?.velocity(deltaTime),
-            let currentHeightVelocity = springs[SpringAnimationKey.CGSizeHeight]?.velocity(deltaTime) {
-            return  CGPointMake(currentWidthVelocity, currentHeightVelocity)
+        if  let currentRVelocity = springs[SpringAnimationKey.CGColorRed]?.velocity(deltaTime),
+            let currentGVelocity = springs[SpringAnimationKey.CGColorGreen]?.velocity(deltaTime)  {
+            
+            return CGPointMake(currentRVelocity, currentGVelocity)
         }
         
-        return CGPointZero
+        if  let currentHVelocity = springs[SpringAnimationKey.CGColorRed]?.velocity(deltaTime),
+            let currentSVelocity = springs[SpringAnimationKey.CGColorGreen]?.velocity(deltaTime)  {
+            
+            return CGPointMake(currentHVelocity, currentSVelocity)
+        }
+        
+        return CGPointMake(springs[SpringAnimationKey.CGColorWhite]!.updatedValue(deltaTime),
+                           springs[SpringAnimationKey.CGColorWhiteAlpha]!.updatedValue(deltaTime))
+    
     }
     
     public func interpolationSprings<T : FAAnimatable>(toValue : T, initialVelocity : Any, angularFrequency : CGFloat, dampingRatio : CGFloat) -> Dictionary<String, FASpring> {
-        
+    
         var springs = Dictionary<String, FASpring>()
-        /*
-         if let startingVelocity = initialVelocity as? CGPoint {
-         let widthSpring = self.width.interpolationSprings((toValue as! CGSize).width, initialVelocity : startingVelocity.x, angularFrequency : angularFrequency, dampingRatio : dampingRatio)
-         let heightSpring = self.height.interpolationSprings((toValue as! CGSize).height, initialVelocity : startingVelocity.y, angularFrequency : angularFrequency, dampingRatio : dampingRatio)
-         
-         springs[SpringAnimationKey.CGSizeWidth]  = widthSpring[SpringAnimationKey.CGFloat]
-         springs[SpringAnimationKey.CGSizeHeight] = heightSpring[SpringAnimationKey.CGFloat]
-         }
-         */
+    
+        var red: CGFloat = 0, green: CGFloat = 0, blue: CGFloat = 0, alphaRGB: CGFloat = 0
+        var toRed: CGFloat = 0, toGreen: CGFloat = 0, toBlue: CGFloat = 0, toAlphaRGB: CGFloat = 0
+        
+        if  UIColor(CGColor: self).getRed(&red, green: &green, blue: &blue, alpha: &alphaRGB) &&
+            UIColor(CGColor:(toValue as! CGColor)).getRed(&toRed, green: &toGreen, blue: &toBlue, alpha: &toAlphaRGB) {
+            
+           if let startingVelocity = initialVelocity as? CGPoint {
+                springs[SpringAnimationKey.CGColorRed] = red.interpolationSprings(toRed, initialVelocity : startingVelocity.x, angularFrequency : angularFrequency, dampingRatio : dampingRatio)[SpringAnimationKey.CGFloat]
+            
+                springs[SpringAnimationKey.CGColorGreen] = green.interpolationSprings(toGreen, initialVelocity : startingVelocity.x, angularFrequency : angularFrequency, dampingRatio : dampingRatio)[SpringAnimationKey.CGFloat]
+            
+                springs[SpringAnimationKey.CGColorBlue] = blue.interpolationSprings(toBlue, initialVelocity : startingVelocity.x, angularFrequency : angularFrequency, dampingRatio : dampingRatio)[SpringAnimationKey.CGFloat]
+            
+                springs[SpringAnimationKey.CGColorRGBAlpha] = alphaRGB.interpolationSprings(toAlphaRGB, initialVelocity : startingVelocity.x, angularFrequency : angularFrequency, dampingRatio : dampingRatio)[SpringAnimationKey.CGFloat]
+            }
+            
+            return springs
+        }
+        
+        var hue: CGFloat = 0, saturation: CGFloat = 0, brightness: CGFloat = 0, alphaHSB: CGFloat = 0
+        var toHue: CGFloat = 0, toSaturation: CGFloat = 0, toBrightness : CGFloat = 0, toAlphaHSB: CGFloat = 0
+        
+        if UIColor(CGColor:self).getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &alphaHSB) &&
+            UIColor(CGColor:(toValue as! CGColor)).getHue(&toHue, saturation: &toSaturation, brightness: &toBrightness, alpha: &toAlphaHSB) {
+            
+            
+            if let startingVelocity = initialVelocity as? CGPoint {
+                springs[SpringAnimationKey.CGColorHue] = hue.interpolationSprings(toHue, initialVelocity : startingVelocity.x, angularFrequency : angularFrequency, dampingRatio : dampingRatio)[SpringAnimationKey.CGFloat]
+                
+                springs[SpringAnimationKey.CGColorSaturation] = saturation.interpolationSprings(toSaturation, initialVelocity : startingVelocity.x, angularFrequency : angularFrequency, dampingRatio : dampingRatio)[SpringAnimationKey.CGFloat]
+                
+                springs[SpringAnimationKey.CGColorBrightness] = brightness.interpolationSprings(toBrightness, initialVelocity : startingVelocity.x, angularFrequency : angularFrequency, dampingRatio : dampingRatio)[SpringAnimationKey.CGFloat]
+                
+                springs[SpringAnimationKey.CGColorHSBAlpha] = alphaHSB.interpolationSprings(toAlphaHSB, initialVelocity : startingVelocity.x, angularFrequency : angularFrequency, dampingRatio : dampingRatio)[SpringAnimationKey.CGFloat]
+            }
+            
+            return springs
+        }
+        
+        
+        var white: CGFloat = 0, alphaWhite: CGFloat = 0
+        var toWhite: CGFloat = 0, toAlphaWhite: CGFloat = 0
+        
+        UIColor(CGColor:self).getWhite(&white, alpha: &alphaWhite)
+        UIColor(CGColor:(toValue as! CGColor)).getWhite(&toWhite, alpha: &toAlphaWhite)
+        
+        if let startingVelocity = initialVelocity as? CGPoint {
+            springs[SpringAnimationKey.CGColorWhite] = white.interpolationSprings(toWhite, initialVelocity : startingVelocity.x, angularFrequency : angularFrequency, dampingRatio : dampingRatio)[SpringAnimationKey.CGFloat]
+            
+            springs[SpringAnimationKey.CGColorWhiteAlpha] = alphaWhite.interpolationSprings(toAlphaWhite, initialVelocity : startingVelocity.x, angularFrequency : angularFrequency, dampingRatio : dampingRatio)[SpringAnimationKey.CGFloat]
+            
+        }
+        
         return springs
     }
     

@@ -35,6 +35,19 @@ public struct SpringAnimationKey {
     static var M42     = "M42"
     static var M43     = "M43"
     static var M44     = "M44"
+    
+    static var CGColorHue          = "CGColorHue"
+    static var CGColorSaturation   = "CGColorSaturation"
+    
+    static var CGColorBrightness   = "CGColorBrightness"
+    static var CGColorHSBAlpha     = "CGColorHSBAlpha"
+    static var CGColorRed          = "CGColorRed"
+    static var CGColorGreen        = "CGColorGreen"
+    
+    static var CGColorBlue         = "CGColorBlue"
+    static var CGColorRGBAlpha     = "CGColorRGBAlpha"
+    static var CGColorWhite        = "CGColorWhite"
+    static var CGColorWhiteAlpha   = "CGColorWhiteAlpha"
 }
 
 public protocol FAAnimatable : Equatable {

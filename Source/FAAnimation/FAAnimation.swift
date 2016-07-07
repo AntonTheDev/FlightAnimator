@@ -116,11 +116,28 @@ extension FAAnimation {
             
                 //TODO: Figure out how to unwrap CoreFoundation type in swift
                 //There appears to be no way of unwrapping a CGColor by type casting
+                // https://bugs.swift.org/browse/SR-1612
             } else if self.keyPath == "backgroundColor" {
                 syncValues(presentationValue as! CGColor, runningAnimation : runningAnimation)
                 
             }
         }
+    }
+    
+    
+    private func interpolateValues<T : FAAnimatable>(toValue : T, currentValue : T, previousFromValue : T?) {
+       
+        var interpolator  = FAInterpolator(toValue : toValue,
+                                           fromValue: currentValue,
+                                           previousFromValue : previousFromValue,
+                                           duration: CGFloat(duration),
+                                           easingFunction : easingFunction)
+        
+        let config = interpolator.interpolatedAnimationConfig()
+        
+        springs = config.springs
+        duration = config.duration
+        values = config.values
     }
     
     private func syncValues<T : FAAnimatable>(currentValue : T, runningAnimation : FAAnimation?) {
@@ -132,39 +149,12 @@ extension FAAnimation {
         if let typedToValue = (toValue as? NSValue)?.typeValue() as? T {
             
             let previousFromValue = (runningAnimation?.fromValue as? NSValue)?.typeValue() as? T
-            
-            var interpolator  = FAInterpolator(toValue : typedToValue,
-                                               fromValue: currentValue,
-                                               previousFromValue : previousFromValue,
-                                               duration: CGFloat(duration),
-                                               easingFunction : easingFunction)
-            
-            let config = interpolator.interpolatedAnimationConfig()
-            
-            springs = config.springs
-            duration = config.duration
-            values = config.values
-            
-            
-            // TODO: Figure out how to unwrap CoreFoundation type in swift
-            // There appears to be no way of unwrapping a CGColor by type casting
-            // So there is a check to see if the value itself conforms to FAAnimatable,
-            // otherwise it should get caught above as an NSValue
+            interpolateValues(typedToValue, currentValue : currentValue, previousFromValue : previousFromValue)
+
         } else  if let typedToValue = toValue  as? T {
             
             let previousFromValue = runningAnimation?.fromValue as? T
-            
-            var interpolator  = FAInterpolator(toValue : typedToValue,
-                                               fromValue: currentValue,
-                                               previousFromValue : previousFromValue,
-                                               duration: CGFloat(duration),
-                                               easingFunction : easingFunction)
-            
-            let config = interpolator.interpolatedAnimationConfig()
-            
-            springs = config.springs
-            duration = config.duration
-            values = config.values
+            interpolateValues(typedToValue, currentValue : currentValue, previousFromValue : previousFromValue)
         }
     }
     
@@ -210,6 +200,7 @@ extension FAAnimation {
                 
                 //TODO: Figure out how to unwrap CoreFoundation type in swift
                 //There appears to be no way of unwrapping a CGColor by type casting
+                // https://bugs.swift.org/browse/SR-1612
             } else if self.keyPath == "backgroundColor" {
                 return valueProgress(presentationValue as! CGColor)
             }
@@ -232,8 +223,6 @@ extension FAAnimation {
             
             return currentValue.magnitudeToValue(typedToValue) / typedFromValue.magnitudeToValue(typedToValue)
        
-            //TODO: Figure out how to unwrap CoreFoundation type in swift
-            //There appears to be no way of unwrapping a CGColor by type casting
         } else if let typedToValue = toValue  as? T,
                   let typedFromValue = fromValue  as? T {
             

@@ -55,6 +55,7 @@ extension CALayer {
             
             //TODO: Figure out how to unwrap CoreFoundation type in swift
             //There appears to be no way of unwrapping a CGColor by type casting
+            // https://bugs.swift.org/browse/SR-1612
             if keyPath == "backgroundColor" {
                 return currentFromValue as! CGColor
                 
