@@ -47,7 +47,7 @@ public class FAAnimationMaker {
 
         if let animationGroup = associatedView!.cachedAnimations![animationKey!] {
             
-            animationGroup._segmentArray.append(SegmentItem(isTimedBased: timeBased,
+            animationGroup._segmentArray.append(AnimationTrigger(isTimedBased: timeBased,
                                                             triggerProgessValue: progress,
                                                             animationKey: animationKey!,
                                                             animatedView: view))

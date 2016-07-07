@@ -28,7 +28,7 @@ public enum FAPrimaryTimingPriority : Int {
 public func registerAnimation(onView view : UIView,
                               forKey key: String,
                               timingPriority : FAPrimaryTimingPriority = .MaxTime,
-                              animator : (animator : FlightAnimator) -> Void ) {
+                              @noescape animator : (animator : FlightAnimator) -> Void ) {
     
     let newAnimator = FlightAnimator(withView: view, forKey : key, priority : timingPriority)
     animator(animator : newAnimator)
@@ -60,6 +60,18 @@ public extension UIView {
 }
 
 public class FlightAnimator : FAAnimationMaker {
+    
+    public func setDidStopCallback(stopCallback : FAAnimationDidStop) {
+        if ((associatedView?.cachedAnimations?.keys.contains(animationKey!)) != nil) {
+             associatedView!.cachedAnimations![animationKey!]!.setDidStopCallback(stopCallback)
+        }
+    }
+    
+    public func setDidStartCallback(startCallback : FAAnimationDidStart) {
+        if ((associatedView?.cachedAnimations?.keys.contains(animationKey!)) != nil) {
+            associatedView!.cachedAnimations![animationKey!]!.setDidStartCallback(startCallback)
+        }
+    }
     
     public func triggerOnStart(timingPriority : FAPrimaryTimingPriority = .MaxTime,
                                onView view: UIView,

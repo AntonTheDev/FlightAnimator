@@ -10,16 +10,16 @@ import Foundation
 import UIKit
 import QuartzCore
 
-func ==(lhs:SegmentItem, rhs:SegmentItem) -> Bool {
+func ==(lhs:AnimationTrigger, rhs:AnimationTrigger) -> Bool {
     return lhs.animatedView == rhs.animatedView &&
         lhs.isTimedBased == rhs.isTimedBased &&
         lhs.triggerProgessValue == rhs.triggerProgessValue &&
         lhs.animationKey == rhs.animationKey
 }
 
-internal struct SegmentItem : Equatable {
+internal struct AnimationTrigger : Equatable {
+
     var isTimedBased = true
-    
     var triggerProgessValue : CGFloat?
     var animationKey : String?
     
@@ -64,8 +64,8 @@ final public class FAAnimationGroup : CAAnimationGroup {
     
     private var displayLink : CADisplayLink?
     
-    var _segmentArray = [SegmentItem]()
-    var segmentArray = [SegmentItem]()
+    var _segmentArray = [AnimationTrigger]()
+    var segmentArray = [AnimationTrigger]()
     
     override init() {
         super.init()
