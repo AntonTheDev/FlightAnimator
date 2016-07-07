@@ -46,10 +46,10 @@ public protocol FAAnimatable : Equatable {
     func magnitudeToValue<T : FAAnimatable>(toValue:  T) -> CGFloat
     
     // Parametric Interpolation
-    func interpolatedValue<T : FAAnimatable>(toValue : T, progress : CGFloat) ->  NSValue
+    func interpolatedValue<T : FAAnimatable>(toValue : T, progress : CGFloat) ->  AnyObject
     
     // Calculates the value at delta time
-    func interpolatedSpringValue<T : FAAnimatable>(toValue : T, springs : Dictionary<String, FASpring>, deltaTime : CGFloat) -> NSValue
+    func interpolatedSpringValue<T : FAAnimatable>(toValue : T, springs : Dictionary<String, FASpring>, deltaTime : CGFloat) -> AnyObject
     
     // Calculates the value at delta time
     func springVelocity(springs : Dictionary<String, FASpring>, deltaTime : CGFloat) -> CGPoint
@@ -61,5 +61,5 @@ public protocol FAAnimatable : Equatable {
                               dampingRatio : CGFloat) -> Dictionary<String, FASpring>
     
     // Returns a core animation value representation
-    func valueRepresentation() -> NSValue
+    func valueRepresentation() -> AnyObject
 }

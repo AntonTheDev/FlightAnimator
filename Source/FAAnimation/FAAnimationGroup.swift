@@ -187,7 +187,7 @@ extension FAAnimationGroup {
         animations = newAnimations.map {$1}
         
         updateGroupDurationBasedOnTimePriority(durationArray)
-        synchronizeRemaingAnimationValues()
+
     }
     
     private func updateGroupDurationBasedOnTimePriority(durationArray: Array<CFTimeInterval>) {
@@ -201,12 +201,9 @@ extension FAAnimationGroup {
         case .Average:
             duration = durationArray.reduce(0, combine: +) / Double(durationArray.count)
         }
-    }
-    
-    private func synchronizeRemaingAnimationValues() {
         
         let filteredAnimation = animations!.filter({ $0.duration == duration })
-        
+    
         if let primaryDrivingAnimation = filteredAnimation.first as? FAAnimation {
             primaryAnimation = primaryDrivingAnimation
             primaryEasingFunction = primaryDrivingAnimation.easingFunction
@@ -215,6 +212,9 @@ extension FAAnimationGroup {
         guard animations != nil else {
             return
         }
+        
+        var newAnimationsArray = [FAAnimation]()
+        newAnimationsArray.append(filteredAnimation.first! as! FAAnimation)
         
         for animation in animations! {
             animation.duration = duration
@@ -228,10 +228,12 @@ extension FAAnimationGroup {
                 default:
                     customAnimation.synchronize()
                 }
+           
+                newAnimationsArray.append(customAnimation)
             }
         }
     }
-    
+
     private func animationDictionaryForGroup(animationGroup : FAAnimationGroup?) -> [String : FAAnimation] {
         var animationDictionary = [String: FAAnimation]()
         

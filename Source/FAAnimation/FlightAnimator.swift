@@ -115,6 +115,10 @@ public class FlightAnimator : FAAnimationMaker {
         return self.value(value, forKeyPath : "borderWidth")
     }
     
+    public func backgroundColor<T : FAAnimatable>(value : T) -> PropertyConfiguration {
+        return self.value(value, forKeyPath : "backgroundColor")
+    }
+    
     public func contentsRect<T : FAAnimatable>(value : T) -> PropertyConfiguration{
         return self.value(value, forKeyPath : "contentsRect")
     }

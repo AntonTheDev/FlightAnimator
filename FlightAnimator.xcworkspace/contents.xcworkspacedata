@@ -57,6 +57,9 @@
             <FileRef
                location = "group:CGSize+FAAnimatable.swift">
             </FileRef>
+            <FileRef
+               location = "group:CGColor+FAAnimatable.swift">
+            </FileRef>
          </Group>
       </Group>
       <Group

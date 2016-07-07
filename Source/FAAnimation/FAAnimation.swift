@@ -99,7 +99,6 @@ final public class FAAnimation : CAKeyframeAnimation {
     }
 }
 
-
 extension FAAnimation {
 
     private func configureValues(runningAnimation : FAAnimation? = nil) {
@@ -114,6 +113,12 @@ extension FAAnimation {
                 syncValues(currentValue, runningAnimation : runningAnimation)
             } else  if let currentValue = presentationValue as? CATransform3D {
                 syncValues(currentValue, runningAnimation : runningAnimation)
+            
+                //TODO: Figure out how to unwrap CoreFoundation type in swift
+                //There appears to be no way of unwrapping a CGColor by type casting
+            } else if self.keyPath == "backgroundColor" {
+                syncValues(presentationValue as! CGColor, runningAnimation : runningAnimation)
+                
             }
         }
     }
@@ -127,6 +132,27 @@ extension FAAnimation {
         if let typedToValue = (toValue as? NSValue)?.typeValue() as? T {
             
             let previousFromValue = (runningAnimation?.fromValue as? NSValue)?.typeValue() as? T
+            
+            var interpolator  = FAInterpolator(toValue : typedToValue,
+                                               fromValue: currentValue,
+                                               previousFromValue : previousFromValue,
+                                               duration: CGFloat(duration),
+                                               easingFunction : easingFunction)
+            
+            let config = interpolator.interpolatedAnimationConfig()
+            
+            springs = config.springs
+            duration = config.duration
+            values = config.values
+            
+            
+            // TODO: Figure out how to unwrap CoreFoundation type in swift
+            // There appears to be no way of unwrapping a CGColor by type casting
+            // So there is a check to see if the value itself conforms to FAAnimatable,
+            // otherwise it should get caught above as an NSValue
+        } else  if let typedToValue = toValue  as? T {
+            
+            let previousFromValue = runningAnimation?.fromValue as? T
             
             var interpolator  = FAInterpolator(toValue : typedToValue,
                                                fromValue: currentValue,
@@ -181,9 +207,14 @@ extension FAAnimation {
                 return valueProgress(currentValue)
             } else  if let currentValue = presentationValue as? CATransform3D {
                 return valueProgress(currentValue)
+                
+                //TODO: Figure out how to unwrap CoreFoundation type in swift
+                //There appears to be no way of unwrapping a CGColor by type casting
+            } else if self.keyPath == "backgroundColor" {
+                return valueProgress(presentationValue as! CGColor)
             }
         }
-        
+    
         return 0.0
     }
     
@@ -195,11 +226,20 @@ extension FAAnimation {
     }
     
     private func valueProgress<T : FAAnimatable>(currentValue : T) -> CGFloat {
+       
         if let typedToValue = (toValue as? NSValue)?.typeValue() as? T,
-            let typedFromValue = (toValue as? NSValue)?.typeValue() as? T{
+           let typedFromValue = (fromValue as? NSValue)?.typeValue() as? T{
+            
+            return currentValue.magnitudeToValue(typedToValue) / typedFromValue.magnitudeToValue(typedToValue)
+       
+            //TODO: Figure out how to unwrap CoreFoundation type in swift
+            //There appears to be no way of unwrapping a CGColor by type casting
+        } else if let typedToValue = toValue  as? T,
+                  let typedFromValue = fromValue  as? T {
             
             return currentValue.magnitudeToValue(typedToValue) / typedFromValue.magnitudeToValue(typedToValue)
         }
+        
         return 0.0
     }
 }

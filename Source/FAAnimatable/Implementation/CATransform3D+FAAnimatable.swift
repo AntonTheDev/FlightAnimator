@@ -48,7 +48,7 @@ extension CATransform3D : FAAnimatable {
         return transform.magnitudeValue()
     }
     
-    public func interpolatedValue<T : FAAnimatable>(toValue : T, progress : CGFloat) -> NSValue {
+    public func interpolatedValue<T : FAAnimatable>(toValue : T, progress : CGFloat) -> AnyObject {
         var transform = CATransform3D()
         let finalValue = toValue as! CATransform3D
         
@@ -75,7 +75,7 @@ extension CATransform3D : FAAnimatable {
         return transform.valueRepresentation()
     }
     
-    public func interpolatedSpringValue<T : FAAnimatable>(toValue : T, springs : Dictionary<String, FASpring>, deltaTime : CGFloat) -> NSValue {
+    public func interpolatedSpringValue<T : FAAnimatable>(toValue : T, springs : Dictionary<String, FASpring>, deltaTime : CGFloat) -> AnyObject {
         var transform = CATransform3D()
         
         transform.m11 = springs[SpringAnimationKey.M11]!.updatedValue(deltaTime)
@@ -191,7 +191,7 @@ extension CATransform3D : FAAnimatable {
         return springs
     }
 
-    public func valueRepresentation() -> NSValue {
+    public func valueRepresentation() -> AnyObject {
         return NSValue(CATransform3D :  self)
     }
 }

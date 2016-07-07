@@ -21,7 +21,7 @@ extension CGFloat : FAAnimatable {
         return self - toValue.magnitudeValue()
     }
     
-    public func interpolatedValue<T : FAAnimatable>(toValue : T, progress : CGFloat) -> NSValue {
+    public func interpolatedValue<T : FAAnimatable>(toValue : T, progress : CGFloat) -> AnyObject {
         return interpolateCGFloat(self, end: (toValue as! CGFloat), progress: progress).valueRepresentation()
     }
     
@@ -48,11 +48,11 @@ extension CGFloat : FAAnimatable {
         return springs
     }
     
-    public func interpolatedSpringValue<T : FAAnimatable>(toValue : T, springs : Dictionary<String, FASpring>, deltaTime : CGFloat) -> NSValue {
+    public func interpolatedSpringValue<T : FAAnimatable>(toValue : T, springs : Dictionary<String, FASpring>, deltaTime : CGFloat) -> AnyObject {
         return springs[SpringAnimationKey.CGFloat]!.updatedValue(deltaTime).valueRepresentation()
     }
     
-    public func valueRepresentation() -> NSValue {
+    public func valueRepresentation() -> AnyObject {
         return NSNumber(float: Float(self))
     }
 }
