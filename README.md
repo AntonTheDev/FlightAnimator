@@ -14,6 +14,8 @@ FlightAnimator is a natural blocks based animation engine built on top of CoreAn
 
 Under the hood, FlightAnimator uses CAKeyframeAnimation(s) and CoreAnimationGroup(s). The animations are technically created as a custom CAAnimationGroup, then configured with multiple property animations. Upon being applied to the layer, it will dynamically synchronize the remaining progress relative to the current presentationLayer's values. 
 
+<iframe src="//gifs.com/embed/flightanimator-swift-framework-demo-4xnjN0" frameborder="0" scrolling="no" width='202' height='360' style="-webkit-backface-visibility: hidden;-webkit-transform: scale(1);" ></iframe>
+
 ##Features
 
 - [x] [46+ Parametric Curves, Decay, and Springs](/Documentation/parametric_easings.md) 
