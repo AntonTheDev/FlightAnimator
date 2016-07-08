@@ -12,7 +12,7 @@
 
 FlightAnimator is a natural animation engine built on top of CoreAnimation, and provides a very simple blocks based syntax to create, configure, cache, and reuse animations dynamically. 
 
-A unique to feature about FlightAnimator, is that you can group multiple animations, and apply different easing curves per property. FlightAnimator takes care of the rest to synchronize them accordingly to create some very interesting effects :)
+A unique feature toFlightAnimator is that you can group multiple animations, and apply different easing curves per property. FlightAnimator takes care of the rest to synchronize them accordingly to create some very interesting effects :)
 
 ##Features
 
@@ -26,7 +26,6 @@ A unique to feature about FlightAnimator, is that you can group multiple animati
 - [x] Advanced Multi-Curve Group Synchronization
 - [x] Define, Cache, and Reuse Animations
 
-<br>
 
 <p align=center>
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=8XyH5mpfoC8&vq=hd1080
