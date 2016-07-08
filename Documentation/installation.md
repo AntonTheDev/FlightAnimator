@@ -43,6 +43,13 @@ git "https://github.com/AntonTheDev/FlightAnimator.git" >= 0.8.0
 6. Add the paths to the frameworks you want to use under “Input Files” within the carthage build phase as follows e.g.:
 
 	```
+	// iOS
  	$(SRCROOT)/Carthage/Build/iOS/FlightAnimator.framework
+  	
+  	or
+  	
+  	// tvOS
+  	$(SRCROOT)/Carthage/Build/tvOS/FlightAnimator.framework
+  	
   	
   	```
