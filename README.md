@@ -14,14 +14,6 @@ FlightAnimator is a natural animation engine built on top of CoreAnimation, and 
 
 A unique to feature about FlightAnimator, is that you can group multiple animations, and apply different easing curves per property. FlightAnimator takes care of the rest to synchronize them accordingly to create some very interesting effects :)
 
-<br>
-
-<p align=center>
-<a href="http://www.youtube.com/watch?feature=player_embedded&v=8XyH5mpfoC8&vq=hd1080
-" target="_blank"><img src="http://img.youtube.com/vi/8XyH5mpfoC8/0.jpg" 
-alt="FlightAnimatore Demo" border="0" /></a>
-</p>
-
 ##Features
 
 - [x] [46+ Parametric Curves, Decay, and Springs](/Documentation/parametric_easings.md) 
@@ -33,6 +25,14 @@ alt="FlightAnimatore Demo" border="0" /></a>
 - [x] Apply Unique Easing per Property Animation
 - [x] Advanced Multi-Curve Group Synchronization
 - [x] Define, Cache, and Reuse Animations
+
+<br>
+
+<p align=center>
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=8XyH5mpfoC8&vq=hd1080
+" target="_blank"><img src="http://img.youtube.com/vi/8XyH5mpfoC8/0.jpg" 
+alt="FlightAnimatore Demo" border="0" /></a>
+</p>
 
 
 ##Installation

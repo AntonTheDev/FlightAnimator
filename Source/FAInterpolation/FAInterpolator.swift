@@ -16,7 +16,7 @@ struct FAAnimationConfig {
     static let SpringDecayDamping       : CGFloat = 0.97
     static let SpringCustomBounceCount  : Int = 12
     
-    static let SpringDecayMagnitudeThreshold  : CGFloat = 1.2
+    static let SpringDecayMagnitudeThreshold  : CGFloat = 1.4
 }
 
 public struct FAInterpolator<T : FAAnimatable> {

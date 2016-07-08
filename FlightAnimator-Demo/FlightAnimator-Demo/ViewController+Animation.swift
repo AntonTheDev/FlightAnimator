@@ -85,7 +85,7 @@ extension ViewController {
            
             animator.triggerOnStart(onView: self.dimmerView, animator: { (animator) in
                 animator.alpha(0.5).duration(0.8).easing(.OutExponential)
-                animator.backgroundColor(UIColor.blueColor().CGColor).duration(0.8).easing(.Linear)
+              //  animator.backgroundColor(UIColor.blueColor().CGColor).duration(0.8).easing(.Linear)
                 
             })
         }
@@ -95,11 +95,11 @@ extension ViewController {
             let toBounds = CGRectMake(0,0, closedConfigFrame.width, closedConfigFrame.height)
             let toPosition = CGPointMake(closedConfigFrame.midX, closedConfigFrame.midY)
             
-            animator.bounds(toBounds).duration(0.7).easing(.InOutExponential)
-            animator.position(toPosition).duration(0.7).easing(.InOutExponential).primary(true)
+            animator.bounds(toBounds).duration(0.8).easing(.InOutExponential)
+            animator.position(toPosition).duration(0.8).easing(.InOutExponential).primary(true)
             
             animator.triggerOnStart(onView: self.dimmerView, animator: { (animator) in
-                animator.alpha(0.0).duration(0.7).easing(.InExponential)
+                animator.alpha(0.0).duration(0.8).easing(.InOutExponential)
             })
         }
     }
@@ -192,7 +192,7 @@ extension ViewController {
         let duration : CGFloat = 0.5
         
         registerAnimation(onView : dragView, forKey : AnimationKeys.PanGestureKey, timingPriority: self.animConfig.primaryTimingPriority) { (animator) in
-            animator.bounds(finalBounds).duration(0.6).easing(.Linear).primary(false)
+            animator.bounds(finalBounds).duration(0.5).easing(.OutQuadratic).primary(false)
             animator.position(finalCenter).duration(0.0).easing(easingFunction).primary(true)
             
             
