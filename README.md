@@ -12,10 +12,8 @@
 
 FlightAnimator is a natural blocks based animation engine built on top of CoreAnimation, and provides provides a very simple syntax to create, configure, cache, and reuse animations dynamically. 
 
-Under the hood animations are built as CAAnimationGroup(s) with multiple custom CAKeyframeAnimation(s) defined uniquely per property. Once it's time to animate, FlightAnimator will dynamically synchronize the remaining progress for all the animations relative to the current presentationLayer's values, then continue to animate to it's final state.
-
 The unique feature about this framework, is that unlike others, you can actually group multiple animations, and apply different easing curves on a per property basis. FlightAnimator takes care of the rest to synchronize them accordingly to create some very interesting effects :)
-
+<br>
 <p align=center>
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=8XyH5mpfoC8&vq=hd1080
 " target="_blank"><img src="http://img.youtube.com/vi/8XyH5mpfoC8/0.jpg" 
@@ -50,6 +48,8 @@ alt="FlightAnimatore Demo" border="0" /></a>
 ##Basic Use 
 
 There are a many ways to use FlightAnimator as it provides a very flexible syntax for defining animations ranging in completexy with ease. Whether performing an animation, chaining animations, or registering/caching an animation, the framework follows a common blocks based builder approach to define property animations within an animation group. Each property animation, is configured with final value, and easing curve, and optionally the primary flag to adjust synchronization of the animations within a group when applied to the layer.
+
+Under the hood animations are built as CAAnimationGroup(s) with multiple custom CAKeyframeAnimation(s) defined uniquely per property. Once it's time to animate, FlightAnimator will dynamically synchronize the remaining progress for all the animations relative to the current presentationLayer's values, then continue to animate to it's final state.
 
 Check out the [Framework Demo App](#demoApp) to experiment with all the different capabilities of FlightAnimator.
 
