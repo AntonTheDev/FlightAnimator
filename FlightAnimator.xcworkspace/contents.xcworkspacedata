@@ -5,7 +5,7 @@
       location = "group:Source"
       name = "Source">
       <FileRef
-         location = "group:FAAnimation/FlightAnimator.swift">
+         location = "group:FlightAnimator.swift">
       </FileRef>
       <Group
          location = "group:FAAnimation"

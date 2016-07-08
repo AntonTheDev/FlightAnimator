@@ -103,7 +103,7 @@ extension FAAnimation {
 
     private func configureValues(runningAnimation : FAAnimation? = nil) {
         if let presentationValue = (weakLayer?.presentationLayer() as? CALayer)?.anyValueForKeyPath(self.keyPath!) {
-            if let currentValue = presentationValue as? CGPoint {
+           if let currentValue = presentationValue as? CGPoint {
                 syncValues(currentValue, runningAnimation : runningAnimation)
             } else  if let currentValue = presentationValue as? CGSize {
                 syncValues(currentValue, runningAnimation : runningAnimation)
@@ -113,18 +113,12 @@ extension FAAnimation {
                 syncValues(currentValue, runningAnimation : runningAnimation)
             } else  if let currentValue = presentationValue as? CATransform3D {
                 syncValues(currentValue, runningAnimation : runningAnimation)
-            
-                //TODO: Figure out how to unwrap CoreFoundation type in swift
-                //There appears to be no way of unwrapping a CGColor by type casting
-                // https://bugs.swift.org/browse/SR-1612
-            } else if self.keyPath == "backgroundColor" {
-                syncValues(presentationValue as! CGColor, runningAnimation : runningAnimation)
-                
+            } else if let currentValue = typeCastCGColor(presentationValue) {
+                syncValues(currentValue, runningAnimation : runningAnimation)
             }
         }
     }
-    
-    
+
     private func interpolateValues<T : FAAnimatable>(toValue : T, currentValue : T, previousFromValue : T?) {
        
         var interpolator  = FAInterpolator(toValue : toValue,
@@ -181,7 +175,6 @@ extension FAAnimation {
     }
 }
 
-
 extension FAAnimation {
     
     func valueProgress() -> CGFloat {
@@ -197,12 +190,8 @@ extension FAAnimation {
                 return valueProgress(currentValue)
             } else  if let currentValue = presentationValue as? CATransform3D {
                 return valueProgress(currentValue)
-                
-                //TODO: Figure out how to unwrap CoreFoundation type in swift
-                //There appears to be no way of unwrapping a CGColor by type casting
-                // https://bugs.swift.org/browse/SR-1612
-            } else if self.keyPath == "backgroundColor" {
-                return valueProgress(presentationValue as! CGColor)
+            } else if let currentValue = typeCastCGColor(presentationValue) {
+                return valueProgress(currentValue)
             }
         }
     

@@ -53,14 +53,10 @@ extension CALayer {
     final public func anyValueForKeyPath(keyPath: String) -> Any? {
         if let currentFromValue = self.valueForKeyPath(keyPath) {
             
-            //TODO: Figure out how to unwrap CoreFoundation type in swift
-            //There appears to be no way of unwrapping a CGColor by type casting
-            // https://bugs.swift.org/browse/SR-1612
-            if keyPath == "backgroundColor" {
-                return currentFromValue as! CGColor
-                
+            if let value = typeCastCGColor(currentFromValue) {
+                return value
             }
-
+    
             let type = String.fromCString(currentFromValue.objCType) ?? ""
             
             if type.hasPrefix("{CGPoint") {
@@ -89,4 +85,14 @@ extension CALayer {
     }
 }
 
-
+public func typeCastCGColor(value : Any) -> CGColor? {
+    if let currentValue = value as? AnyObject {
+        //TODO: There appears to be no way of unwrapping a CGColor by type casting
+        //Fix when the following bug is fixed https://bugs.swift.org/browse/SR-1612
+        if CFGetTypeID(currentValue) == CGColorGetTypeID() {
+            return (currentValue as! CGColor)
+        }
+    }
+    
+    return nil
+}

@@ -7,6 +7,7 @@ FlightAnimator supports any user defined animatable properties of the following 
 * CGPoint
 * CGRect
 * CATransform3D
+* CGColor
 
 The following are all the supported animatable CALayer properties:
 <table width = 348>

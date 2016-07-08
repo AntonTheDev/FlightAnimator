@@ -152,8 +152,6 @@ extension CurveSelectionCollectionViewCell: UIPickerViewDataSource, UIPickerView
     }
     
     func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-
-       
         self.delegate?.cell(self, didSelectEasing : functions[row])
     }
     

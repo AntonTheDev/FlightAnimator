@@ -10,7 +10,7 @@
 1. Edit the project's podfile, and save
 
 	```
-    pod 'FlightAnimator', '~> 0.7.3'
+    pod 'FlightAnimator', '~> 0.8.0'
 	```
 2. Install FlightAnimator by running
 
@@ -28,7 +28,7 @@ The installation instruction below a OSX for iOS.
 	
 	```
 #FlightAnimator
-git "https://github.com/AntonTheDev/FlightAnimator.git" >= 0.7.3
+git "https://github.com/AntonTheDev/FlightAnimator.git" >= 0.8.0
 	```
 2. Run `carthage update`. This will fetch dependencies into a [Carthage/Checkouts][] folder, then build each one.
 3. In the application targets’ “General” settings tab, in the “Embedded Binaries” section, drag and drop each framework for use from the Carthage/Build folder on disk.

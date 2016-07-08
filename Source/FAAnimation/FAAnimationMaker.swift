@@ -14,7 +14,7 @@ public class FAAnimationMaker {
     internal weak var associatedView : UIView?
     internal var animationKey : String?
     
-    var animationConfigurations = [String : PropertyConfiguration]()
+    var animationConfigurations = [String : PropertyAnimationConfig]()
     var primaryTimingPriority : FAPrimaryTimingPriority = .MaxTime
     
     init(withView view : UIView, forKey key: String, priority : FAPrimaryTimingPriority = .MaxTime) {
@@ -60,32 +60,24 @@ public class FAAnimationMaker {
     }
 }
 
-public protocol PropertyConfiguration {
+public protocol PropertyAnimationConfig {
     var easingCurve : FAEasing { get }
     var duration : CGFloat { get }
     
-    func duration(duration : CGFloat) -> PropertyConfiguration
-    func easing(easing : FAEasing) -> PropertyConfiguration
-    func primary(primary : Bool) -> PropertyConfiguration
+    func duration(duration : CGFloat) -> PropertyAnimationConfig
+    func easing(easing : FAEasing) -> PropertyAnimationConfig
+    func primary(primary : Bool) -> PropertyAnimationConfig
 }
 
 private class Configuration {
-    var value: PropertyConfiguration
+    var value: PropertyAnimationConfig
     
     init<T : FAAnimatable>(value: T, forKeyPath key : String, view : UIView, animationKey : String) {
         self.value = ConfigurationValue(value: value, forKeyPath : key, view : view, animationKey : animationKey)
     }
-    
-    func duration(duration : CGFloat) {
-        value.duration(duration)
-    }
-    
-    func easing(easing : FAEasing) {
-        value.easing(easing)
-    }
 }
 
-internal class ConfigurationValue<T : FAAnimatable> : PropertyConfiguration {
+internal class ConfigurationValue<T : FAAnimatable> : PropertyAnimationConfig {
     
     private weak var associatedView : UIView?
     private var animationKey : String?
@@ -106,19 +98,19 @@ internal class ConfigurationValue<T : FAAnimatable> : PropertyConfiguration {
         self.primary = false
     }
     
-    func duration(duration : CGFloat) -> PropertyConfiguration {
+    func duration(duration : CGFloat) -> PropertyAnimationConfig {
         self.duration = duration
         updateAnimation()
         return self
     }
     
-    func easing(easing : FAEasing) -> PropertyConfiguration {
+    func easing(easing : FAEasing) -> PropertyAnimationConfig {
         self.easingCurve = easing
         updateAnimation()
         return self
     }
     
-    func primary(primary : Bool) -> PropertyConfiguration {
+    func primary(primary : Bool) -> PropertyAnimationConfig {
         self.primary = primary
         updateAnimation()
         return self

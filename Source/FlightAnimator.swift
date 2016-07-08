@@ -94,72 +94,86 @@ public class FlightAnimator : FAAnimationMaker {
     }
     
     
-    public func value<T : FAAnimatable>(value : T, forKeyPath key : String) -> PropertyConfiguration {
-        animationConfigurations[key] = ConfigurationValue(value: value, forKeyPath: key, view : associatedView!, animationKey: animationKey!)
+    public func value<T : FAAnimatable>(value : T, forKeyPath key : String) -> PropertyAnimationConfig {
+        
+        if let value = value as? UIColor {
+            animationConfigurations[key] = ConfigurationValue(value: value.CGColor, forKeyPath: key, view : associatedView!, animationKey: animationKey!)
+        } else {
+            animationConfigurations[key] = ConfigurationValue(value: value, forKeyPath: key, view : associatedView!, animationKey: animationKey!)
+        }
+    
         return animationConfigurations[key]!
     }
     
-    public func alpha(value : CGFloat) -> PropertyConfiguration {
+    public func alpha(value : CGFloat) -> PropertyAnimationConfig {
         return self.value(value, forKeyPath : "opacity")
     }
     
-    public func anchorPoint<T : FAAnimatable>(value : T) -> PropertyConfiguration {
+    public func anchorPoint<T : FAAnimatable>(value : T) -> PropertyAnimationConfig {
         return self.value(value, forKeyPath : "anchorPoint")
     }
     
-    public func bounds<T : FAAnimatable>(value : T) -> PropertyConfiguration {
-        return self.value(value, forKeyPath : "bounds")
-    }
-    
-    public func borderWidth<T : FAAnimatable>(value : T) -> PropertyConfiguration {
-        return self.value(value, forKeyPath : "borderWidth")
-    }
-    
-    public func backgroundColor<T : FAAnimatable>(value : T) -> PropertyConfiguration {
+    public func backgroundColor<T : FAAnimatable>(value : T) -> PropertyAnimationConfig {
         return self.value(value, forKeyPath : "backgroundColor")
     }
     
-    public func contentsRect<T : FAAnimatable>(value : T) -> PropertyConfiguration{
+    public func bounds<T : FAAnimatable>(value : T) -> PropertyAnimationConfig {
+        return self.value(value, forKeyPath : "bounds")
+    }
+    
+    public func borderColor<T : FAAnimatable>(value : T) -> PropertyAnimationConfig {
+        return self.value(value, forKeyPath : "borderColor")
+    }
+    
+    public func borderWidth<T : FAAnimatable>(value : T) -> PropertyAnimationConfig {
+        return self.value(value, forKeyPath : "borderWidth")
+    }
+
+    public func contentsRect<T : FAAnimatable>(value : T) -> PropertyAnimationConfig{
         return self.value(value, forKeyPath : "contentsRect")
     }
     
-    public func cornerRadius<T : FAAnimatable>(value : T) -> PropertyConfiguration {
+    public func cornerRadius<T : FAAnimatable>(value : T) -> PropertyAnimationConfig {
         return self.value(value, forKeyPath : "cornerRadius")
     }
     
-    public func opacity<T : FAAnimatable>(value : T) -> PropertyConfiguration {
+    public func opacity<T : FAAnimatable>(value : T) -> PropertyAnimationConfig {
         return self.value(value, forKeyPath : "opacity")
     }
     
-    public func position<T : FAAnimatable>(value : T) -> PropertyConfiguration {
+    public func position<T : FAAnimatable>(value : T) -> PropertyAnimationConfig {
         return self.value(value, forKeyPath : "position")
     }
     
-    public func shadowOffset<T : FAAnimatable>(value : T) -> PropertyConfiguration {
+    public func shadowColor<T : FAAnimatable>(value : T) -> PropertyAnimationConfig {
+        return self.value(value, forKeyPath : "shadowColor")
+    }
+    
+    public func shadowOffset<T : FAAnimatable>(value : T) -> PropertyAnimationConfig {
         return self.value(value, forKeyPath : "shadowOffset")
     }
     
-    public func shadowOpacity<T : FAAnimatable>(value : T) -> PropertyConfiguration{
+    public func shadowOpacity<T : FAAnimatable>(value : T) -> PropertyAnimationConfig {
         return self.value(value, forKeyPath : "shadowOpacity")
     }
     
-    public func shadowRadius<T : FAAnimatable>(value : T) -> PropertyConfiguration {
+    public func shadowRadius<T : FAAnimatable>(value : T) -> PropertyAnimationConfig {
         return self.value(value, forKeyPath : "shadowRadius")
     }
     
-    public func size<T : FAAnimatable>(value : T) -> PropertyConfiguration {
+    public func size<T : FAAnimatable>(value : T) -> PropertyAnimationConfig {
         return bounds(CGRectMake(0, 0, (value as? CGSize)!.width, (value as? CGSize)!.height))
     }
     
-    public func sublayerTransform<T : FAAnimatable>(value : T) -> PropertyConfiguration {
+    public func sublayerTransform<T : FAAnimatable>(value : T) -> PropertyAnimationConfig {
         return self.value(value, forKeyPath : "sublayerTransform")
     }
     
-    public func transform<T : FAAnimatable>(value : T) -> PropertyConfiguration{
+    public func transform<T : FAAnimatable>(value : T) -> PropertyAnimationConfig{
         return self.value(value, forKeyPath : "transform")
     }
     
-    public func animateZPosition<T : FAAnimatable>(value : T) -> PropertyConfiguration {
+    public func animateZPosition<T : FAAnimatable>(value : T) -> PropertyAnimationConfig {
         return self.value(value, forKeyPath : "animateZPosition")
     }
 }

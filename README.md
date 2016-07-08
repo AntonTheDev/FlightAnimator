@@ -1,32 +1,29 @@
 #FlightAnimator
 
-[![Awesome](https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg)](https://github.com/sindresorhus/awesome)
-[![Cocoapods Compatible](https://img.shields.io/badge/pod-v0.7.3-blue.svg)]()
+[![Cocoapods Compatible](https://img.shields.io/badge/pod-v0.8.0-blue.svg)]()
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)]()
 [![Platform](https://img.shields.io/badge/platform-ios-lightgrey.svg)]()
 [![License](https://img.shields.io/badge/license-MIT-343434.svg)](/LICENSE.md)
 
 ![alt tag](/Documentation/FlightBanner.jpg?raw=true)
 
+##Introduction
+
+FlightAnimator is a natural blocks based animation engine built on top of CoreAnimation, and provides provides a very simple syntax to create, configure, cache, and reuse animations dynamically. 
+
+Under the hood, FlightAnimator uses CAKeyframeAnimation(s) and CoreAnimationGroup(s). The animations are technically created as a custom CAAnimationGroup, then configured with multiple property animations. Upon being applied to the layer, it will dynamically synchronize the remaining progress relative to the current presentationLayer's values. 
+
 ##Features
 
 - [x] [46+ Parametric Curves, Decay, and Springs](/Documentation/parametric_easings.md) 
 - [x] Blocks Syntax for Building Complex Animations
-- [x] Define, Cache, and Reuse Animations
-- [x] Apply Unique Easing per Property Animation
 - [x] Chain Animations:
 	* Synchronously 
 	* Time Progress Relative
 	* Value Progress Relative
+- [x] Apply Unique Easing per Property Animation
 - [x] Advanced Multi-Curve Group Synchronization
-
-##Introduction
-
-FlightAnimator is a natural animation engine built on top of CoreAnimation. Implemented with a blocks based approach, it provides a very simple syntax to create, configure, cache, and reuse animations dynamically based on the current state. 
-
-Under the hood, FlightAnimator uses CAKeyframeAnimation(s) and CoreAnimationGroup(s). The animations are created as a custom CAAnimationGroup, then configured with multiple property animations. Once the animation is applied to the layer, it will dynamically synchronize the remaining progress based on the current presentationLayer's values. The animations can be applied directly on a view, or registered/cached as states, and be applied at a later time.
-
-Check out the [Framework Demo App](#demoApp) packaged with the project to experiment with all the different capabilities of FlightAnimator.
+- [x] Define, Cache, and Reuse Animations
 
 
 ##Installation
@@ -43,13 +40,13 @@ Check out the [Framework Demo App](#demoApp) packaged with the project to experi
 
 ##Basic Use 
 
-There are a many ways to use FlightAnimator as it provides a very flexible syntax for defining animations ranging in completexy with ease. Whether performing an animation,  chaining animations, or registering/caching an animation, the framework follows a common blocks based builder approach to define property animations within an animation group. 
+There are a many ways to use FlightAnimator as it provides a very flexible syntax for defining animations ranging in completexy with ease. Whether performing an animation, chaining animations, or registering/caching an animation, the framework follows a common blocks based builder approach to define property animations within an animation group. Each property animation, is configured with final value, and easing curve, and optionally the primary flag to adjust synchronization of the animations within a group when applied to the layer.
 
-During the build process, for each property animation, one can apply the final value, the timing curve, and a the primary flag to adjust synchronization of the animation when it is applied.
+Check out the [Framework Demo App](#demoApp) to experiment with all the different capabilities of FlightAnimator.
 
 ###Simple Animation
 
-To perform a simple animation  call the `animate(:)` method on the view to animate. Let's look at a simple example below.
+To perform a simple animation call the `animate(:)` method on the view to animate. Once the animator completes the creation process, the animation applies itself on it's own to the layer, and sets all the final layers values on the model layer.
 
 ```swift
 view.animate { (animator) in
@@ -57,39 +54,70 @@ view.animate { (animator) in
       animator.position(newPositon).duration(0.5).easing(.InSine)
 }
 ```
-The closure returns an instance of an FAAnimationMaker, which can be used to build a complex animation to perform, one property at a time. Apply different durations, and timing curves for each individual property in the animation. And that's it, the animation kicks itself off, applies the final animation to the layer, and sets all the final layers values on the model layer.
 
-In the case there is a need to animate a custom defined NSManaged animatable property, i.e progress to draw a circle. Use the `value(value:forKeyPath:)` method on the animator to animate that property.
+The closure returns an instance FlightAnimator used to build a complex animation to perform one property at a time. Technically the animator creates a CGAnimationGroup under the hood to add individual animations to. Once inside the closure, the first step is to creating individual property animation with a destination value, then configure the duration, and easing curve accordingly.
+
+Methods on the FlightAnimator defined for every supported animatable property, but In the case there is a need to animate a custom defined NSManaged animatable property, i.e progress to draw a circle. Use the `value(value:forKeyPath:)` method on the animator to animate that property.
 
 ```swift
 view.animate { (animator) in
-      animator.value(value, forKeyPath : "progress").duration(0.5).easing(.OutCubic)
+    animator.value(value, forKeyPath : "progress").duration(0.5).easing(.OutCubic)    
+}
+```
+
+Once you have created a property animation within the group, it recursively returns an instance of PropertyAnimationConfig, which allows for chaining the a duration, easing curve, or primary flag, documentated documented at a later point in the documentation. 
+
+```swift
+func duration(duration : CGFloat) -> PropertyAnimationConfig
+func easing(easing : FAEasing) -> PropertyAnimationConfig
+func primary(primary : Bool) -> PropertyAnimationConfig
+```
+
+###Animation Delegate Callbacks
+
+If there is a need to implement the CAAnimationDelegate, you can directly apply the callbacks on the animator instance during creation.
+
+```
+view.animate { (animator) in
+    animator.bounds(newBounds).duration(0.5).easing(.OutCubic)
+    animator.position(newPositon).duration(0.5).easing(.InSine)
+    
+    animator.setDidStartCallback({ (anim) in
+         // Animation Did Start
+    })
+    
+    animator.setDidStopCallback({ (anim, complete) in
+         // Animation Did Stop   
+    })
 }
 ```
 
 ##Chaining Animations
 
-Chaining animations together in FlightAnimator is very easy. You can nest animations using three different types triggers:
+Chaining animations together in FlightAnimator is simple easy. You can nest animations using three different types triggers:
 
 * Simultaneously
 * Time Progress Based
 * Value Progress Based
  
-These can be applied to the view being animated, or any other view accessible in the view heirarchy. Let's look at how to nest some animations using triggers.
+These can be applied to the view being animated, or any other view accessible in the view heirarchy.
 
 ####Trigger Simultaneously
 
 To trigger an animation right as the parent animation begins, attach a trigger on a parent animator by calling `animator.triggerOnStart(...)`. The trigger will perform the animation enclosed accordingly right as the parent begins animating. 
 
-```swift
+```
+// Parent Animation Group
 view.animate { (animator) in
 	animator.bounds(newBounds).duration(0.5).easing(.EaseOutCubic)
     animator.position(newPositon).duration(0.5).easing(.EaseOutCubic)
     
+    // Child Animation Group, Triggered by Parent Group
     animatortriggerOnStart(onView: self.secondaryView, animator: { (animator) in
          animator.bounds(newSecondaryBounds).duration(0.5).easing(.OutCubic)
          animator.position(newSecondaryCenter).duration(0.5).easing(.OutCubic)
     })
+}
 ```
 
 ####Trigger Relative to Time Progress
@@ -128,11 +156,13 @@ view.animate { (animator) in
 
 ##Cache & Reuse Animations
 
-FlighAnimator allows for defining animations (aka states) up front using keys, and triggers them at any time in the application flow. When the animation is applied, if the view is in mid flight, it will synchronize itself accordingly, and animate to its final destination. To register an animation, call a globally defined method, and create an animations just as defined earlier examples within the maker block.
+FlighAnimator allows for registering animations (aka states) up front with a unique animation key. Once defined it can be manually triggered at any time in the application flow using the animation key used registration. 
+
+When the animation is applied, if the view is in mid flight, it will synchronize itself with the current presentation layer values, and animate to its final destination. 
 
 ####Register/Cache Animation
 
-The following example shows how to register, and cache it for a key on a specified view. This animation is only cached, and is not performed until it is manually triggered at a later point.
+To register an animation, call a globally defined method, and create an animations just as defined earlier examples within the maker block. The following example shows how to register, and cache an animation for a key on a specified view. 
 
 ```swift
 struct AnimationKeys {
@@ -146,6 +176,8 @@ registerAnimation(onView : view, forKey : AnimationKeys.CenterStateFrameAnimatio
 })
 ```
 
+This animation is only cached, and is not performed until it is manually triggered.
+
 ####Apply Registered Animation
 
 
@@ -155,7 +187,7 @@ To trigger the animation call the following
 view.applyAnimation(forKey: AnimationKeys.CenterStateFrameAnimation)
 ```
 
-In the case there is a need to apply the final values without actually animating the view, override the default animated flag to false, and it will apply all the final values to the model layer of the associated view.
+To apply final values without animating the view, override the default animated flag to false, and it will apply all the final values to the model layer of the associated view.
 
 
 ```swift
@@ -167,12 +199,12 @@ view.applyAnimation(forKey: AnimationKeys.CenterStateFrameAnimation, animated : 
 
 ###Timing Adjustments
 
-Due to the dynamic nature of the framework, it won't always perform the expect way at first, and may take a few tweaks to get it just right. FlightAnimator has a few settings that allow for customization of the animation duration.
+Due to the dynamic nature of the framework, it may take a few tweaks to get the animation just right. 
 
-The following timing options are available:
+FlightAnimator has a few options for finer control over timing synchronization:
 
-* Designating timing priority during synchronization for the overall animation
-* Designating a primary driver on individual property animations within a group
+* **Timing Priority** - Adjust how the time is select during synchronization of the overall animation
+* **Primary Drivers** - Defines animations that affect timing during synchronization of the overall animation
 
 ####Timing Priority
 
@@ -253,7 +285,6 @@ func respondToPanRecognizer(recognizer : UIPanGestureRecognizer) {
     }
 }
 ```
-
 
 ##Reference
 

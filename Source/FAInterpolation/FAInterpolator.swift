@@ -127,22 +127,18 @@ public struct FAInterpolator<T : FAAnimatable> {
             
             repeat {
                 let newValue = toValue.interpolatedSpringValue(toValue, springs : springs, deltaTime: animationTime)
-               // let currentAnimatableValue  = newValue.typeValue() as! T
-                
-                
+               
                 if let currentAnimatableValue  = newValue as? NSValue,
                     let typedValue = currentAnimatableValue.typeValue() as? T {
                     if floor(toValue.magnitudeToValue(typedValue)) == 0.0 {
                         bouncCount += 1
                     }
                 } else if let typedValue = newValue as? T {
-                    
-                        if floor(toValue.magnitudeToValue(typedValue)) == 0.0 {
-                            bouncCount += 1
-                        }
+                    if floor(toValue.magnitudeToValue(typedValue)) == 0.0 {
+                        bouncCount += 1
                     }
+                }
                 
-               
                 valueArray.append(newValue)
                 animationTime += frameRateTimeUnit
             } while (bouncCount < FAAnimationConfig.SpringCustomBounceCount)
