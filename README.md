@@ -12,12 +12,16 @@
 
 FlightAnimator is a natural blocks based animation engine built on top of CoreAnimation, and provides provides a very simple syntax to create, configure, cache, and reuse animations dynamically. 
 
-Under the hood, FlightAnimator uses CAKeyframeAnimation(s) and CoreAnimationGroup(s). The animations are technically created as a custom CAAnimationGroup, then configured with multiple property animations. Upon being applied to the layer, it will dynamically synchronize the remaining progress relative to the current presentationLayer's values. 
+Under the hood animations are built as CAAnimationGroup(s) with multiple custom CAKeyframeAnimation(s) defined uniquely per property. Once it's time to animate, FlightAnimator will dynamically synchronize the remaining progress for all the animations relative to the current presentationLayer's values, then continue to animate to it's final state.
+
+The unique feature about this framework, is that unlike others, you can actually group multiple animations, and apply different easing curves on a per property basis. FlightAnimator takes care of the rest to synchronize them accordingly to create some very interesting effects :)
+
 <p align=center>
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=8XyH5mpfoC8&vq=hd1080
 " target="_blank"><img src="http://img.youtube.com/vi/8XyH5mpfoC8/0.jpg" 
 alt="FlightAnimatore Demo" border="0" /></a>
 </p>
+
 ##Features
 
 - [x] [46+ Parametric Curves, Decay, and Springs](/Documentation/parametric_easings.md) 
