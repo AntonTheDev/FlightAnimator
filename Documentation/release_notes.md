@@ -1,6 +1,7 @@
 #Release Notes
 
 ####Version 0.8.0
+* Added tvOS Support for both Carthage and Cocoapods
 * Added the ability to listen to CAAnimationDelegate by applying then on the aniamtor instance within the build closure 
 * Added the ability to interpolate CGColor, RGBA, HSBA, and Monochromatic
 * Added property accessors for backgroundColor, borderColor, shadowColor
