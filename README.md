@@ -29,7 +29,7 @@ Under the hood, FlightAnimator uses CAKeyframeAnimation(s) and CoreAnimationGrou
 
 ##Installation
 
-* **Requirements** : XCode 7.3+, iOS 8.0+ 
+* **Requirements** : XCode 7.3+, iOS 8.0+, tvOS 9.0+
 * [Installation Instructions](/Documentation/installation.md)
 * [Release Notes](/Documentation/release_notes.md)
 
