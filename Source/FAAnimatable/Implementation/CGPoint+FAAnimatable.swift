@@ -30,7 +30,7 @@ extension CGPoint : FAAnimatable {
         return CGPointZero.magnitudeValue()
     }
     
-    public func interpolatedValue<T : FAAnimatable>(toValue : T, progress : CGFloat) -> NSValue {
+    public func interpolatedValue<T : FAAnimatable>(toValue : T, progress : CGFloat) -> AnyObject {
         if let toValue = toValue as? CGPoint {
             let adjustedx : CGFloat = interpolateCGFloat(self.x, end: toValue.x, progress: progress)
             let adjustedy : CGFloat = interpolateCGFloat(self.y, end: toValue.y, progress: progress)
@@ -54,7 +54,7 @@ extension CGPoint : FAAnimatable {
         return springs
     }
     
-    public func interpolatedSpringValue<T : FAAnimatable>(toValue : T, springs : Dictionary<String, FASpring>, deltaTime : CGFloat) -> NSValue {
+    public func interpolatedSpringValue<T : FAAnimatable>(toValue : T, springs : Dictionary<String, FASpring>, deltaTime : CGFloat) -> AnyObject {
         let adjustedx : CGFloat = springs[SpringAnimationKey.CGPointX]!.updatedValue(deltaTime)
         let adjustedy : CGFloat = springs[SpringAnimationKey.CGPointY]!.updatedValue(deltaTime)
         return CGPointMake(adjustedx, adjustedy).valueRepresentation()
@@ -69,7 +69,7 @@ extension CGPoint : FAAnimatable {
         return CGPointZero
     }
     
-    public func valueRepresentation() -> NSValue {
+    public func valueRepresentation() -> AnyObject {
          return NSValue(CGPoint :  self)
     }
 }

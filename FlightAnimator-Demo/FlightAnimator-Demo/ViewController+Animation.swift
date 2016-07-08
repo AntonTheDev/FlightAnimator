@@ -82,9 +82,11 @@ extension ViewController {
             
             animator.bounds(toBounds).duration(0.8).easing(.OutExponential)
             animator.position(toPosition).duration(0.8).easing(.OutExponential).primary(true)
-            
+           
             animator.triggerOnStart(onView: self.dimmerView, animator: { (animator) in
                 animator.alpha(0.5).duration(0.8).easing(.OutExponential)
+                animator.backgroundColor(UIColor.blueColor().CGColor).duration(0.8).easing(.Linear)
+                
             })
         }
         

@@ -10,8 +10,8 @@ import Foundation
 import UIKit
 import QuartzCore
 
-public typealias FAAnimationDidStart = () -> Void
-public typealias FAAnimationDidStop  = (complete : Bool) -> Void
+public typealias FAAnimationDidStart = ((anim: CAAnimation) -> Void)
+public typealias FAAnimationDidStop  = ((anim: CAAnimation, complete: Bool) -> Void)
 
 class FAAnimationDelegate : NSObject {
 
@@ -20,13 +20,13 @@ class FAAnimationDelegate : NSObject {
     
     override func animationDidStart(anim: CAAnimation) {
         if let startCallback = animationDidStart {
-           startCallback()
+            startCallback(anim : anim)
         }
     }
     
     override func animationDidStop(anim: CAAnimation, finished flag: Bool) {
         if let stopCallback = animationDidStop {
-            stopCallback(complete: flag)
+            stopCallback(anim : anim, complete: flag)
           
         }
     }
@@ -56,11 +56,11 @@ public extension CAAnimation {
             activeDelegate = FAAnimationDelegate()
         }
  
-        activeDelegate!.setDidStopCallback({ completion in
+        activeDelegate!.setDidStopCallback { (anim, complete) in
             if let _ = self.delegate as? FAAnimationDelegate {
-                stopCallback(complete: completion)
+                stopCallback(anim : anim, complete: complete)
             }
-        })
+        }
         
         self.delegate = activeDelegate
     }
@@ -78,12 +78,11 @@ public extension CAAnimation {
         } else {
             activeDelegate = FAAnimationDelegate()
         }
-        
-        activeDelegate!.setDidStartCallback({
+        activeDelegate!.setDidStartCallback { (anim) in
             if let _ = self.delegate as? FAAnimationDelegate {
-                startCallback()
+                startCallback(anim : anim)
             }
-        })
+        }
         
         self.delegate = activeDelegate
     }

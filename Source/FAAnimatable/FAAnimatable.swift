@@ -35,6 +35,19 @@ public struct SpringAnimationKey {
     static var M42     = "M42"
     static var M43     = "M43"
     static var M44     = "M44"
+    
+    static var CGColorHue          = "CGColorHue"
+    static var CGColorSaturation   = "CGColorSaturation"
+    
+    static var CGColorBrightness   = "CGColorBrightness"
+    static var CGColorHSBAlpha     = "CGColorHSBAlpha"
+    static var CGColorRed          = "CGColorRed"
+    static var CGColorGreen        = "CGColorGreen"
+    
+    static var CGColorBlue         = "CGColorBlue"
+    static var CGColorRGBAlpha     = "CGColorRGBAlpha"
+    static var CGColorWhite        = "CGColorWhite"
+    static var CGColorWhiteAlpha   = "CGColorWhiteAlpha"
 }
 
 public protocol FAAnimatable : Equatable {
@@ -46,10 +59,10 @@ public protocol FAAnimatable : Equatable {
     func magnitudeToValue<T : FAAnimatable>(toValue:  T) -> CGFloat
     
     // Parametric Interpolation
-    func interpolatedValue<T : FAAnimatable>(toValue : T, progress : CGFloat) ->  NSValue
+    func interpolatedValue<T : FAAnimatable>(toValue : T, progress : CGFloat) ->  AnyObject
     
     // Calculates the value at delta time
-    func interpolatedSpringValue<T : FAAnimatable>(toValue : T, springs : Dictionary<String, FASpring>, deltaTime : CGFloat) -> NSValue
+    func interpolatedSpringValue<T : FAAnimatable>(toValue : T, springs : Dictionary<String, FASpring>, deltaTime : CGFloat) -> AnyObject
     
     // Calculates the value at delta time
     func springVelocity(springs : Dictionary<String, FASpring>, deltaTime : CGFloat) -> CGPoint
@@ -61,5 +74,5 @@ public protocol FAAnimatable : Equatable {
                               dampingRatio : CGFloat) -> Dictionary<String, FASpring>
     
     // Returns a core animation value representation
-    func valueRepresentation() -> NSValue
+    func valueRepresentation() -> AnyObject
 }

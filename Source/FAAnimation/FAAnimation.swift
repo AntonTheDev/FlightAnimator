@@ -99,12 +99,11 @@ final public class FAAnimation : CAKeyframeAnimation {
     }
 }
 
-
 extension FAAnimation {
 
     private func configureValues(runningAnimation : FAAnimation? = nil) {
         if let presentationValue = (weakLayer?.presentationLayer() as? CALayer)?.anyValueForKeyPath(self.keyPath!) {
-            if let currentValue = presentationValue as? CGPoint {
+           if let currentValue = presentationValue as? CGPoint {
                 syncValues(currentValue, runningAnimation : runningAnimation)
             } else  if let currentValue = presentationValue as? CGSize {
                 syncValues(currentValue, runningAnimation : runningAnimation)
@@ -114,8 +113,25 @@ extension FAAnimation {
                 syncValues(currentValue, runningAnimation : runningAnimation)
             } else  if let currentValue = presentationValue as? CATransform3D {
                 syncValues(currentValue, runningAnimation : runningAnimation)
+            } else if let currentValue = typeCastCGColor(presentationValue) {
+                syncValues(currentValue, runningAnimation : runningAnimation)
             }
         }
+    }
+
+    private func interpolateValues<T : FAAnimatable>(toValue : T, currentValue : T, previousFromValue : T?) {
+       
+        var interpolator  = FAInterpolator(toValue : toValue,
+                                           fromValue: currentValue,
+                                           previousFromValue : previousFromValue,
+                                           duration: CGFloat(duration),
+                                           easingFunction : easingFunction)
+        
+        let config = interpolator.interpolatedAnimationConfig()
+        
+        springs = config.springs
+        duration = config.duration
+        values = config.values
     }
     
     private func syncValues<T : FAAnimatable>(currentValue : T, runningAnimation : FAAnimation?) {
@@ -127,18 +143,12 @@ extension FAAnimation {
         if let typedToValue = (toValue as? NSValue)?.typeValue() as? T {
             
             let previousFromValue = (runningAnimation?.fromValue as? NSValue)?.typeValue() as? T
+            interpolateValues(typedToValue, currentValue : currentValue, previousFromValue : previousFromValue)
+
+        } else  if let typedToValue = toValue  as? T {
             
-            var interpolator  = FAInterpolator(toValue : typedToValue,
-                                               fromValue: currentValue,
-                                               previousFromValue : previousFromValue,
-                                               duration: CGFloat(duration),
-                                               easingFunction : easingFunction)
-            
-            let config = interpolator.interpolatedAnimationConfig()
-            
-            springs = config.springs
-            duration = config.duration
-            values = config.values
+            let previousFromValue = runningAnimation?.fromValue as? T
+            interpolateValues(typedToValue, currentValue : currentValue, previousFromValue : previousFromValue)
         }
     }
     
@@ -165,7 +175,6 @@ extension FAAnimation {
     }
 }
 
-
 extension FAAnimation {
     
     func valueProgress() -> CGFloat {
@@ -181,9 +190,11 @@ extension FAAnimation {
                 return valueProgress(currentValue)
             } else  if let currentValue = presentationValue as? CATransform3D {
                 return valueProgress(currentValue)
+            } else if let currentValue = typeCastCGColor(presentationValue) {
+                return valueProgress(currentValue)
             }
         }
-        
+    
         return 0.0
     }
     
@@ -195,11 +206,18 @@ extension FAAnimation {
     }
     
     private func valueProgress<T : FAAnimatable>(currentValue : T) -> CGFloat {
+       
         if let typedToValue = (toValue as? NSValue)?.typeValue() as? T,
-            let typedFromValue = (toValue as? NSValue)?.typeValue() as? T{
+           let typedFromValue = (fromValue as? NSValue)?.typeValue() as? T{
+            
+            return currentValue.magnitudeToValue(typedToValue) / typedFromValue.magnitudeToValue(typedToValue)
+       
+        } else if let typedToValue = toValue  as? T,
+                  let typedFromValue = fromValue  as? T {
             
             return currentValue.magnitudeToValue(typedToValue) / typedFromValue.magnitudeToValue(typedToValue)
         }
+        
         return 0.0
     }
 }

@@ -25,13 +25,13 @@ extension CGSize : FAAnimatable {
         return CGSizeMake((toValue as! CGSize).width - width, (toValue as! CGSize).height - height).magnitudeValue()
     }
     
-    public func interpolatedValue<T : FAAnimatable>(toValue : T, progress : CGFloat) -> NSValue {
+    public func interpolatedValue<T : FAAnimatable>(toValue : T, progress : CGFloat) -> AnyObject {
         let width : CGFloat = ceil(interpolateCGFloat(self.width, end: (toValue as! CGSize).width, progress: progress))
         let height : CGFloat = ceil(interpolateCGFloat(self.height, end: (toValue as! CGSize).height, progress: progress))
         return  CGSizeMake(width, height).valueRepresentation()
     }
     
-    public func interpolatedSpringValue<T : FAAnimatable>(toValue : T, springs : Dictionary<String, FASpring>, deltaTime : CGFloat) -> NSValue {
+    public func interpolatedSpringValue<T : FAAnimatable>(toValue : T, springs : Dictionary<String, FASpring>, deltaTime : CGFloat) -> AnyObject {
         let size = CGSizeMake(springs[SpringAnimationKey.CGSizeWidth]!.updatedValue(deltaTime),
                               springs[SpringAnimationKey.CGSizeHeight]!.updatedValue(deltaTime))
         return size.valueRepresentation()
@@ -61,7 +61,7 @@ extension CGSize : FAAnimatable {
         return springs
     }
     
-    public func valueRepresentation() -> NSValue {
+    public func valueRepresentation() -> AnyObject {
         return NSValue(CGSize :  self)
     }
 }

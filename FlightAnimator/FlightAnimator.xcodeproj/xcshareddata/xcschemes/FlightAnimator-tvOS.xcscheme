@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "13009CE81D0B90C3008419C8"
+               BlueprintIdentifier = "3A742D7C1D2F3B94008E555E"
                BuildableName = "FlightAnimator.framework"
-               BlueprintName = "FlightAnimator"
+               BlueprintName = "FlightAnimator-tvOS"
                ReferencedContainer = "container:FlightAnimator.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -28,31 +28,12 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "13009CF21D0B90C4008419C8"
-               BuildableName = "FlightAnimatorTests.xctest"
-               BlueprintName = "FlightAnimatorTests"
-               ReferencedContainer = "container:FlightAnimator.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
       </Testables>
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "13009CE81D0B90C3008419C8"
-            BuildableName = "FlightAnimator.framework"
-            BlueprintName = "FlightAnimator"
-            ReferencedContainer = "container:FlightAnimator.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </TestAction>
    <LaunchAction
-      buildConfiguration = "Release"
+      buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       launchStyle = "0"
@@ -64,9 +45,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "13009CE81D0B90C3008419C8"
+            BlueprintIdentifier = "3A742D7C1D2F3B94008E555E"
             BuildableName = "FlightAnimator.framework"
-            BlueprintName = "FlightAnimator"
+            BlueprintName = "FlightAnimator-tvOS"
             ReferencedContainer = "container:FlightAnimator.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -82,9 +63,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "13009CE81D0B90C3008419C8"
+            BlueprintIdentifier = "3A742D7C1D2F3B94008E555E"
             BuildableName = "FlightAnimator.framework"
-            BlueprintName = "FlightAnimator"
+            BlueprintName = "FlightAnimator-tvOS"
             ReferencedContainer = "container:FlightAnimator.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

@@ -109,8 +109,14 @@ public struct FAInterpolator<T : FAAnimatable> {
         case .SpringDecay(_):
             repeat {
                 let newValue = toValue.interpolatedSpringValue(toValue, springs : springs, deltaTime: animationTime)
-                let currentAnimatableValue  = newValue.typeValue() as! T
-                animationComplete = toValue.magnitudeToValue(currentAnimatableValue)  < FAAnimationConfig.SpringDecayMagnitudeThreshold
+               
+                if let currentAnimatableValue  = newValue as? NSValue,
+                    let typedValue = currentAnimatableValue.typeValue() as? T {
+                    animationComplete = toValue.magnitudeToValue(typedValue)  < FAAnimationConfig.SpringDecayMagnitudeThreshold
+                    
+                } else if let typedValue = newValue as? T {
+                    animationComplete = toValue.magnitudeToValue(typedValue)  < FAAnimationConfig.SpringDecayMagnitudeThreshold
+                }
                 
                 valueArray.append(newValue)
                 animationTime += frameRateTimeUnit
@@ -121,10 +127,16 @@ public struct FAInterpolator<T : FAAnimatable> {
             
             repeat {
                 let newValue = toValue.interpolatedSpringValue(toValue, springs : springs, deltaTime: animationTime)
-                let currentAnimatableValue  = newValue.typeValue() as! T
-                
-                if floor(toValue.magnitudeToValue(currentAnimatableValue)) == 0.0 {
-                    bouncCount += 1
+               
+                if let currentAnimatableValue  = newValue as? NSValue,
+                    let typedValue = currentAnimatableValue.typeValue() as? T {
+                    if floor(toValue.magnitudeToValue(typedValue)) == 0.0 {
+                        bouncCount += 1
+                    }
+                } else if let typedValue = newValue as? T {
+                    if floor(toValue.magnitudeToValue(typedValue)) == 0.0 {
+                        bouncCount += 1
+                    }
                 }
                 
                 valueArray.append(newValue)

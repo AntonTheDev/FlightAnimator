@@ -1,5 +1,16 @@
 #Release Notes
 
+####Version 0.8.0
+* Added the ability to listen to CAAnimationDelegate by applying then on the aniamtor instance within the build closure 
+* Added the ability to interpolate CGColor, RGBA, HSBA, and Monochromatic
+* Added property accessors for backgroundColor, borderColor, shadowColor
+* Fix for synchronizing, it was running the sychronization logic twice, 30%+ performance improvement
+
+
+####Version 0.7.3
+* Removed unnecessary Type Conversion between Doubles and CGFloats
+* Refactored the value / time based progress logic
+
 ####Version 0.7.2
 * Added Build support for iOS 8.0+ (prior was only built via Carthage / Cocoapods for ios 9.3)
 

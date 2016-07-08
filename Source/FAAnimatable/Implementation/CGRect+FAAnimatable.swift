@@ -25,13 +25,13 @@ extension CGRect : FAAnimatable {
         return CGSizeMake((toValue as! CGRect).width - width, (toValue as! CGRect).height - height).magnitudeValue()
     }
     
-    public func interpolatedValue<T : FAAnimatable>(toValue : T, progress : CGFloat) -> NSValue {
+    public func interpolatedValue<T : FAAnimatable>(toValue : T, progress : CGFloat) -> AnyObject {
         let width : CGFloat = ceil(interpolateCGFloat(self.width, end: (toValue as! CGRect).width, progress: progress))
         let height : CGFloat = ceil(interpolateCGFloat(self.height, end: (toValue as! CGRect).height, progress: progress))
         return CGRectMake(0, 0, width, height).valueRepresentation()
     }
     
-    public func interpolatedSpringValue<T : FAAnimatable>(toValue : T, springs : Dictionary<String, FASpring>, deltaTime : CGFloat) -> NSValue {
+    public func interpolatedSpringValue<T : FAAnimatable>(toValue : T, springs : Dictionary<String, FASpring>, deltaTime : CGFloat) -> AnyObject {
         let rect = CGRectMake(0,
                               0,
                               springs[SpringAnimationKey.CGSizeWidth]!.updatedValue(deltaTime),
@@ -75,7 +75,7 @@ extension CGRect : FAAnimatable {
         return springs
     }
     
-    public func valueRepresentation() -> NSValue {
+    public func valueRepresentation() -> AnyObject {
         return NSValue(CGRect :  self)
     }
 }
