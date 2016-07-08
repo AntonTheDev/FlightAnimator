@@ -14,7 +14,7 @@ FlightAnimator is a natural blocks based animation engine built on top of CoreAn
 
 Under the hood, FlightAnimator uses CAKeyframeAnimation(s) and CoreAnimationGroup(s). The animations are technically created as a custom CAAnimationGroup, then configured with multiple property animations. Upon being applied to the layer, it will dynamically synchronize the remaining progress relative to the current presentationLayer's values. 
 <p align=center>
-<a href="http://www.youtube.com/watch?feature=player_embedded&v=8XyH5mpfoC8
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=8XyH5mpfoC8&vq=hd1080
 " target="_blank"><img src="http://img.youtube.com/vi/8XyH5mpfoC8/0.jpg" 
 alt="FlightAnimatore Demo" border="0" /></a>
 </p>
