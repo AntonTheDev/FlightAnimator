@@ -8,11 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		13009CED1D0B90C4008419C8 /* FlightAnimator.h in Headers */ = {isa = PBXBuildFile; fileRef = 13009CEC1D0B90C4008419C8 /* FlightAnimator.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		13009CF41D0B90C4008419C8 /* FlightAnimator.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 13009CE91D0B90C3008419C8 /* FlightAnimator.framework */; };
-		13009CF91D0B90C4008419C8 /* FlightAnimatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13009CF81D0B90C4008419C8 /* FlightAnimatorTests.swift */; };
 		13E5D22A1D2ED970005CF3E1 /* FlightAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13E5D2291D2ED970005CF3E1 /* FlightAnimator.swift */; };
 		3A742D5A1D2E4006008E555E /* CGColor+FAAnimatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A742D591D2E4006008E555E /* CGColor+FAAnimatable.swift */; };
-		3A742D801D2F3B94008E555E /* FlightAnimator-tvOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A742D7F1D2F3B94008E555E /* FlightAnimator-tvOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3A742D861D2F3C65008E555E /* FlightAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13E5D2291D2ED970005CF3E1 /* FlightAnimator.swift */; };
 		3A742D871D2F3C65008E555E /* CALayer+FAAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AEBA4B31D2AF657008147ED /* CALayer+FAAnimation.swift */; };
 		3A742D881D2F3C65008E555E /* NSValue+FAAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AEBA4B41D2AF657008147ED /* NSValue+FAAnimation.swift */; };
@@ -52,28 +49,13 @@
 		3AEBA4CF1D2AF657008147ED /* FASpring.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AEBA4BD1D2AF657008147ED /* FASpring.swift */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		13009CF51D0B90C4008419C8 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 13009CE01D0B90C3008419C8 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 13009CE81D0B90C3008419C8;
-			remoteInfo = FlightAnimator;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXFileReference section */
 		13009CE91D0B90C3008419C8 /* FlightAnimator.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FlightAnimator.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		13009CEC1D0B90C4008419C8 /* FlightAnimator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FlightAnimator.h; sourceTree = "<group>"; };
-		13009CF31D0B90C4008419C8 /* FlightAnimatorTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FlightAnimatorTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		13009CF81D0B90C4008419C8 /* FlightAnimatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlightAnimatorTests.swift; sourceTree = "<group>"; };
-		13009CFA1D0B90C4008419C8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		13E5D2291D2ED970005CF3E1 /* FlightAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlightAnimator.swift; sourceTree = "<group>"; };
 		3A742D591D2E4006008E555E /* CGColor+FAAnimatable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGColor+FAAnimatable.swift"; sourceTree = "<group>"; };
 		3A742D771D2F3B12008E555E /* Info-iOS.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Info-iOS.plist"; path = "FlightAnimator/Info-iOS.plist"; sourceTree = SOURCE_ROOT; };
 		3A742D7D1D2F3B94008E555E /* FlightAnimator.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FlightAnimator.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		3A742D7F1D2F3B94008E555E /* FlightAnimator-tvOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FlightAnimator-tvOS.h"; sourceTree = "<group>"; };
-		3A742D811D2F3B94008E555E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3A742D9A1D2F3E0C008E555E /* Info-tvOS.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Info-tvOS.plist"; path = "FlightAnimator/Info-tvOS.plist"; sourceTree = SOURCE_ROOT; };
 		3AEBA4A71D2AF657008147ED /* FAAnimation+Callbacks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "FAAnimation+Callbacks.swift"; sourceTree = "<group>"; };
 		3AEBA4A81D2AF657008147ED /* FAPanGestureRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FAPanGestureRecognizer.swift; sourceTree = "<group>"; };
@@ -102,14 +84,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		13009CF01D0B90C4008419C8 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				13009CF41D0B90C4008419C8 /* FlightAnimator.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		3A742D791D2F3B94008E555E /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -124,8 +98,6 @@
 			isa = PBXGroup;
 			children = (
 				13009CEB1D0B90C4008419C8 /* FlightAnimator */,
-				13009CF71D0B90C4008419C8 /* FlightAnimatorTests */,
-				3A742D7E1D2F3B94008E555E /* FlightAnimator-tvOS */,
 				13009CEA1D0B90C3008419C8 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -134,7 +106,6 @@
 			isa = PBXGroup;
 			children = (
 				13009CE91D0B90C3008419C8 /* FlightAnimator.framework */,
-				13009CF31D0B90C4008419C8 /* FlightAnimatorTests.xctest */,
 				3A742D7D1D2F3B94008E555E /* FlightAnimator.framework */,
 			);
 			name = Products;
@@ -147,24 +118,6 @@
 				3AEBA4A51D2AF657008147ED /* Source */,
 			);
 			path = FlightAnimator;
-			sourceTree = "<group>";
-		};
-		13009CF71D0B90C4008419C8 /* FlightAnimatorTests */ = {
-			isa = PBXGroup;
-			children = (
-				13009CF81D0B90C4008419C8 /* FlightAnimatorTests.swift */,
-				13009CFA1D0B90C4008419C8 /* Info.plist */,
-			);
-			path = FlightAnimatorTests;
-			sourceTree = "<group>";
-		};
-		3A742D7E1D2F3B94008E555E /* FlightAnimator-tvOS */ = {
-			isa = PBXGroup;
-			children = (
-				3A742D7F1D2F3B94008E555E /* FlightAnimator-tvOS.h */,
-				3A742D811D2F3B94008E555E /* Info.plist */,
-			);
-			path = "FlightAnimator-tvOS";
 			sourceTree = "<group>";
 		};
 		3AEBA4A51D2AF657008147ED /* Source */ = {
@@ -259,7 +212,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3A742D801D2F3B94008E555E /* FlightAnimator-tvOS.h in Headers */,
 				3A742D991D2F3D2E008E555E /* FlightAnimator.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -284,24 +236,6 @@
 			productName = FlightAnimator;
 			productReference = 13009CE91D0B90C3008419C8 /* FlightAnimator.framework */;
 			productType = "com.apple.product-type.framework";
-		};
-		13009CF21D0B90C4008419C8 /* FlightAnimatorTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 13009D001D0B90C4008419C8 /* Build configuration list for PBXNativeTarget "FlightAnimatorTests" */;
-			buildPhases = (
-				13009CEF1D0B90C4008419C8 /* Sources */,
-				13009CF01D0B90C4008419C8 /* Frameworks */,
-				13009CF11D0B90C4008419C8 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				13009CF61D0B90C4008419C8 /* PBXTargetDependency */,
-			);
-			name = FlightAnimatorTests;
-			productName = FlightAnimatorTests;
-			productReference = 13009CF31D0B90C4008419C8 /* FlightAnimatorTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		3A742D7C1D2F3B94008E555E /* FlightAnimator-tvOS */ = {
 			isa = PBXNativeTarget;
@@ -334,9 +268,6 @@
 					13009CE81D0B90C3008419C8 = {
 						CreatedOnToolsVersion = 7.3;
 					};
-					13009CF21D0B90C4008419C8 = {
-						CreatedOnToolsVersion = 7.3;
-					};
 					3A742D7C1D2F3B94008E555E = {
 						CreatedOnToolsVersion = 7.3.1;
 					};
@@ -355,7 +286,6 @@
 			projectRoot = "";
 			targets = (
 				13009CE81D0B90C3008419C8 /* FlightAnimator-iOS */,
-				13009CF21D0B90C4008419C8 /* FlightAnimatorTests */,
 				3A742D7C1D2F3B94008E555E /* FlightAnimator-tvOS */,
 			);
 		};
@@ -363,13 +293,6 @@
 
 /* Begin PBXResourcesBuildPhase section */
 		13009CE71D0B90C3008419C8 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		13009CF11D0B90C4008419C8 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -412,14 +335,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		13009CEF1D0B90C4008419C8 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				13009CF91D0B90C4008419C8 /* FlightAnimatorTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		3A742D781D2F3B94008E555E /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -447,14 +362,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		13009CF61D0B90C4008419C8 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 13009CE81D0B90C3008419C8 /* FlightAnimator-iOS */;
-			targetProxy = 13009CF51D0B90C4008419C8 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		13009CFB1D0B90C4008419C8 /* Debug */ = {
@@ -561,7 +468,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.iagd.flightanimator.FlightAnimator;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.iagd.flightanimator.FlightAnimator-iOS";
 				PRODUCT_NAME = FlightAnimator;
 				SKIP_INSTALL = YES;
 			};
@@ -578,29 +485,9 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.iagd.flightanimator.FlightAnimator;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.iagd.flightanimator.FlightAnimator-iOS";
 				PRODUCT_NAME = FlightAnimator;
 				SKIP_INSTALL = YES;
-			};
-			name = Release;
-		};
-		13009D011D0B90C4008419C8 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				INFOPLIST_FILE = FlightAnimatorTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.iagd.flightanimator.FlightAnimatorTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Debug;
-		};
-		13009D021D0B90C4008419C8 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				INFOPLIST_FILE = FlightAnimatorTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.iagd.flightanimator.FlightAnimatorTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
 		};
@@ -619,7 +506,7 @@
 				SDKROOT = appletvos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 3;
-				TVOS_DEPLOYMENT_TARGET = 9.2;
+				TVOS_DEPLOYMENT_TARGET = 9.0;
 			};
 			name = Debug;
 		};
@@ -638,7 +525,7 @@
 				SDKROOT = appletvos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 3;
-				TVOS_DEPLOYMENT_TARGET = 9.2;
+				TVOS_DEPLOYMENT_TARGET = 9.0;
 			};
 			name = Release;
 		};
@@ -659,15 +546,6 @@
 			buildConfigurations = (
 				13009CFE1D0B90C4008419C8 /* Debug */,
 				13009CFF1D0B90C4008419C8 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		13009D001D0B90C4008419C8 /* Build configuration list for PBXNativeTarget "FlightAnimatorTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				13009D011D0B90C4008419C8 /* Debug */,
-				13009D021D0B90C4008419C8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
