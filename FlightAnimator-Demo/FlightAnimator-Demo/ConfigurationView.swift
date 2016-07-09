@@ -357,7 +357,7 @@ class ConfigurationView : UIView {
         } else  {
 
             enableSecondaryViewLabel.animate { (animator) in
-                animator.position(initialCenter).duration(0.5).easing(.OutSine)
+                animator.position(self.initialCenter).duration(0.5).easing(.OutSine)
                 
                 animator.triggerAtTimeProgress(atProgress: 0.61, onView: self.atProgressLabel, animator: { (animator) in
                     animator.alpha(1.0).duration(0.5).easing(.OutSine)

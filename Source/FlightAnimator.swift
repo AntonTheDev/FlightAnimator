@@ -28,7 +28,7 @@ public enum FAPrimaryTimingPriority : Int {
 public func registerAnimation(onView view : UIView,
                               forKey key: String,
                               timingPriority : FAPrimaryTimingPriority = .MaxTime,
-                              @noescape animator : (animator : FlightAnimator) -> Void ) {
+                              animator : (animator : FlightAnimator) -> Void ) {
     
     let newAnimator = FlightAnimator(withView: view, forKey : key, priority : timingPriority)
     animator(animator : newAnimator)
@@ -36,7 +36,7 @@ public func registerAnimation(onView view : UIView,
 
 public extension UIView {
     
-    func animate(timingPriority : FAPrimaryTimingPriority = .MaxTime, @noescape animator : (animator : FlightAnimator) -> Void ) {
+    func animate(timingPriority : FAPrimaryTimingPriority = .MaxTime, animator : (animator : FlightAnimator) -> Void ) {
         let newAnimator = FlightAnimator(withView: self, forKey : "AppliedAnimation",  priority : timingPriority)
         animator(animator : newAnimator)
         applyAnimation(forKey: "AppliedAnimation")
@@ -97,9 +97,9 @@ public class FlightAnimator : FAAnimationMaker {
     public func value(value : Any, forKeyPath key : String) -> PropertyAnimationConfig {
         
         if let value = value as? UIColor {
-            animationConfigurations[key] = ConfigurationValue(value: value.CGColor, forKeyPath: key, view : associatedView!, animationKey: animationKey!)
+            animationConfigurations[key] = PropertyAnimationConfig(value: value.CGColor, forKeyPath: key, view : associatedView!, animationKey: animationKey!)
         } else {
-            animationConfigurations[key] = ConfigurationValue(value: value, forKeyPath: key, view : associatedView!, animationKey: animationKey!)
+            animationConfigurations[key] = PropertyAnimationConfig(value: value, forKeyPath: key, view : associatedView!, animationKey: animationKey!)
         }
     
         return animationConfigurations[key]!

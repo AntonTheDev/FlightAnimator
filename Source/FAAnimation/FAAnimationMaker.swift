@@ -9,6 +9,14 @@
 import Foundation
 import UIKit
 
+internal struct AnimationTrigger : Equatable {
+    var isTimedBased = true
+    var triggerProgessValue : CGFloat?
+    var animationKey : String?
+    weak var animatedView : UIView?
+}
+
+
 public class FAAnimationMaker {
     
     internal weak var associatedView : UIView?
@@ -29,7 +37,12 @@ public class FAAnimationMaker {
         if associatedView!.cachedAnimations == nil {
             associatedView!.cachedAnimations = [String : FAAnimationGroup]()
         }
+       
+        if associatedView!.cachedAnimations!.keys.contains(animationKey!) {
+            associatedView!.cachedAnimations![animationKey!] = nil
+        }
         
+       
         let newGroup = FAAnimationGroup()
         newGroup.animationKey = animationKey
         newGroup.weakLayer = associatedView?.layer
@@ -60,24 +73,7 @@ public class FAAnimationMaker {
     }
 }
 
-public protocol PropertyAnimationConfig {
-    var easingCurve : FAEasing { get }
-    var duration : CGFloat { get }
-    
-    func duration(duration : CGFloat) -> PropertyAnimationConfig
-    func easing(easing : FAEasing) -> PropertyAnimationConfig
-    func primary(primary : Bool) -> PropertyAnimationConfig
-}
-
-private class Configuration {
-    var value: PropertyAnimationConfig
-    
-    init(value: Any, forKeyPath key : String, view : UIView, animationKey : String) {
-        self.value = ConfigurationValue(value: value, forKeyPath : key, view : view, animationKey : animationKey)
-    }
-}
-
-internal class ConfigurationValue : PropertyAnimationConfig {
+public class PropertyAnimationConfig  {
     
     private weak var associatedView : UIView?
     private var animationKey : String?
@@ -96,6 +92,11 @@ internal class ConfigurationValue : PropertyAnimationConfig {
         easingCurve = .Linear
         duration = 0.0
         primary = false
+    }
+    
+    deinit {
+        associatedView = nil
+        //print ("DEINIT PropertyAnimationConfig")
     }
     
     func duration(duration : CGFloat) -> PropertyAnimationConfig {

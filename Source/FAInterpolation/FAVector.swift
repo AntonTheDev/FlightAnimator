@@ -9,15 +9,7 @@
 import Foundation
 import UIKit
 
-struct FAAnimationConfig {
-    static let InterpolationFrameCount  : CGFloat = 60.0
-    
-    static let SpringDecayFrequency     : CGFloat = 14.0
-    static let SpringDecayDamping       : CGFloat = 0.97
-    static let SpringCustomBounceCount  : Int = 12
-    
-    static let SpringDecayMagnitudeThreshold  : CGFloat = 1.4
-}
+
 
 public func -(lhs:FAVector, rhs:FAVector) -> FAVector {
     var calculatedComponents = [CGFloat]()

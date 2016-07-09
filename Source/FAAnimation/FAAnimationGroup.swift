@@ -17,13 +17,6 @@ func ==(lhs:AnimationTrigger, rhs:AnimationTrigger) -> Bool {
         lhs.animationKey == rhs.animationKey
 }
 
-internal struct AnimationTrigger : Equatable {
-    var isTimedBased = true
-    var triggerProgessValue : CGFloat?
-    var animationKey : String?
-    weak var animatedView : UIView?
-}
-
 final public class FAAnimationGroup : CAAnimationGroup {
     
     var primaryTimingPriority : FAPrimaryTimingPriority = .MaxTime
@@ -58,7 +51,7 @@ final public class FAAnimationGroup : CAAnimationGroup {
     
     // This is used to
     private var primaryEasingFunction : FAEasing = FAEasing.Linear
-    private var primaryAnimation : FAAnimation?
+    private weak var primaryAnimation : FAAnimation?
     
     private var displayLink : CADisplayLink?
     
@@ -81,8 +74,8 @@ final public class FAAnimationGroup : CAAnimationGroup {
         animationGroup.weakLayer                = weakLayer
         animationGroup.startTime                = startTime
         animationGroup.animationKey             = animationKey
-        animationGroup.segmentArray             = segmentArray
         animationGroup._segmentArray            = _segmentArray
+        animationGroup.primaryAnimation         = primaryAnimation
         animationGroup.primaryTimingPriority    = primaryTimingPriority
         return animationGroup
     }
@@ -93,6 +86,13 @@ final public class FAAnimationGroup : CAAnimationGroup {
 extension FAAnimationGroup {
     
     func synchronizeAnimationGroup(oldAnimationGroup : FAAnimationGroup?) {
+        
+        oldAnimationGroup?.stopTriggerTimer()
+        
+        if let anim = oldAnimationGroup?.weakLayer?.presentationLayer()!.animationForKey(animationKey!) as? FAAnimationGroup {
+            anim.stopTriggerTimer()
+        }
+        
         synchronizeAnimations(oldAnimationGroup)
     }
     
@@ -140,9 +140,7 @@ extension FAAnimationGroup {
 extension FAAnimationGroup {
     
     private func synchronizeAnimations(oldAnimationGroup : FAAnimationGroup?) {
-        
-        oldAnimationGroup?.stopTriggerTimer()
-
+    
         var durationArray =  [Double]()
         
         var oldAnimations = animationDictionaryForGroup(oldAnimationGroup)
@@ -203,7 +201,6 @@ extension FAAnimationGroup {
       
         if let primaryDrivingAnimation = filteredAnimation.first as? FAAnimation {
             primaryAnimation = primaryDrivingAnimation
-            primaryEasingFunction = primaryDrivingAnimation.easingFunction
         }
         
         guard animations != nil else {
@@ -213,19 +210,17 @@ extension FAAnimationGroup {
         var newAnimationsArray = [FAAnimation]()
         newAnimationsArray.append(filteredAnimation.first! as! FAAnimation)
         
-        for animation in animations! {
+        let filteredNonAnimation = animations!.filter({ $0 != primaryAnimation })
+        
+        for animation in filteredNonAnimation {
             animation.duration = duration
             
             if let customAnimation = animation as? FAAnimation {
-                switch customAnimation.easingFunction {
-                case .SpringDecay(_):
-                    break
-                case .SpringCustom(_, _, _):
-                    break
-                default:
-                    customAnimation.synchronize()
+                
+                if customAnimation.easingFunction.isSpring() == false {
+                     customAnimation.synchronize()
                 }
-           
+                
                 newAnimationsArray.append(customAnimation)
             }
         }
@@ -252,9 +247,8 @@ extension FAAnimationGroup {
 
 extension FAAnimationGroup {
     
-    internal func updateLoop() {
+    internal func updateTrigger() {
         for segment in segmentArray {
-            
             if segment.isTimedBased && primaryAnimation?.timeProgress() >= segment.triggerProgessValue ||
               !segment.isTimedBased && primaryAnimation?.valueProgress() >= segment.triggerProgessValue  {
                
@@ -277,14 +271,13 @@ extension FAAnimationGroup {
         segmentArray = _segmentArray
         
         if displayLink == nil {
-            displayLink = CADisplayLink(target: self, selector: #selector(FAAnimationGroup.updateLoop))
+            displayLink = CADisplayLink(target: self, selector: #selector(FAAnimationGroup.updateTrigger))
             displayLink!.addToRunLoop(NSRunLoop.mainRunLoop(), forMode: NSDefaultRunLoopMode)
             displayLink!.paused = false
         }
     }
     
     private func stopTriggerTimer() {
-        
         segmentArray = [AnimationTrigger]()
         
         displayLink?.paused = true

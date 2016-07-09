@@ -48,23 +48,20 @@ final public class FAAnimation : CAKeyframeAnimation {
     // fact they calculate their duration dynamically based on the spring
     // configuration, and if configured with a lower duration than other
     // non spring animations, it may not progress to the final value.
-    private var primaryAnimation : Bool = false
+    private var isPrimary : Bool = false
 
     func setAnimationAsPrimary(primary : Bool) {
-        primaryAnimation = primary
+        isPrimary = primary
     }
     
     func isAnimationPrimary() -> Bool {
-        switch easingFunction {
-        case .SpringDecay(_):
+        if easingFunction.isSpring() || isPrimary {
             return true
-        case .SpringCustom(_, _, _):
-            return true
-        default:
-            return primaryAnimation
         }
+        
+        return false
     }
-    
+
     override init() {
         super.init()
         CALayer.swizzleAddAnimation()
@@ -80,7 +77,7 @@ final public class FAAnimation : CAKeyframeAnimation {
     
     override public func copyWithZone(zone: NSZone) -> AnyObject {
         let animation = super.copyWithZone(zone) as! FAAnimation
-        animation.primaryAnimation  = primaryAnimation
+        animation.isPrimary         = isPrimary
         animation.weakLayer         = weakLayer
         animation.fromValue         = fromValue
         animation.toValue           = toValue
@@ -142,26 +139,18 @@ extension FAAnimation {
             let currentTime = presentationLayer.convertTime(CACurrentMediaTime(), toLayer: runningAnimation!.weakLayer)
             let deltaTime = CGFloat(currentTime - animationStartTime)
             
-            
-            switch easingFunction {
-            case .SpringDecay(_):
-                easingFunction = oldInterpolator.adjustedVelocityEasing(deltaTime, easingFunction:  easingFunction)
-            case .SpringCustom(_,_,_):
-                easingFunction = oldInterpolator.adjustedVelocityEasing(deltaTime, easingFunction:  easingFunction)
-            default:
-                break
+            if easingFunction.isSpring() {
+                easingFunction = oldInterpolator.adjustedEasingVelocity(deltaTime, easingFunction:  easingFunction)
             }
-            
-            
-          // easingFunction = oldInterpolator.adjustedVelocityEasing(deltaTime, easingFunction:  easingFunction)
+
         } else {
-        
+            
             switch easingFunction {
             case .SpringDecay(_):
-                easingFunction =  FAEasing.SpringDecay(velocity: interpolator?.zeroValueVelocity())
+                easingFunction =  FAEasing.SpringDecay(velocity: interpolator?.zeroVelocityValue())
             
             case let .SpringCustom(_,frequency,damping):
-                easingFunction = FAEasing.SpringCustom(velocity: interpolator?.zeroValueVelocity() ,
+                easingFunction = FAEasing.SpringCustom(velocity: interpolator?.zeroVelocityValue() ,
                                                        frequency: frequency,
                                                        ratio: damping)
             default:
@@ -170,6 +159,7 @@ extension FAAnimation {
         }
     }
 }
+
 
 extension FAAnimation {
     
@@ -185,7 +175,7 @@ extension FAAnimation {
         let currentTime = weakLayer?.presentationLayer()!.convertTime(CACurrentMediaTime(), toLayer: nil)
         let difference = currentTime! - startTime!
         
-        return CGFloat(round(100 * (difference / duration))/100) + 0.03333333333
+        return CGFloat(round(100 * (difference / duration))/100) + FAAnimationConfig.AnimationTimeAdjustment
     }
 }
 

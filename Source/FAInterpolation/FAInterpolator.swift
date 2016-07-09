@@ -9,6 +9,32 @@
 import Foundation
 import UIKit
 
+public func typeCastCGColor(value : Any) -> CGColor? {
+    if let currentValue = value as? AnyObject {
+        //TODO: There appears to be no way of unwrapping a CGColor by type casting
+        //Fix when the following bug is fixed https://bugs.swift.org/browse/SR-1612
+        if CFGetTypeID(currentValue) == CGColorGetTypeID() {
+            return (currentValue as! CGColor)
+        }
+    }
+    
+    return nil
+}
+
+struct FAAnimationConfig {
+    static let InterpolationFrameCount  : CGFloat = 60.0
+    
+    static let SpringDecayFrequency     : CGFloat = 14.0
+    static let SpringDecayDamping       : CGFloat = 0.97
+    static let SpringCustomBounceCount  : Int = 10
+    
+    static let SpringDecayMagnitudeThreshold  : CGFloat = 1.35
+    
+    // When another animation is kickoff, the framework needs to
+    // synchronize all the values again, and by the time the animation begins, it may be few frame forwards
+    static let AnimationTimeAdjustment   : CGFloat = 2.0 * (1.0 / FAAnimationConfig.InterpolationFrameCount)
+}
+
 public class Interpolator {
     
     var toValue : Any
@@ -68,7 +94,7 @@ public class Interpolator {
         return (Double(adjustedDuration), interpolatedParametricValues(adjustedDuration, easingFunction: easingFunction))
     }
     
-    public func adjustedVelocityEasing(deltaTime: CGFloat, easingFunction : FAEasing) ->  FAEasing {
+    public func adjustedEasingVelocity(deltaTime: CGFloat, easingFunction : FAEasing) ->  FAEasing {
         
         var progressComponents = [CGFloat]()
         
@@ -135,7 +161,7 @@ extension Interpolator {
     }
     
     
-    func zeroValueVelocity() -> Any? {
+    func zeroVelocityValue() -> Any? {
         
         var zeroValue : Any?
         
@@ -183,7 +209,7 @@ extension Interpolator {
                                         angularFrequency: CGFloat,
                                         dampingRatio: CGFloat) {
      
-        let velocity = (initialVelocity != nil) ? initialVelocity : zeroValueVelocity()
+        let velocity = (initialVelocity != nil) ? initialVelocity : zeroVelocityValue()
         let vectorVelocity = FAVector(value :velocity)
 
         springs = [FASpring]()
@@ -247,7 +273,6 @@ extension Interpolator {
             repeat {
                 let newValue = interpolatedSpringValue(animationTime)
                 animationComplete = newValue.magnitudeToVector(toVector) < FAAnimationConfig.SpringDecayMagnitudeThreshold
-                print(newValue.magnitudeToVector(toVector))
                 valueArray.append(newValue.valueRepresentation(toValue)!)
                 animationTime += frameRateTimeUnit
             } while (animationComplete == false)
@@ -302,14 +327,4 @@ extension Interpolator {
 
 
 
-public func typeCastCGColor(value : Any) -> CGColor? {
-    if let currentValue = value as? AnyObject {
-        //TODO: There appears to be no way of unwrapping a CGColor by type casting
-        //Fix when the following bug is fixed https://bugs.swift.org/browse/SR-1612
-        if CFGetTypeID(currentValue) == CGColorGetTypeID() {
-            return (currentValue as! CGColor)
-        }
-    }
-    
-    return nil
-}
+
