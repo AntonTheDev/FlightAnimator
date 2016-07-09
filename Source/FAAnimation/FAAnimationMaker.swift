@@ -90,12 +90,12 @@ internal class ConfigurationValue : PropertyAnimationConfig {
     
     init(value: Any, forKeyPath key : String, view : UIView, animationKey : String) {
         self.animationKey = animationKey
-        self.associatedView = view
-        self.keyPath = key
-        self.toValue = value
-        self.easingCurve = .Linear
-        self.duration = 0.0
-        self.primary = false
+        associatedView = view
+        keyPath = key
+        toValue = value
+        easingCurve = .Linear
+        duration = 0.0
+        primary = false
     }
     
     func duration(duration : CGFloat) -> PropertyAnimationConfig {

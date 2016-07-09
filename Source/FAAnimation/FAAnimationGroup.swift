@@ -109,7 +109,7 @@ extension FAAnimationGroup {
                 animationLayer.speed = 1.0
                 animationLayer.timeOffset = 0.0
                 startTime = animationLayer.convertTime(CACurrentMediaTime(), fromLayer: nil)
-                animationLayer.addAnimation(self, forKey: self.animationKey)
+                animationLayer.addAnimation(self, forKey: animationKey)
             }
             
             if let subAnimations = animations {

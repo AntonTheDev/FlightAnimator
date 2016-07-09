@@ -55,8 +55,8 @@ final public class FAAnimation : CAKeyframeAnimation {
     }
     
     func isAnimationPrimary() -> Bool {
-        switch self.easingFunction {
-        case .SpringDecay:
+        switch easingFunction {
+        case .SpringDecay(_):
             return true
         case .SpringCustom(_, _, _):
             return true
@@ -95,8 +95,8 @@ final public class FAAnimation : CAKeyframeAnimation {
     }
     
     func scrubToProgress(progress : CGFloat) {
-        self.weakLayer!.speed = 0.0
-        self.weakLayer!.timeOffset = CFTimeInterval(duration * Double(progress))
+        weakLayer?.speed = 0.0
+        weakLayer?.timeOffset = CFTimeInterval(duration * Double(progress))
     }
 }
 
@@ -104,7 +104,7 @@ extension FAAnimation {
 
     private func configureValues(runningAnimation : FAAnimation? = nil) {
         if let presentationLayer = (weakLayer?.presentationLayer() as? CALayer),
-           let presentationValue = presentationLayer.anyValueForKeyPath(self.keyPath!) {
+           let presentationValue = presentationLayer.anyValueForKeyPath(keyPath!) {
         
             if let currentValue = presentationValue as? CGPoint {
                 fromValue = NSValue(CGPoint : currentValue)
@@ -126,7 +126,7 @@ extension FAAnimation {
                                          fromValue: fromValue,
                                          previousValue : runningAnimation?.fromValue)
             
-            let config = interpolator?.interpolatedConfiguration(CGFloat(duration), easingFunction: self.easingFunction)
+            let config = interpolator?.interpolatedConfiguration(CGFloat(duration), easingFunction: easingFunction)
             
             duration = config!.duration
             values = config!.values
@@ -174,7 +174,7 @@ extension FAAnimation {
 extension FAAnimation {
     
     func valueProgress() -> CGFloat {
-        if let presentationValue = (weakLayer?.presentationLayer() as? CALayer)?.anyValueForKeyPath(self.keyPath!) {
+        if let presentationValue = (weakLayer?.presentationLayer() as? CALayer)?.anyValueForKeyPath(keyPath!) {
             return interpolator!.valueProgress(presentationValue)
         }
     

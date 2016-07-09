@@ -45,7 +45,7 @@ public extension UIView {
     func applyAnimation(forKey key: String,
                         animated : Bool = true) {
         
-        if let cachedAnimationsArray = self.cachedAnimations,
+        if let cachedAnimationsArray = cachedAnimations,
             let animation = cachedAnimationsArray[key] {
             animation.applyFinalState(animated)
         }

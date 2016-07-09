@@ -183,7 +183,7 @@ extension Interpolator {
                                         angularFrequency: CGFloat,
                                         dampingRatio: CGFloat) {
      
-        let velocity = (initialVelocity != nil) ? initialVelocity : self.zeroValueVelocity()
+        let velocity = (initialVelocity != nil) ? initialVelocity : zeroValueVelocity()
         let vectorVelocity = FAVector(value :velocity)
 
         springs = [FASpring]()
