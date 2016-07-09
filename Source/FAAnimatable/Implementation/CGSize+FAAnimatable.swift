@@ -8,7 +8,7 @@
 
 import Foundation
 import UIKit
-
+/*
 public func ==(lhs:CGSize, rhs:CGSize) -> Bool {
     return  CGSizeEqualToSize(lhs, rhs)
 }
@@ -65,3 +65,5 @@ extension CGSize : FAAnimatable {
         return NSValue(CGSize :  self)
     }
 }
+ 
+ */

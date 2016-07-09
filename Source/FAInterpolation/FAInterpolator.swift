@@ -9,95 +9,201 @@
 import Foundation
 import UIKit
 
-struct FAAnimationConfig {
-    static let InterpolationFrameCount  : CGFloat = 60.0
+public class Interpolator {
     
-    static let SpringDecayFrequency     : CGFloat = 14.0
-    static let SpringDecayDamping       : CGFloat = 0.97
-    static let SpringCustomBounceCount  : Int = 12
+    var toValue : Any
+    var fromValue : Any
+    var previousValue : Any?
     
-    static let SpringDecayMagnitudeThreshold  : CGFloat = 1.4
-}
-
-public struct FAInterpolator<T : FAAnimatable> {
-   
-    var toValue   : T
-    var fromValue : T
-    var previousFromValue : T?
+    var toVector : FAVector
+    var fromVector : FAVector
+    var previousValueVector : FAVector?
     
-    var duration : CGFloat
-    var easingFunction : FAEasing
+    var springs : [FASpring]?
     
-    mutating func interpolatedAnimationConfig() -> (duration : Double,  values : [AnyObject], springs : Dictionary<String, FASpring>?) {
+    init(toValue : Any, fromValue : Any, previousValue : Any?) {
         
+        if let typedToValue = (toValue as? NSValue)?.typeValue(),
+           let typedFromValue = (fromValue as? NSValue)?.typeValue() {
+           
+            let previousFromValue = (previousValue as? NSValue)?.typeValue()
+           
+            self.toValue = typedToValue
+            self.fromValue = typedFromValue
+            self.previousValue = previousFromValue
+            
+        } else {
+            self.toValue = toValue
+            self.fromValue = fromValue
+            self.previousValue = previousValue
+        }
+
+        self.toVector = FAVector(value: self.toValue)
+        self.fromVector = FAVector(value: self.fromValue)
+        
+        if previousValue != nil {
+            self.previousValueVector = FAVector(value: previousValue)
+        }
+    }
+    
+    func interpolatedConfiguration(duration : CGFloat, easingFunction : FAEasing) ->  (duration : Double,  values : [AnyObject])? {
         switch easingFunction {
         case let .SpringDecay(velocity):
-            let newSprings = fromValue.interpolationSprings(toValue,
-                                                     initialVelocity: velocity,
-                                                     angularFrequency: FAAnimationConfig.SpringDecayFrequency,
-                                                     dampingRatio: FAAnimationConfig.SpringDecayDamping)
+            if springs == nil {
+                decayComponentSprings(velocity)
+            }
             
-            return interpolatedSpringValues(newSprings)
+            return interpolatedSpringValues(easingFunction)
             
         case let .SpringCustom(velocity, frequency, damping):
-            let newSprings = fromValue.interpolationSprings(toValue,
-                                                     initialVelocity: velocity,
-                                                     angularFrequency: frequency,
-                                                     dampingRatio: damping)
-            
-            
-            return interpolatedSpringValues(newSprings)
+            if springs == nil {
+                customComponentSprings(velocity, angularFrequency: frequency, dampingRatio: damping)
+            }
+            return interpolatedSpringValues(easingFunction)
         default:
-            
-            duration = relativeDuration()
-            return (Double(duration), interpolatedParametricValues(CGFloat(duration),  easingFunction: easingFunction), springs : nil)
+            break
         }
+        
+        let adjustedDuration = duration * relativeProgress()
+        return (Double(adjustedDuration), interpolatedParametricValues(adjustedDuration, easingFunction: easingFunction))
     }
     
-    private func relativeDuration() -> CGFloat {
-        var progress : CGFloat  = 1.0
+    
+    public func velocityAdjustedEasing(deltaTime: CGFloat, easingFunction : FAEasing) ->  FAEasing {
         
-        if previousFromValue == toValue ||
-            previousFromValue == nil {
-            progress = 1.0
-        } else {
-            let progressedDiff = previousFromValue!.magnitudeToValue(fromValue)
-            let remainingDiff  = fromValue.magnitudeToValue(toValue)
-            
-            progress  = remainingDiff / (remainingDiff + progressedDiff)
-            
-            if progress.isNaN {
-                progress = 1.0
+        var progressComponents = [CGFloat]()
+        
+        switch easingFunction {
+        case .SpringDecay(_):
+            for index in 0..<fromVector.components.count {
+                progressComponents.append(springs![index].velocity(deltaTime))
             }
+            
+            let decayVelocity = FAVector(comps : progressComponents).typeRepresentation(toValue)
+           
+            print("Decay Velocity", decayVelocity)
+            return .SpringDecay(velocity:decayVelocity)
+        
+        case let .SpringCustom(_,frequency,damping):
+        
+            for index in 0..<fromVector.components.count {
+                progressComponents.append(springs![index].velocity(deltaTime))
+            }
+            let springVelocity = FAVector(comps : progressComponents).typeRepresentation(toValue)
+            
+            print("Spring Velocity", springVelocity)
+            
+            return .SpringCustom(velocity:springVelocity ,
+                                           frequency: frequency,
+                                           ratio: damping)
+        default:
+            break
         }
         
-        return duration * progress
+        return easingFunction
     }
+}
 
-    private func interpolatedParametricValues(adjustedDuration : CGFloat, easingFunction : FAEasing) -> [AnyObject] {
+extension Interpolator {
+    
+    public func valueProgress(value : Any) -> CGFloat {
+        let currentVector = FAVector(value: value)
         
+        let progressedMagnitude = currentVector.magnitudeToVector(fromVector)
+        let overallMagnitude = fromVector.magnitudeToVector(toVector)
+        return progressedMagnitude / overallMagnitude
+    }
+    
+    private func relativeProgress() -> CGFloat {
+        if previousValueVector != nil ||
+            previousValueVector == toVector {
+            return 1.0
+        }
+        
+        var progress : CGFloat  = 1.0
+        if previousValueVector != nil {
+            let progressedMagnitude = previousValueVector!.magnitudeToVector(fromVector)
+            let overallMagnitude = fromVector.magnitudeToVector(toVector)
+            
+            progress = progressedMagnitude / overallMagnitude
+        }
+        
+        
+        if progress.isNaN {
+            progress = 1.0
+        }
+        
+        return progress
+    }
+}
+
+extension Interpolator {
+    
+    private func decayComponentSprings(initialVelocity: Any) {
+        customComponentSprings(initialVelocity,
+                               angularFrequency: FAAnimationConfig.SpringDecayFrequency,
+                               dampingRatio: FAAnimationConfig.SpringDecayFrequency)
+    }
+    
+    private func customComponentSprings(initialVelocity: Any,
+                                        angularFrequency: CGFloat,
+                                        dampingRatio: CGFloat) {
+        
+        let vectorVelocity = FAVector(value : initialVelocity)
+        
+        if vectorVelocity.components.count == 0 {
+            print("Stop")
+        }
+        
+        springs = [FASpring]()
+        
+        for index in 0..<toVector.components.count {
+                let floatSpring = FASpring(finalValue   : toVector.components[index],
+                                           initialValue : fromVector.components[index],
+                                           positionVelocity: vectorVelocity.components[index],
+                                           angularFrequency:angularFrequency,
+                                           dampingRatio: dampingRatio)
+                
+                springs!.append(floatSpring)
+        }
+    }
+}
+
+extension Interpolator {
+    
+    private func interpolatedParametricValues(duration : CGFloat, easingFunction : FAEasing) -> [AnyObject] {
         var newArray = [AnyObject]()
         var animationTime : CGFloat = 0.0
         let frameRateTimeUnit = 1.0 / FAAnimationConfig.InterpolationFrameCount
         
-        let newValue = fromValue.interpolatedValue(toValue, progress: 0.0)
-        newArray.append(newValue)
+        let firstValue = interpolatedValue(0.0)
+        newArray.append(firstValue.valueRepresentation(toValue)!)
         
         repeat {
             animationTime += frameRateTimeUnit
             let progress = easingFunction.parametricProgress(CGFloat(animationTime / duration))
-            let newValue = fromValue.interpolatedValue(toValue, progress: progress)
-            newArray.append(newValue)
+            let newValue = interpolatedValue(progress)
+            newArray.append(newValue.valueRepresentation(toValue)!)
         } while (animationTime <= duration)
         
         newArray.removeLast()
         
-        let finalValue = fromValue.interpolatedValue(toValue, progress: 1.0)
-        newArray.append(finalValue)
+        let finalValue = interpolatedValue(1.0)
+        newArray.append(finalValue.valueRepresentation(toValue)!)
         return newArray
     }
-
-    private func interpolatedSpringValues(springs : Dictionary<String, FASpring>) -> (duration : Double,  values : [AnyObject], springs : Dictionary<String, FASpring>?) {
+    
+    private func interpolatedValue(progress : CGFloat) -> FAVector {
+        var progressComponents = [CGFloat]()
+        
+        for index in 0..<fromVector.components.count {
+            progressComponents.append(interpolateCGFloat(fromVector.components[index], end : toVector.components[index], progress: progress))
+        }
+        
+        return FAVector(comps: progressComponents)
+    }
+    
+    private func interpolatedSpringValues(easingFunction : FAEasing) -> (duration : Double,  values : [AnyObject]) {
         
         var valueArray: Array<AnyObject> = Array<AnyObject>()
         var animationTime : CGFloat = 0.0
@@ -108,17 +214,10 @@ public struct FAInterpolator<T : FAAnimatable> {
         switch easingFunction {
         case .SpringDecay(_):
             repeat {
-                let newValue = toValue.interpolatedSpringValue(toValue, springs : springs, deltaTime: animationTime)
-               
-                if let currentAnimatableValue  = newValue as? NSValue,
-                    let typedValue = currentAnimatableValue.typeValue() as? T {
-                    animationComplete = toValue.magnitudeToValue(typedValue)  < FAAnimationConfig.SpringDecayMagnitudeThreshold
-                    
-                } else if let typedValue = newValue as? T {
-                    animationComplete = toValue.magnitudeToValue(typedValue)  < FAAnimationConfig.SpringDecayMagnitudeThreshold
-                }
+                let newValue = interpolatedSpringValue(animationTime)
+                animationComplete = newValue.magnitudeToVector(toVector) < FAAnimationConfig.SpringDecayMagnitudeThreshold
                 
-                valueArray.append(newValue)
+                valueArray.append(newValue.valueRepresentation(toValue)!)
                 animationTime += frameRateTimeUnit
             } while (animationComplete == false)
             
@@ -126,44 +225,60 @@ public struct FAInterpolator<T : FAAnimatable> {
             var bouncCount = 0
             
             repeat {
-                let newValue = toValue.interpolatedSpringValue(toValue, springs : springs, deltaTime: animationTime)
-               
-                if let currentAnimatableValue  = newValue as? NSValue,
-                    let typedValue = currentAnimatableValue.typeValue() as? T {
-                    if floor(toValue.magnitudeToValue(typedValue)) == 0.0 {
-                        bouncCount += 1
-                    }
-                } else if let typedValue = newValue as? T {
-                    if floor(toValue.magnitudeToValue(typedValue)) == 0.0 {
-                        bouncCount += 1
-                    }
+                let newValue = interpolatedSpringValue(animationTime)
+                if floor(newValue.magnitudeToVector(toVector)) == 0.0 {
+                    bouncCount += 1
                 }
                 
-                valueArray.append(newValue)
+                valueArray.append(newValue.valueRepresentation(toValue)!)
                 animationTime += frameRateTimeUnit
             } while (bouncCount < FAAnimationConfig.SpringCustomBounceCount)
             
             break
         }
         
-        valueArray.append(toValue.valueRepresentation())
+        valueArray.append(toVector.valueRepresentation(toValue)!)
         animationTime += frameRateTimeUnit
         
-        return (Double(animationTime),  values : valueArray, springs)
+        return (Double(animationTime),  values : valueArray)
+    }
+    
+    private func interpolatedSpringValue(deltaTime: CGFloat) -> FAVector {
+        var progressComponents = [CGFloat]()
+        
+        for index in 0..<fromVector.components.count {
+            progressComponents.append(springs![index].updatedValue(deltaTime))
+        }
+        
+        return FAVector(comps: progressComponents)
+    }
+    
+    /**
+     This is a simple method that calculates the actual value between
+     the relative start and end value, based on the progress
+     
+     - parameter start:    the relative intial value
+     - parameter end:      the relative final value
+     - parameter progress: the progress that has been traveled from the relative initial value
+     
+     - returns: the actual value of hte current progress between the relative start and end point
+     */
+    
+    func interpolateCGFloat(start : CGFloat, end : CGFloat, progress : CGFloat) -> CGFloat {
+        return start * (1.0 - progress) + end * progress
     }
 }
 
-/**
- This is a simple method that calculates the actual value between
- the relative start and end value, based on the progress
- 
- - parameter start:    the relative intial value
- - parameter end:      the relative final value
- - parameter progress: the progress that has been traveled from the relative initial value
- 
- - returns: the actual value of hte current progress between the relative start and end point
- */
 
-func interpolateCGFloat(start : CGFloat, end : CGFloat, progress : CGFloat) -> CGFloat {
-    return start * (1.0 - progress) + end * progress
+
+public func typeCastCGColor(value : Any) -> CGColor? {
+    if let currentValue = value as? AnyObject {
+        //TODO: There appears to be no way of unwrapping a CGColor by type casting
+        //Fix when the following bug is fixed https://bugs.swift.org/browse/SR-1612
+        if CFGetTypeID(currentValue) == CGColorGetTypeID() {
+            return (currentValue as! CGColor)
+        }
+    }
+    
+    return nil
 }

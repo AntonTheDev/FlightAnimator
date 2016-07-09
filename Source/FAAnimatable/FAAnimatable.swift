@@ -8,7 +8,7 @@
 
 import Foundation
 import QuartzCore
-
+/*
 public struct SpringAnimationKey {
     static var CGFloat          = "CGFloatKey"
     static var CGPointX         = "CGPointX"
@@ -76,3 +76,5 @@ public protocol FAAnimatable : Equatable {
     // Returns a core animation value representation
     func valueRepresentation() -> AnyObject
 }
+ 
+ */

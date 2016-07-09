@@ -9,7 +9,7 @@
 import Foundation
 import Foundation
 import UIKit
-
+/*
 public func ==(lhs:CGColor, rhs:CGColor) -> Bool {
     return CGColorEqualToColor(lhs, rhs)
 }
@@ -241,5 +241,5 @@ extension CGColor : FAAnimatable {
     }
 }
 
-
+*/
 

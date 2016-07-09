@@ -85,14 +85,3 @@ extension CALayer {
     }
 }
 
-public func typeCastCGColor(value : Any) -> CGColor? {
-    if let currentValue = value as? AnyObject {
-        //TODO: There appears to be no way of unwrapping a CGColor by type casting
-        //Fix when the following bug is fixed https://bugs.swift.org/browse/SR-1612
-        if CFGetTypeID(currentValue) == CGColorGetTypeID() {
-            return (currentValue as! CGColor)
-        }
-    }
-    
-    return nil
-}

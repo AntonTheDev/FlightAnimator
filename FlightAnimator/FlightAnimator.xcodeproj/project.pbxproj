@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		13009CED1D0B90C4008419C8 /* FlightAnimator.h in Headers */ = {isa = PBXBuildFile; fileRef = 13009CEC1D0B90C4008419C8 /* FlightAnimator.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		134E3A481D301676005696C1 /* FAVector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 134E3A471D301676005696C1 /* FAVector.swift */; };
+		134E3A491D301676005696C1 /* FAVector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 134E3A471D301676005696C1 /* FAVector.swift */; };
 		13E5D22A1D2ED970005CF3E1 /* FlightAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13E5D2291D2ED970005CF3E1 /* FlightAnimator.swift */; };
 		3A742D5A1D2E4006008E555E /* CGColor+FAAnimatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A742D591D2E4006008E555E /* CGColor+FAAnimatable.swift */; };
 		3A742D861D2F3C65008E555E /* FlightAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13E5D2291D2ED970005CF3E1 /* FlightAnimator.swift */; };
@@ -52,6 +54,7 @@
 /* Begin PBXFileReference section */
 		13009CE91D0B90C3008419C8 /* FlightAnimator.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FlightAnimator.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		13009CEC1D0B90C4008419C8 /* FlightAnimator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FlightAnimator.h; sourceTree = "<group>"; };
+		134E3A471D301676005696C1 /* FAVector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FAVector.swift; path = Interpolation/FAVector.swift; sourceTree = "<group>"; };
 		13E5D2291D2ED970005CF3E1 /* FlightAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlightAnimator.swift; sourceTree = "<group>"; };
 		3A742D591D2E4006008E555E /* CGColor+FAAnimatable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGColor+FAAnimatable.swift"; sourceTree = "<group>"; };
 		3A742D771D2F3B12008E555E /* Info-iOS.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Info-iOS.plist"; path = "FlightAnimator/Info-iOS.plist"; sourceTree = SOURCE_ROOT; };
@@ -120,16 +123,33 @@
 			path = FlightAnimator;
 			sourceTree = "<group>";
 		};
-		3AEBA4A51D2AF657008147ED /* Source */ = {
+		134E3A451D30160B005696C1 /* Source Files */ = {
 			isa = PBXGroup;
 			children = (
 				3A742D771D2F3B12008E555E /* Info-iOS.plist */,
 				3A742D9A1D2F3E0C008E555E /* Info-tvOS.plist */,
 				13E5D2291D2ED970005CF3E1 /* FlightAnimator.swift */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		134E3A461D301640005696C1 /* Interpolation */ = {
+			isa = PBXGroup;
+			children = (
+				134E3A471D301676005696C1 /* FAVector.swift */,
+			);
+			name = Interpolation;
+			sourceTree = "<group>";
+		};
+		3AEBA4A51D2AF657008147ED /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				134E3A461D301640005696C1 /* Interpolation */,
 				3AEBA4B11D2AF657008147ED /* FAAnimation */,
 				3AEBA4A91D2AF657008147ED /* FAAnimatable */,
 				3AEBA4BA1D2AF657008147ED /* FAInterpolation */,
 				3AEBA4A61D2AF657008147ED /* Extras */,
+				134E3A451D30160B005696C1 /* Source Files */,
 			);
 			name = Source;
 			path = ../../Source;
@@ -332,6 +352,7 @@
 				3AEBA4CF1D2AF657008147ED /* FASpring.swift in Sources */,
 				3AEBA4CB1D2AF657008147ED /* FAAnimationMaker.swift in Sources */,
 				3AEBA4C31D2AF657008147ED /* CGPoint+FAAnimatable.swift in Sources */,
+				134E3A481D301676005696C1 /* FAVector.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -358,6 +379,7 @@
 				3A742D961D2F3C65008E555E /* FASpring.swift in Sources */,
 				3A742D971D2F3C65008E555E /* FAAnimation+Callbacks.swift in Sources */,
 				3A742D981D2F3C65008E555E /* FAPanGestureRecognizer.swift in Sources */,
+				134E3A491D301676005696C1 /* FAVector.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -557,6 +579,7 @@
 				3A742D841D2F3B94008E555E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

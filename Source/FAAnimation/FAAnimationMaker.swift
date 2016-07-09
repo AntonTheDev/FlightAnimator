@@ -72,23 +72,23 @@ public protocol PropertyAnimationConfig {
 private class Configuration {
     var value: PropertyAnimationConfig
     
-    init<T : FAAnimatable>(value: T, forKeyPath key : String, view : UIView, animationKey : String) {
+    init(value: Any, forKeyPath key : String, view : UIView, animationKey : String) {
         self.value = ConfigurationValue(value: value, forKeyPath : key, view : view, animationKey : animationKey)
     }
 }
 
-internal class ConfigurationValue<T : FAAnimatable> : PropertyAnimationConfig {
+internal class ConfigurationValue : PropertyAnimationConfig {
     
     private weak var associatedView : UIView?
     private var animationKey : String?
     private var keyPath : String?
     
-    var toValue : T
+    var toValue : Any
     var easingCurve : FAEasing = .Linear
     var duration : CGFloat
     var primary : Bool
     
-    init(value: T, forKeyPath key : String, view : UIView, animationKey : String) {
+    init(value: Any, forKeyPath key : String, view : UIView, animationKey : String) {
         self.animationKey = animationKey
         self.associatedView = view
         self.keyPath = key
@@ -123,10 +123,23 @@ internal class ConfigurationValue<T : FAAnimatable> : PropertyAnimationConfig {
         
         let animation = FAAnimation(keyPath: keyPath)
         animation.easingFunction = easingCurve
-        animation.toValue = toValue.valueRepresentation()
+       
+        if let currentValue = toValue as? CGPoint {
+            animation.toValue =  NSValue(CGPoint :currentValue)
+        } else  if let currentValue = toValue as? CGSize {
+            animation.toValue = NSValue( CGSize :currentValue)
+        } else  if let currentValue = toValue as? CGRect {
+            animation.toValue = NSValue( CGRect : currentValue)
+        } else  if let currentValue = toValue as? CGFloat {
+            animation.toValue = currentValue
+        } else  if let currentValue = toValue as? CATransform3D {
+            animation.toValue =  NSValue( CATransform3D : currentValue)
+        } else if let currentValue = typeCastCGColor(toValue) {
+            animation.toValue = currentValue
+        }
+        
         animation.duration = Double(duration)
         animation.setAnimationAsPrimary(primary)
-        
         animationGroup.weakLayer = associatedView?.layer
         animationGroup.animations!.append(animation)
         

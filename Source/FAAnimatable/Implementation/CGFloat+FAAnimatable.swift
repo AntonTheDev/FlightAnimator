@@ -8,7 +8,7 @@
 
 import Foundation
 import UIKit
-
+/*
 extension CGFloat : FAAnimatable {
     
     public typealias T = CGFloat
@@ -56,3 +56,4 @@ extension CGFloat : FAAnimatable {
         return NSNumber(float: Float(self))
     }
 }
+ */

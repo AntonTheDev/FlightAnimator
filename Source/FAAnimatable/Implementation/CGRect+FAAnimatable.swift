@@ -8,7 +8,7 @@
 
 import Foundation
 import UIKit
-
+/*
 public func ==(lhs:CGRect, rhs:CGRect) -> Bool {
     return CGRectEqualToRect(lhs, rhs)
 }
@@ -79,3 +79,5 @@ extension CGRect : FAAnimatable {
         return NSValue(CGRect :  self)
     }
 }
+ 
+ */

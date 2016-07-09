@@ -18,11 +18,9 @@ func ==(lhs:AnimationTrigger, rhs:AnimationTrigger) -> Bool {
 }
 
 internal struct AnimationTrigger : Equatable {
-
     var isTimedBased = true
     var triggerProgessValue : CGFloat?
     var animationKey : String?
-    
     weak var animatedView : UIView?
 }
 
@@ -92,7 +90,6 @@ final public class FAAnimationGroup : CAAnimationGroup {
     }
 }
 
-
 //MARK: Public API
 
 extension FAAnimationGroup {
@@ -128,7 +125,7 @@ extension FAAnimationGroup {
                         if subAnimation.keyPath! == "opacity" {
                             animationLayer.owningView()!.setValue(toValue, forKeyPath: "alpha")
                         } else {
-                            animationLayer.modelLayer().setValue(toValue, forKeyPath: subAnimation.keyPath!)
+                            animationLayer.setValue(toValue, forKeyPath: subAnimation.keyPath!)
                         }
                     }
                 }
@@ -187,7 +184,6 @@ extension FAAnimationGroup {
         animations = newAnimations.map {$1}
         
         updateGroupDurationBasedOnTimePriority(durationArray)
-
     }
     
     private func updateGroupDurationBasedOnTimePriority(durationArray: Array<CFTimeInterval>) {
@@ -203,7 +199,8 @@ extension FAAnimationGroup {
         }
         
         let filteredAnimation = animations!.filter({ $0.duration == duration })
-    
+        let nonFilteredAnimation = animations!.filter({ $0.duration != duration })
+        
         if let primaryDrivingAnimation = filteredAnimation.first as? FAAnimation {
             primaryAnimation = primaryDrivingAnimation
             primaryEasingFunction = primaryDrivingAnimation.easingFunction
@@ -216,7 +213,7 @@ extension FAAnimationGroup {
         var newAnimationsArray = [FAAnimation]()
         newAnimationsArray.append(filteredAnimation.first! as! FAAnimation)
         
-        for animation in animations! {
+        for animation in nonFilteredAnimation {
             animation.duration = duration
             
             if let customAnimation = animation as? FAAnimation {

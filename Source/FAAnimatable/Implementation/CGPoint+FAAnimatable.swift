@@ -8,7 +8,7 @@
 
 import Foundation
 import UIKit
-
+/*
 public func ==(lhs:CGPoint, rhs:CGPoint) -> Bool {
     return  CGPointEqualToPoint(lhs, rhs)
 }
@@ -73,3 +73,5 @@ extension CGPoint : FAAnimatable {
          return NSValue(CGPoint :  self)
     }
 }
+ 
+ */
