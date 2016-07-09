@@ -119,12 +119,12 @@ extension FAAnimation {
             } else if let currentValue = typeCastCGColor(presentationValue) {
                 fromValue = currentValue
             }
-
+            
+            synchronizeAnimationVelocity(fromValue, runningAnimation: runningAnimation)
+            
             interpolator  = Interpolator(toValue: toValue,
                                          fromValue: fromValue,
                                          previousValue : runningAnimation?.fromValue)
-            
-            synchronizeAnimationVelocity(fromValue, runningAnimation: runningAnimation)
             
             let config = interpolator?.interpolatedConfiguration(CGFloat(duration), easingFunction: self.easingFunction)
             
@@ -142,7 +142,18 @@ extension FAAnimation {
             let currentTime = presentationLayer.convertTime(CACurrentMediaTime(), toLayer: runningAnimation!.weakLayer)
             let deltaTime = CGFloat(currentTime - animationStartTime)
             
-            easingFunction = oldInterpolator.adjustedVelocityEasing(deltaTime, easingFunction:  easingFunction)
+            
+            switch easingFunction {
+            case .SpringDecay(_):
+                easingFunction = oldInterpolator.adjustedVelocityEasing(deltaTime, easingFunction:  easingFunction)
+            case .SpringCustom(_,_,_):
+                easingFunction = oldInterpolator.adjustedVelocityEasing(deltaTime, easingFunction:  easingFunction)
+            default:
+                break
+            }
+            
+            
+          // easingFunction = oldInterpolator.adjustedVelocityEasing(deltaTime, easingFunction:  easingFunction)
         } else {
         
             switch easingFunction {

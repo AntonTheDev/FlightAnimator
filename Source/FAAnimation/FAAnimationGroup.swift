@@ -141,6 +141,8 @@ extension FAAnimationGroup {
     
     private func synchronizeAnimations(oldAnimationGroup : FAAnimationGroup?) {
         
+        oldAnimationGroup?.stopTriggerTimer()
+
         var durationArray =  [Double]()
         
         var oldAnimations = animationDictionaryForGroup(oldAnimationGroup)
@@ -185,6 +187,7 @@ extension FAAnimationGroup {
     }
     
     private func updateGroupDurationBasedOnTimePriority(durationArray: Array<CFTimeInterval>) {
+       
         switch primaryTimingPriority {
         case .MaxTime:
             duration = durationArray.maxElement()!
@@ -281,6 +284,9 @@ extension FAAnimationGroup {
     }
     
     private func stopTriggerTimer() {
+        
+        segmentArray = [AnimationTrigger]()
+        
         displayLink?.paused = true
         displayLink?.removeFromRunLoop(NSRunLoop.mainRunLoop(), forMode: NSDefaultRunLoopMode)
         displayLink = nil

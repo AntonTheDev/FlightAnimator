@@ -75,7 +75,7 @@ public class Interpolator {
         switch easingFunction {
         case .SpringDecay(_):
             
-            for index in 0..<fromVector.components.count {
+            for index in 0..<toVector.components.count {
                 progressComponents.append(springs![index].velocity(deltaTime))
             }
             
@@ -85,7 +85,7 @@ public class Interpolator {
             
         case let .SpringCustom(_,frequency,damping):
             
-            for index in 0..<fromVector.components.count {
+            for index in 0..<toVector.components.count {
                 progressComponents.append(springs![index].velocity(deltaTime))
             }
             
@@ -140,17 +140,17 @@ extension Interpolator {
         var zeroValue : Any?
         
         guard let presentationValue = toValue as? NSValue else {
-            if let _ = fromValue as? CGPoint {
+            if let _ = toValue as? CGPoint {
                 zeroValue = CGPointZero
-            } else if let _ = fromValue as? CGSize {
+            } else if let _ = toValue as? CGSize {
                 zeroValue = CGSizeZero
-            } else  if let _ = fromValue as? CGRect {
+            } else  if let _ = toValue as? CGRect {
                 zeroValue = CGRectZero
-            } else  if let _ = fromValue as? CGFloat {
+            } else  if let _ = toValue as? CGFloat {
                 zeroValue = CGFloat(0.0)
-            } else  if let _ = fromValue as? CATransform3D {
+            } else  if let _ = toValue as? CATransform3D {
                 zeroValue =  CATransform3DIdentity
-            } else if let _ = typeCastCGColor(fromValue) {
+            } else if let _ = typeCastCGColor(toValue) {
                 zeroValue = UIColor().CGColor
             }
             return zeroValue
@@ -179,11 +179,12 @@ extension Interpolator {
                                dampingRatio: FAAnimationConfig.SpringDecayFrequency)
     }
     
-    private func customComponentSprings(initialVelocity: Any,
+    private func customComponentSprings(initialVelocity: Any?,
                                         angularFrequency: CGFloat,
                                         dampingRatio: CGFloat) {
-        
-        let vectorVelocity = FAVector(value : initialVelocity)
+     
+        let velocity = (initialVelocity != nil) ? initialVelocity : self.zeroValueVelocity()
+        let vectorVelocity = FAVector(value :velocity)
 
         springs = [FASpring]()
         
@@ -226,7 +227,7 @@ extension Interpolator {
     private func interpolatedValue(progress : CGFloat) -> FAVector {
         var progressComponents = [CGFloat]()
         
-        for index in 0..<fromVector.components.count {
+        for index in 0..<toVector.components.count {
             progressComponents.append(interpolateCGFloat(fromVector.components[index], end : toVector.components[index], progress: progress))
         }
         
@@ -276,7 +277,7 @@ extension Interpolator {
     private func interpolatedSpringValue(deltaTime: CGFloat) -> FAVector {
         var progressComponents = [CGFloat]()
         
-        for index in 0..<fromVector.components.count {
+        for index in 0..<toVector.components.count {
             progressComponents.append(springs![index].updatedValue(deltaTime))
         }
         
