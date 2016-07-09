@@ -24,10 +24,10 @@ public class Interpolator {
     init(toValue : Any, fromValue : Any, previousValue : Any?) {
         
         if let typedToValue = (toValue as? NSValue)?.typeValue(),
-           let typedFromValue = (fromValue as? NSValue)?.typeValue() {
-           
+            let typedFromValue = (fromValue as? NSValue)?.typeValue() {
+            
             let previousFromValue = (previousValue as? NSValue)?.typeValue()
-           
+            
             self.toValue = typedToValue
             self.fromValue = typedFromValue
             self.previousValue = previousFromValue
@@ -37,7 +37,7 @@ public class Interpolator {
             self.fromValue = fromValue
             self.previousValue = previousValue
         }
-
+        
         self.toVector = FAVector(value: self.toValue)
         self.fromVector = FAVector(value: self.fromValue)
         
@@ -68,34 +68,32 @@ public class Interpolator {
         return (Double(adjustedDuration), interpolatedParametricValues(adjustedDuration, easingFunction: easingFunction))
     }
     
-    
-    public func velocityAdjustedEasing(deltaTime: CGFloat, easingFunction : FAEasing) ->  FAEasing {
+    public func adjustedVelocityEasing(deltaTime: CGFloat, easingFunction : FAEasing) ->  FAEasing {
         
         var progressComponents = [CGFloat]()
         
         switch easingFunction {
         case .SpringDecay(_):
+            
             for index in 0..<fromVector.components.count {
                 progressComponents.append(springs![index].velocity(deltaTime))
             }
             
             let decayVelocity = FAVector(comps : progressComponents).typeRepresentation(toValue)
-           
-            print("Decay Velocity", decayVelocity)
+        
             return .SpringDecay(velocity:decayVelocity)
-        
+            
         case let .SpringCustom(_,frequency,damping):
-        
+            
             for index in 0..<fromVector.components.count {
                 progressComponents.append(springs![index].velocity(deltaTime))
             }
+            
             let springVelocity = FAVector(comps : progressComponents).typeRepresentation(toValue)
-            
-            print("Spring Velocity", springVelocity)
-            
+        
             return .SpringCustom(velocity:springVelocity ,
-                                           frequency: frequency,
-                                           ratio: damping)
+                                 frequency: frequency,
+                                 ratio: damping)
         default:
             break
         }
@@ -135,6 +133,42 @@ extension Interpolator {
         
         return progress
     }
+    
+    
+    func zeroValueVelocity() -> Any? {
+        
+        var zeroValue : Any?
+        
+        guard let presentationValue = toValue as? NSValue else {
+            if let _ = fromValue as? CGPoint {
+                zeroValue = CGPointZero
+            } else if let _ = fromValue as? CGSize {
+                zeroValue = CGSizeZero
+            } else  if let _ = fromValue as? CGRect {
+                zeroValue = CGRectZero
+            } else  if let _ = fromValue as? CGFloat {
+                zeroValue = CGFloat(0.0)
+            } else  if let _ = fromValue as? CATransform3D {
+                zeroValue =  CATransform3DIdentity
+            } else if let _ = typeCastCGColor(fromValue) {
+                zeroValue = UIColor().CGColor
+            }
+            return zeroValue
+        }
+        
+        if let _ = presentationValue.typeValue() as? CGPoint {
+            zeroValue = CGPointZero
+        } else  if let _ = presentationValue.typeValue() as? CGSize {
+            zeroValue = CGSizeZero
+        } else  if let _ = presentationValue.typeValue() as? CGRect {
+            zeroValue = CGRectZero
+        } else  if let _ = presentationValue.typeValue() as? CATransform3D {
+            zeroValue = CATransform3DIdentity
+        }
+        
+        return zeroValue
+    }
+
 }
 
 extension Interpolator {
@@ -150,21 +184,17 @@ extension Interpolator {
                                         dampingRatio: CGFloat) {
         
         let vectorVelocity = FAVector(value : initialVelocity)
-        
-        if vectorVelocity.components.count == 0 {
-            print("Stop")
-        }
-        
+
         springs = [FASpring]()
         
         for index in 0..<toVector.components.count {
-                let floatSpring = FASpring(finalValue   : toVector.components[index],
-                                           initialValue : fromVector.components[index],
-                                           positionVelocity: vectorVelocity.components[index],
-                                           angularFrequency:angularFrequency,
-                                           dampingRatio: dampingRatio)
-                
-                springs!.append(floatSpring)
+            let floatSpring = FASpring(finalValue   : toVector.components[index],
+                                       initialValue : fromVector.components[index],
+                                       positionVelocity: vectorVelocity.components[index],
+                                       angularFrequency:angularFrequency,
+                                       dampingRatio: dampingRatio)
+            
+            springs!.append(floatSpring)
         }
     }
 }

@@ -29,9 +29,11 @@ final public class FAAnimation : CAKeyframeAnimation {
     // current velocity in motion
     var startTime : CFTimeInterval?
     
+    
     // FromValue defined automatically during synchronization
     // based on the presentation layer properties
     internal var fromValue: AnyObject?
+    
     
     // Flag used to track the animation as a primary influencer for the
     // overall timing within an animation group.
@@ -101,40 +103,34 @@ final public class FAAnimation : CAKeyframeAnimation {
 extension FAAnimation {
 
     private func configureValues(runningAnimation : FAAnimation? = nil) {
-        if let presentationValue = (weakLayer?.presentationLayer() as? CALayer)?.anyValueForKeyPath(self.keyPath!) {
+        if let presentationLayer = (weakLayer?.presentationLayer() as? CALayer),
+           let presentationValue = presentationLayer.anyValueForKeyPath(self.keyPath!) {
+        
             if let currentValue = presentationValue as? CGPoint {
                 fromValue = NSValue(CGPoint : currentValue)
-                syncValues(runningAnimation)
             } else  if let currentValue = presentationValue as? CGSize {
                 fromValue = NSValue(CGSize : currentValue)
-                syncValues(runningAnimation)
             } else  if let currentValue = presentationValue as? CGRect {
                 fromValue = NSValue(CGRect : currentValue)
-                syncValues(runningAnimation)
             } else  if let currentValue = presentationValue as? CGFloat {
                 fromValue = NSNumber(float : Float(currentValue))
-                syncValues(runningAnimation)
             } else  if let currentValue = presentationValue as? CATransform3D {
                 fromValue = NSValue(CATransform3D : currentValue)
-                syncValues(runningAnimation)
             } else if let currentValue = typeCastCGColor(presentationValue) {
                 fromValue = currentValue
-                syncValues(runningAnimation)
             }
-        }
-    }
 
-    private func syncValues(runningAnimation : FAAnimation?) {
-        synchronizeAnimationVelocity(fromValue, runningAnimation: runningAnimation)
-        
-        interpolator  = Interpolator(toValue: toValue,
-                                     fromValue: fromValue,
-                                     previousValue : runningAnimation?.fromValue)
-    
-        let config = interpolator?.interpolatedConfiguration(CGFloat(duration), easingFunction: self.easingFunction)
-        
-        duration = config!.duration
-        values = config!.values
+            interpolator  = Interpolator(toValue: toValue,
+                                         fromValue: fromValue,
+                                         previousValue : runningAnimation?.fromValue)
+            
+            synchronizeAnimationVelocity(fromValue, runningAnimation: runningAnimation)
+            
+            let config = interpolator?.interpolatedConfiguration(CGFloat(duration), easingFunction: self.easingFunction)
+            
+            duration = config!.duration
+            values = config!.values
+        }
     }
 
     private func synchronizeAnimationVelocity(fromValue : Any, runningAnimation : FAAnimation?) {
@@ -146,7 +142,20 @@ extension FAAnimation {
             let currentTime = presentationLayer.convertTime(CACurrentMediaTime(), toLayer: runningAnimation!.weakLayer)
             let deltaTime = CGFloat(currentTime - animationStartTime)
             
-            easingFunction = oldInterpolator.velocityAdjustedEasing(deltaTime, easingFunction:  easingFunction)
+            easingFunction = oldInterpolator.adjustedVelocityEasing(deltaTime, easingFunction:  easingFunction)
+        } else {
+        
+            switch easingFunction {
+            case .SpringDecay(_):
+                easingFunction =  FAEasing.SpringDecay(velocity: interpolator?.zeroValueVelocity())
+            
+            case let .SpringCustom(_,frequency,damping):
+                easingFunction = FAEasing.SpringCustom(velocity: interpolator?.zeroValueVelocity() ,
+                                                       frequency: frequency,
+                                                       ratio: damping)
+            default:
+                break
+            }
         }
     }
 }

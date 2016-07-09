@@ -199,8 +199,7 @@ extension FAAnimationGroup {
         }
         
         let filteredAnimation = animations!.filter({ $0.duration == duration })
-        let nonFilteredAnimation = animations!.filter({ $0.duration != duration })
-        
+      
         if let primaryDrivingAnimation = filteredAnimation.first as? FAAnimation {
             primaryAnimation = primaryDrivingAnimation
             primaryEasingFunction = primaryDrivingAnimation.easingFunction
@@ -213,7 +212,7 @@ extension FAAnimationGroup {
         var newAnimationsArray = [FAAnimation]()
         newAnimationsArray.append(filteredAnimation.first! as! FAAnimation)
         
-        for animation in nonFilteredAnimation {
+        for animation in animations! {
             animation.duration = duration
             
             if let customAnimation = animation as? FAAnimation {

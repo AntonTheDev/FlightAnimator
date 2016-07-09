@@ -19,52 +19,10 @@
          <FileRef
             location = "group:FAAnimationMaker.swift">
          </FileRef>
-         <Group
-            location = "group:Extensions"
-            name = "Extensions">
-            <FileRef
-               location = "group:CALayer+FAAnimation.swift">
-            </FileRef>
-            <FileRef
-               location = "group:NSValue+FAAnimation.swift">
-            </FileRef>
-            <FileRef
-               location = "group:UIView+FAAnimation.swift">
-            </FileRef>
-         </Group>
-      </Group>
-      <Group
-         location = "group:FAAnimatable"
-         name = "FAAnimatable">
-         <FileRef
-            location = "group:FAAnimatable.swift">
-         </FileRef>
-         <Group
-            location = "group:Implementation"
-            name = "Implementation">
-            <FileRef
-               location = "group:CATransform3D+FAAnimatable.swift">
-            </FileRef>
-            <FileRef
-               location = "group:CGFloat+FAAnimatable.swift">
-            </FileRef>
-            <FileRef
-               location = "group:CGPoint+FAAnimatable.swift">
-            </FileRef>
-            <FileRef
-               location = "group:CGRect+FAAnimatable.swift">
-            </FileRef>
-            <FileRef
-               location = "group:CGSize+FAAnimatable.swift">
-            </FileRef>
-            <FileRef
-               location = "group:CGColor+FAAnimatable.swift">
-            </FileRef>
-         </Group>
       </Group>
       <Group
          location = "group:FAInterpolation"
-         name = "FAInterpolator">
+         name = "FAInterpolation">
          <FileRef
             location = "group:FAInterpolator.swift">
          </FileRef>
@@ -74,15 +32,24 @@
          <FileRef
             location = "group:FASpring.swift">
          </FileRef>
+         <FileRef
+            location = "group:FAVector.swift">
+         </FileRef>
       </Group>
       <Group
-         location = "group:Extras"
-         name = "Extras">
+         location = "group:Extensions"
+         name = "Extensions">
          <FileRef
-            location = "group:FAAnimation+Callbacks.swift">
+            location = "group:CALayer+FAAnimation.swift">
          </FileRef>
          <FileRef
-            location = "group:FAPanGestureRecognizer.swift">
+            location = "group:UIView+FAAnimation.swift">
+         </FileRef>
+         <FileRef
+            location = "group:NSValue+FAAnimation.swift">
+         </FileRef>
+         <FileRef
+            location = "group:FAAnimation+Callbacks.swift">
          </FileRef>
       </Group>
    </Group>

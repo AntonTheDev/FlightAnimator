@@ -75,13 +75,6 @@ extension UIView {
     
     internal func attachAnimation(animation : AnyObject,
                                   forKey key: String) {
-        
-        if cachedAnimations != nil {
-          //  if let animation = cachedAnimations![key] {
-          //      animation.stopUpdateLoop()
-          //  }
-        }
-        
         self.appendAnimation(animation, forKey : key)
     }
 }
