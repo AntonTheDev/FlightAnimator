@@ -246,7 +246,7 @@ extension Interpolator {
             repeat {
                 let newValue = interpolatedSpringValue(animationTime)
                 animationComplete = newValue.magnitudeToVector(toVector) < FAAnimationConfig.SpringDecayMagnitudeThreshold
-                
+                print(newValue.magnitudeToVector(toVector))
                 valueArray.append(newValue.valueRepresentation(toValue)!)
                 animationTime += frameRateTimeUnit
             } while (animationComplete == false)

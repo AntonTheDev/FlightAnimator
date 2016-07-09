@@ -82,9 +82,7 @@ final public class FAAnimationGroup : CAAnimationGroup {
         animationGroup.startTime                = startTime
         animationGroup.animationKey             = animationKey
         animationGroup.segmentArray             = segmentArray
-        
         animationGroup._segmentArray            = _segmentArray
-        
         animationGroup.primaryTimingPriority    = primaryTimingPriority
         return animationGroup
     }

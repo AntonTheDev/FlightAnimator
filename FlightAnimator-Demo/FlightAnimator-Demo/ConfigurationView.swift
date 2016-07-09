@@ -45,7 +45,7 @@ var functions : [FAEasing]    = [.SpringDecay(velocity : CGPointZero), .SpringCu
                                  .InExponential, .OutExponential, .InOutExponential, .OutInExponential,
                                  .InCircular, .OutCircular, .InOutCircular, .OutInCircular,
                                  .InBack,  .OutBack, .InOutBack, .OutInBack,
-                                 .InElastic, .OutElastic, .InOutElastic,
+                                 .InElastic, .OutElastic, .InOutElastic, .OutInElastic,
                                  .InBounce, .OutBounce, .InOutBounce, .OutInBounce]
 
 protocol ConfigurationViewDelegate {

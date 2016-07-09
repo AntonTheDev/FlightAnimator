@@ -179,21 +179,24 @@ extension ViewController {
         let currentPosition = CGCSRectGetCenter(lastToFrame)
         let currentAlpha = self.dragView.alpha
         let currentTransform = self.dragView.layer.transform
-        
-        var easingFunction :FAEasing = .SpringDecay(velocity: velocity)
+ 
+        var easingFunction :FAEasing = self.animConfig.positionFunction
         
         switch animConfig.positionFunction {
-        case let .SpringCustom(_, frequency, ratio):
+         case .SpringDecay(_):
+            easingFunction = .SpringDecay(velocity: velocity)
+         
+         case let .SpringCustom(_, frequency, ratio):
             easingFunction = .SpringCustom(velocity: velocity, frequency: frequency, ratio: ratio)
         default:
             break
         }
-        
+
         let duration : CGFloat = 0.5
         
         registerAnimation(onView : dragView, forKey : AnimationKeys.PanGestureKey, timingPriority: self.animConfig.primaryTimingPriority) { (animator) in
             animator.bounds(finalBounds).duration(0.5).easing(.OutQuadratic).primary(false)
-            animator.position(finalCenter).duration(0.0).easing(easingFunction).primary(true)
+            animator.position(finalCenter).duration(0.6).easing(easingFunction).primary(true)
             
             
             if self.animConfig.enableSecondaryView {

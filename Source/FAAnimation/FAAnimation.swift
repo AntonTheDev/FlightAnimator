@@ -10,8 +10,7 @@ import Foundation
 import UIKit
 
 final public class FAAnimation : CAKeyframeAnimation {
-    
-    
+
     var interpolator : Interpolator?
     
     weak var weakLayer : CALayer?
@@ -81,6 +80,7 @@ final public class FAAnimation : CAKeyframeAnimation {
     
     override public func copyWithZone(zone: NSZone) -> AnyObject {
         let animation = super.copyWithZone(zone) as! FAAnimation
+        animation.primaryAnimation  = primaryAnimation
         animation.weakLayer         = weakLayer
         animation.fromValue         = fromValue
         animation.toValue           = toValue
