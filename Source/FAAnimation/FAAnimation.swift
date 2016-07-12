@@ -77,13 +77,13 @@ final public class FAAnimation : CAKeyframeAnimation {
     
     override public func copyWithZone(zone: NSZone) -> AnyObject {
         let animation = super.copyWithZone(zone) as! FAAnimation
-        animation.isPrimary         = isPrimary
+        animation.isPrimary  = isPrimary
         animation.weakLayer         = weakLayer
         animation.fromValue         = fromValue
         animation.toValue           = toValue
         animation.easingFunction    = easingFunction
         animation.startTime         = startTime
-        animation.interpolator      = interpolator
+        //animation.interpolator      = interpolator
         return animation
     }
     
@@ -137,7 +137,7 @@ extension FAAnimation {
             let oldInterpolator = runningAnimation?.interpolator {
             
             let currentTime = presentationLayer.convertTime(CACurrentMediaTime(), toLayer: runningAnimation!.weakLayer)
-            let deltaTime = CGFloat(currentTime - animationStartTime)
+            let deltaTime = CGFloat(currentTime - animationStartTime) - FAAnimationConfig.AnimationTimeAdjustment
             
             if easingFunction.isSpring() {
                 easingFunction = oldInterpolator.adjustedEasingVelocity(deltaTime, easingFunction:  easingFunction)
@@ -160,7 +160,6 @@ extension FAAnimation {
     }
 }
 
-
 extension FAAnimation {
     
     func valueProgress() -> CGFloat {
@@ -175,7 +174,7 @@ extension FAAnimation {
         let currentTime = weakLayer?.presentationLayer()!.convertTime(CACurrentMediaTime(), toLayer: nil)
         let difference = currentTime! - startTime!
         
-        return CGFloat(round(100 * (difference / duration))/100) + FAAnimationConfig.AnimationTimeAdjustment
+        return CGFloat(round(100 * (difference / duration))/100)
     }
 }
 

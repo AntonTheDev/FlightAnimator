@@ -26,16 +26,14 @@ struct FAAnimationConfig {
     
     static let SpringDecayFrequency     : CGFloat = 14.0
     static let SpringDecayDamping       : CGFloat = 0.97
-    static let SpringCustomBounceCount  : Int = 10
+    static let SpringCustomBounceCount  : Int = 4
     
     static let SpringDecayMagnitudeThreshold  : CGFloat = 1.35
-    
-    // When another animation is kickoff, the framework needs to
-    // synchronize all the values again, and by the time the animation begins, it may be few frame forwards
+
     static let AnimationTimeAdjustment   : CGFloat = 2.0 * (1.0 / FAAnimationConfig.InterpolationFrameCount)
 }
 
-public class Interpolator {
+public struct Interpolator {
     
     var toValue : Any
     var fromValue : Any
@@ -72,7 +70,7 @@ public class Interpolator {
         }
     }
     
-    func interpolatedConfiguration(duration : CGFloat, easingFunction : FAEasing) ->  (duration : Double,  values : [AnyObject])? {
+    mutating func interpolatedConfiguration(duration : CGFloat, easingFunction : FAEasing) ->  (duration : Double,  values : [AnyObject])? {
         switch easingFunction {
         case let .SpringDecay(velocity):
             if springs == nil {
@@ -145,13 +143,13 @@ extension Interpolator {
         }
         
         var progress : CGFloat  = 1.0
+        
         if previousValueVector != nil {
             let progressedMagnitude = previousValueVector!.magnitudeToVector(fromVector)
             let overallMagnitude = fromVector.magnitudeToVector(toVector)
             
             progress = progressedMagnitude / overallMagnitude
         }
-        
         
         if progress.isNaN {
             progress = 1.0
@@ -199,13 +197,13 @@ extension Interpolator {
 
 extension Interpolator {
     
-    private func decayComponentSprings(initialVelocity: Any) {
+    private mutating func decayComponentSprings(initialVelocity: Any) {
         customComponentSprings(initialVelocity,
                                angularFrequency: FAAnimationConfig.SpringDecayFrequency,
                                dampingRatio: FAAnimationConfig.SpringDecayFrequency)
     }
     
-    private func customComponentSprings(initialVelocity: Any?,
+    private mutating func customComponentSprings(initialVelocity: Any?,
                                         angularFrequency: CGFloat,
                                         dampingRatio: CGFloat) {
      

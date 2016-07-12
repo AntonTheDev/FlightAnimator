@@ -34,7 +34,7 @@ var functionTypes : [String] = ["SpringDecay", "SpringCustom",
                                 "InElastic", "OutElastic", "InOutElastic", "OutInElastic",
                                 "InBounce", "OutBounce", "InOutBounce", "OutInBounce"]
 
-var functions : [FAEasing]    = [.SpringDecay(velocity : CGPointZero), .SpringCustom(velocity: CGPointZero, frequency: 21, ratio: 0.96),
+var functions : [FAEasing]    = [.SpringDecay(velocity : CGPointZero), .SpringCustom(velocity: CGPointZero, frequency: 14, ratio: 0.8),
                                  .Linear, .SmoothStep, .SmootherStep,
                                  .InSine, .OutSine, .InOutSine, .OutInSine,
                                  .InAtan, .OutAtan, .InOutAtan,

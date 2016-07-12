@@ -28,7 +28,7 @@ public enum FAPrimaryTimingPriority : Int {
 public func registerAnimation(onView view : UIView,
                               forKey key: String,
                               timingPriority : FAPrimaryTimingPriority = .MaxTime,
-                              animator : (animator : FlightAnimator) -> Void ) {
+                              @noescape animator : (animator : FlightAnimator) -> Void ) {
     
     let newAnimator = FlightAnimator(withView: view, forKey : key, priority : timingPriority)
     animator(animator : newAnimator)
@@ -36,7 +36,7 @@ public func registerAnimation(onView view : UIView,
 
 public extension UIView {
     
-    func animate(timingPriority : FAPrimaryTimingPriority = .MaxTime, animator : (animator : FlightAnimator) -> Void ) {
+    func animate(timingPriority : FAPrimaryTimingPriority = .MaxTime, @noescape animator : (animator : FlightAnimator) -> Void ) {
         let newAnimator = FlightAnimator(withView: self, forKey : "AppliedAnimation",  priority : timingPriority)
         animator(animator : newAnimator)
         applyAnimation(forKey: "AppliedAnimation")
@@ -62,14 +62,14 @@ public extension UIView {
 public class FlightAnimator : FAAnimationMaker {
     
     public func setDidStopCallback(stopCallback : FAAnimationDidStop) {
-        if ((associatedView?.cachedAnimations?.keys.contains(animationKey!)) != nil) {
-             associatedView!.cachedAnimations![animationKey!]!.setDidStopCallback(stopCallback)
+        if ((associatedView?.cachedAnimations?.keys.contains(NSString(string: animationKey!))) != nil) {
+             associatedView!.cachedAnimations![NSString(string: animationKey!)]!.setDidStopCallback(stopCallback)
         }
     }
     
     public func setDidStartCallback(startCallback : FAAnimationDidStart) {
-        if ((associatedView?.cachedAnimations?.keys.contains(animationKey!)) != nil) {
-            associatedView!.cachedAnimations![animationKey!]!.setDidStartCallback(startCallback)
+        if ((associatedView?.cachedAnimations?.keys.contains(NSString(string: animationKey!))) != nil) {
+            associatedView!.cachedAnimations![NSString(string: animationKey!)]!.setDidStartCallback(startCallback)
         }
     }
     

@@ -119,22 +119,26 @@ public class FAVector : Equatable {
     public func valueRepresentation(value : Any) -> AnyObject? {
         
         if let _ = value as? CGPoint {
-            return NSValue(CGPoint : CGPointMake(components[0], components[1]))
+            let valueRepresentation = NSValue(CGPoint : CGPointMake(components[0], components[1]))
+            return valueRepresentation
         }
         else  if let _ = value as? CGSize {
-            return NSValue(CGSize : CGSizeMake(components[0], components[1]))
+            let valueRepresentation = NSValue(CGSize : CGSizeMake(components[0], components[1]))
+            return valueRepresentation
         }
         else  if let _ = value as? CGRect {
-            return NSValue(CGRect : CGRectMake(components[0], components[1], components[2], components[3]))
+            let valueRepresentation = NSValue(CGRect : CGRectMake(components[0], components[1], components[2], components[3]))
+            return valueRepresentation
         }
         else  if let _ = value as? CGFloat {
             return components[0]
         }
         else  if let _ = value as? CATransform3D {
-            return NSValue(CATransform3D : CATransform3D(m11: components[0],  m12: components[1],  m13: components[2],  m14: components[3],
+            let valueRepresentation = NSValue(CATransform3D : CATransform3D(m11: components[0],  m12: components[1],  m13: components[2],  m14: components[3],
                                                          m21: components[4],  m22: components[5],  m23: components[6],  m24: components[7],
                                                          m31: components[8],  m32: components[9],  m33: components[10], m34: components[11],
                                                          m41: components[12], m42: components[13], m43: components[14], m44: components[15]))
+            return valueRepresentation
         }
         else if let currentValue = typeCastCGColor(value) {
             let color = UIColor(CGColor : currentValue)

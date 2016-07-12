@@ -43,7 +43,13 @@ extension CALayer {
             animation.weakLayer = self
             animation.animationKey = key
             animation.startTime = self.convertTime(CACurrentMediaTime(), fromLayer: nil)
-            animation.synchronizeAnimationGroup((self.animationForKey(key!) as? FAAnimationGroup))
+            
+            if let oldAnimation = self.animationForKey(key!) as? FAAnimationGroup{
+                oldAnimation.stopTriggerTimer()
+                animation.synchronizeAnimationGroup(oldAnimation)
+            } else {
+                animation.synchronizeAnimationGroup(nil)                
+            }
         }
 
         removeAllAnimations()
