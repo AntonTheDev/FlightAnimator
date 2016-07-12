@@ -1,5 +1,8 @@
 #Release Notes
 
+####Version 0.8.1
+* Fixed Bug Issue #13 reported by @springlo, M33 Property sprign pointing to M34
+
 ####Version 0.8.0
 * Added tvOS Support for both Carthage and Cocoapods
 * Added the ability to listen to CAAnimationDelegate by setting a closure on the animator instance within the build closure 
