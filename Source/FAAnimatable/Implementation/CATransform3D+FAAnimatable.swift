@@ -158,7 +158,7 @@ extension CATransform3D : FAAnimatable {
                                                                             angularFrequency : angularFrequency,
                                                                             dampingRatio : dampingRatio)[SpringAnimationKey.CGFloat]
             
-            springs[SpringAnimationKey.M33] = self.m33.interpolationSprings((toValue as! CATransform3D).m34,
+            springs[SpringAnimationKey.M33] = self.m33.interpolationSprings((toValue as! CATransform3D).m33,
                                                                             initialVelocity : startingVelocity.x,
                                                                             angularFrequency : angularFrequency,
                                                                             dampingRatio : dampingRatio)[SpringAnimationKey.CGFloat]
