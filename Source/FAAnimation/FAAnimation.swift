@@ -83,7 +83,7 @@ final public class FAAnimation : CAKeyframeAnimation {
         animation.toValue           = toValue
         animation.easingFunction    = easingFunction
         animation.startTime         = startTime
-        //animation.interpolator      = interpolator
+        animation.interpolator      = interpolator
         return animation
     }
     

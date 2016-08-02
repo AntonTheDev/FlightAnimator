@@ -40,14 +40,17 @@ extension CALayer {
     
     internal func FA_addAnimation(anim: CAAnimation, forKey key: String?) {
         if let animation = anim as? FAAnimationGroup {
+            animation.stopTriggerTimer()
             animation.weakLayer = self
             animation.animationKey = key
             animation.startTime = self.convertTime(CACurrentMediaTime(), fromLayer: nil)
             
             if let oldAnimation = self.animationForKey(key!) as? FAAnimationGroup{
+                self.removeAnimationForKey(key!)
                 oldAnimation.stopTriggerTimer()
                 animation.synchronizeAnimationGroup(oldAnimation)
             } else {
+                self.removeAnimationForKey(key!)
                 animation.synchronizeAnimationGroup(nil)                
             }
         }

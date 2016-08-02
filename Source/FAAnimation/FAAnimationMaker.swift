@@ -39,6 +39,7 @@ public class FAAnimationMaker {
         }
        
         if associatedView!.cachedAnimations!.keys.contains(NSString(string: animationKey!)) {
+            associatedView!.cachedAnimations![NSString(string: animationKey!)]?.stopTriggerTimer()
             associatedView!.cachedAnimations![NSString(string: animationKey!)] = nil
         }
         

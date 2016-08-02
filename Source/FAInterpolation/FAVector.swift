@@ -9,8 +9,6 @@
 import Foundation
 import UIKit
 
-
-
 public func -(lhs:FAVector, rhs:FAVector) -> FAVector {
     var calculatedComponents = [CGFloat]()
     
@@ -33,7 +31,7 @@ public func ==(lhs:FAVector, rhs:FAVector) -> Bool {
 }
 
 
-/// IPValue class. Contains a vectorized version of an Interpolatable type.
+/// FAValue class. Contains a vectorized version of an Interpolatable type.
 public class FAVector : Equatable {
     
     var components: [CGFloat] = [CGFloat]()
@@ -118,22 +116,22 @@ public class FAVector : Equatable {
     
     public func valueRepresentation(value : Any) -> AnyObject? {
         
-        if let _ = value as? CGPoint {
+        if  value is CGPoint {
             let valueRepresentation = NSValue(CGPoint : CGPointMake(components[0], components[1]))
             return valueRepresentation
         }
-        else  if let _ = value as? CGSize {
+        else  if value is CGSize {
             let valueRepresentation = NSValue(CGSize : CGSizeMake(components[0], components[1]))
             return valueRepresentation
         }
-        else  if let _ = value as? CGRect {
+        else  if value is CGRect {
             let valueRepresentation = NSValue(CGRect : CGRectMake(components[0], components[1], components[2], components[3]))
             return valueRepresentation
         }
-        else  if let _ = value as? CGFloat {
+        else  if value is CGFloat {
             return components[0]
         }
-        else  if let _ = value as? CATransform3D {
+        else  if value is CATransform3D {
             let valueRepresentation = NSValue(CATransform3D : CATransform3D(m11: components[0],  m12: components[1],  m13: components[2],  m14: components[3],
                                                          m21: components[4],  m22: components[5],  m23: components[6],  m24: components[7],
                                                          m31: components[8],  m32: components[9],  m33: components[10], m34: components[11],
