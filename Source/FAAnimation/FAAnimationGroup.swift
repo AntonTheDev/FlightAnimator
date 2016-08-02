@@ -17,19 +17,16 @@ func ==(lhs:AnimationTrigger, rhs:AnimationTrigger) -> Bool {
         lhs.animationKey == rhs.animationKey
 }
 
-internal struct AnimationTrigger : Equatable {
-
-    var isTimedBased = true
-    var triggerProgessValue : CGFloat?
-    var animationKey : String?
-    
-    weak var animatedView : UIView?
+func ==(lhs:FAAnimationGroup, rhs:FAAnimationGroup) -> Bool {
+    return lhs.weakLayer == rhs.weakLayer &&
+        lhs.animationKey == rhs.animationKey
 }
 
 final public class FAAnimationGroup : CAAnimationGroup {
     
     var primaryTimingPriority : FAPrimaryTimingPriority = .MaxTime
     var animationKey : String?
+    
     
     weak var weakLayer : CALayer? {
         didSet {
@@ -60,7 +57,7 @@ final public class FAAnimationGroup : CAAnimationGroup {
     
     // This is used to
     private var primaryEasingFunction : FAEasing = FAEasing.Linear
-    private var primaryAnimation : FAAnimation?
+    private weak var primaryAnimation : FAAnimation?
     
     private var displayLink : CADisplayLink?
     
@@ -83,21 +80,21 @@ final public class FAAnimationGroup : CAAnimationGroup {
         animationGroup.weakLayer                = weakLayer
         animationGroup.startTime                = startTime
         animationGroup.animationKey             = animationKey
+        animationGroup._segmentArray            = _segmentArray
         animationGroup.segmentArray             = segmentArray
         
-        animationGroup._segmentArray            = _segmentArray
-        
+        animationGroup.primaryAnimation         = primaryAnimation
         animationGroup.primaryTimingPriority    = primaryTimingPriority
         return animationGroup
     }
 }
-
 
 //MARK: Public API
 
 extension FAAnimationGroup {
     
     func synchronizeAnimationGroup(oldAnimationGroup : FAAnimationGroup?) {
+        oldAnimationGroup?.stopTriggerTimer()
         synchronizeAnimations(oldAnimationGroup)
     }
     
@@ -107,14 +104,15 @@ extension FAAnimationGroup {
     }
     
     func applyFinalState(animated : Bool = false) {
-        stopTriggerTimer()
+        // stopTriggerTimer()
         
         if let animationLayer = weakLayer {
             if animated {
                 animationLayer.speed = 1.0
                 animationLayer.timeOffset = 0.0
                 startTime = animationLayer.convertTime(CACurrentMediaTime(), fromLayer: nil)
-                animationLayer.addAnimation(self, forKey: self.animationKey)
+                animationLayer.addAnimation(self, forKey: animationKey)
+                startTriggerTimer()
             }
             
             if let subAnimations = animations {
@@ -128,14 +126,14 @@ extension FAAnimationGroup {
                         if subAnimation.keyPath! == "opacity" {
                             animationLayer.owningView()!.setValue(toValue, forKeyPath: "alpha")
                         } else {
-                            animationLayer.modelLayer().setValue(toValue, forKeyPath: subAnimation.keyPath!)
+                            animationLayer.setValue(toValue, forKeyPath: subAnimation.keyPath!)
                         }
                     }
                 }
             }
         }
         
-        startTriggerTimer()
+        
     }
 }
 
@@ -145,7 +143,7 @@ extension FAAnimationGroup {
 extension FAAnimationGroup {
     
     private func synchronizeAnimations(oldAnimationGroup : FAAnimationGroup?) {
-        
+    
         var durationArray =  [Double]()
         
         var oldAnimations = animationDictionaryForGroup(oldAnimationGroup)
@@ -187,10 +185,10 @@ extension FAAnimationGroup {
         animations = newAnimations.map {$1}
         
         updateGroupDurationBasedOnTimePriority(durationArray)
-
     }
     
     private func updateGroupDurationBasedOnTimePriority(durationArray: Array<CFTimeInterval>) {
+       
         switch primaryTimingPriority {
         case .MaxTime:
             duration = durationArray.maxElement()!
@@ -203,10 +201,9 @@ extension FAAnimationGroup {
         }
         
         let filteredAnimation = animations!.filter({ $0.duration == duration })
-    
+      
         if let primaryDrivingAnimation = filteredAnimation.first as? FAAnimation {
             primaryAnimation = primaryDrivingAnimation
-            primaryEasingFunction = primaryDrivingAnimation.easingFunction
         }
         
         guard animations != nil else {
@@ -216,19 +213,17 @@ extension FAAnimationGroup {
         var newAnimationsArray = [FAAnimation]()
         newAnimationsArray.append(filteredAnimation.first! as! FAAnimation)
         
-        for animation in animations! {
+        let filteredNonAnimation = animations!.filter({ $0 != primaryAnimation })
+        
+        for animation in filteredNonAnimation {
             animation.duration = duration
             
             if let customAnimation = animation as? FAAnimation {
-                switch customAnimation.easingFunction {
-                case .SpringDecay(_):
-                    break
-                case .SpringCustom(_, _, _):
-                    break
-                default:
-                    customAnimation.synchronize()
+                
+                if customAnimation.easingFunction.isSpring() == false {
+                     customAnimation.synchronize()
                 }
-           
+                
                 newAnimationsArray.append(customAnimation)
             }
         }
@@ -255,14 +250,18 @@ extension FAAnimationGroup {
 
 extension FAAnimationGroup {
     
-    internal func updateLoop() {
+    internal func updateTrigger() {
         for segment in segmentArray {
-            
             if segment.isTimedBased && primaryAnimation?.timeProgress() >= segment.triggerProgessValue ||
               !segment.isTimedBased && primaryAnimation?.valueProgress() >= segment.triggerProgessValue  {
-               
-                segment.animatedView!.applyAnimation(forKey: segment.animationKey!)
+                //print("TRIGGER  ++++++++ CALINK \(weakLayer?.description)  - \(displayLink)\n")
                 segmentArray.removeObject(segment)
+                segment.animatedView!.applyAnimation(forKey: segment.animationKey! as String)
+            }
+       
+            if segmentArray.count <= 0 {
+                stopTriggerTimer()
+                return
             }
         }
         
@@ -273,22 +272,37 @@ extension FAAnimationGroup {
     }
     
     private func startTriggerTimer() {
+        
+        if displayLink != nil {
+            return 
+        }
+        stopTriggerTimer()
+        
         if _segmentArray.count == 0 {
             return
         }
-        
+    
         segmentArray = _segmentArray
         
         if displayLink == nil {
-            displayLink = CADisplayLink(target: self, selector: #selector(FAAnimationGroup.updateLoop))
+            displayLink = CADisplayLink(target: self, selector: #selector(FAAnimationGroup.updateTrigger))
             displayLink!.addToRunLoop(NSRunLoop.mainRunLoop(), forMode: NSDefaultRunLoopMode)
             displayLink!.paused = false
+            //print("START ++++++++ CALINK \(weakLayer?.description)  - \(displayLink)\n")
         }
     }
     
-    private func stopTriggerTimer() {
+    public func stopTriggerTimer() {
         displayLink?.paused = true
-        displayLink?.removeFromRunLoop(NSRunLoop.mainRunLoop(), forMode: NSDefaultRunLoopMode)
-        displayLink = nil
+        
+        guard let displayLink = displayLink else {
+            return
+        }
+       
+        // print("STOP ++++++++ CALINK \(weakLayer?.description)  - \(displayLink)\n")
+        segmentArray = [AnimationTrigger]()
+       
+        displayLink.removeFromRunLoop(NSRunLoop.mainRunLoop(), forMode: NSDefaultRunLoopMode)
+        self.displayLink = nil
     }
 }

@@ -34,7 +34,7 @@ var functionTypes : [String] = ["SpringDecay", "SpringCustom",
                                 "InElastic", "OutElastic", "InOutElastic", "OutInElastic",
                                 "InBounce", "OutBounce", "InOutBounce", "OutInBounce"]
 
-var functions : [FAEasing]    = [.SpringDecay(velocity : CGPointZero), .SpringCustom(velocity: CGPointZero, frequency: 21, ratio: 0.96),
+var functions : [FAEasing]    = [.SpringDecay(velocity : CGPointZero), .SpringCustom(velocity: CGPointZero, frequency: 14, ratio: 0.8),
                                  .Linear, .SmoothStep, .SmootherStep,
                                  .InSine, .OutSine, .InOutSine, .OutInSine,
                                  .InAtan, .OutAtan, .InOutAtan,
@@ -45,7 +45,7 @@ var functions : [FAEasing]    = [.SpringDecay(velocity : CGPointZero), .SpringCu
                                  .InExponential, .OutExponential, .InOutExponential, .OutInExponential,
                                  .InCircular, .OutCircular, .InOutCircular, .OutInCircular,
                                  .InBack,  .OutBack, .InOutBack, .OutInBack,
-                                 .InElastic, .OutElastic, .InOutElastic,
+                                 .InElastic, .OutElastic, .InOutElastic, .OutInElastic,
                                  .InBounce, .OutBounce, .InOutBounce, .OutInBounce]
 
 protocol ConfigurationViewDelegate {
@@ -357,7 +357,7 @@ class ConfigurationView : UIView {
         } else  {
 
             enableSecondaryViewLabel.animate { (animator) in
-                animator.position(initialCenter).duration(0.5).easing(.OutSine)
+                animator.position(self.initialCenter).duration(0.5).easing(.OutSine)
                 
                 animator.triggerAtTimeProgress(atProgress: 0.61, onView: self.atProgressLabel, animator: { (animator) in
                     animator.alpha(1.0).duration(0.5).easing(.OutSine)

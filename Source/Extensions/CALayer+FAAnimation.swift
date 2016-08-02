@@ -40,10 +40,19 @@ extension CALayer {
     
     internal func FA_addAnimation(anim: CAAnimation, forKey key: String?) {
         if let animation = anim as? FAAnimationGroup {
+            animation.stopTriggerTimer()
             animation.weakLayer = self
             animation.animationKey = key
             animation.startTime = self.convertTime(CACurrentMediaTime(), fromLayer: nil)
-            animation.synchronizeAnimationGroup((self.animationForKey(key!) as? FAAnimationGroup))
+            
+            if let oldAnimation = self.animationForKey(key!) as? FAAnimationGroup{
+                self.removeAnimationForKey(key!)
+                oldAnimation.stopTriggerTimer()
+                animation.synchronizeAnimationGroup(oldAnimation)
+            } else {
+                self.removeAnimationForKey(key!)
+                animation.synchronizeAnimationGroup(nil)                
+            }
         }
 
         removeAllAnimations()
@@ -85,14 +94,3 @@ extension CALayer {
     }
 }
 
-public func typeCastCGColor(value : Any) -> CGColor? {
-    if let currentValue = value as? AnyObject {
-        //TODO: There appears to be no way of unwrapping a CGColor by type casting
-        //Fix when the following bug is fixed https://bugs.swift.org/browse/SR-1612
-        if CFGetTypeID(currentValue) == CGColorGetTypeID() {
-            return (currentValue as! CGColor)
-        }
-    }
-    
-    return nil
-}

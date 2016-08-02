@@ -1,5 +1,9 @@
 #Release Notes
 
+####Version 0.9.0
+* Refactored Interpolation logic, to use vectors
+* Fix bug, where prior triggers were not getting cancelled
+
 ####Version 0.8.1
 * Fixed Bug Issue #13 reported by @springlo, M33 Property sprign pointing to M34
 

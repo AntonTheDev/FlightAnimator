@@ -56,13 +56,13 @@ public extension CAAnimation {
             activeDelegate = FAAnimationDelegate()
         }
  
-        activeDelegate!.setDidStopCallback { (anim, complete) in
-            if let _ = self.delegate as? FAAnimationDelegate {
+        activeDelegate!.setDidStopCallback { [weak self] (anim, complete) in
+            if let _ = self?.delegate as? FAAnimationDelegate {
                 stopCallback(anim : anim, complete: complete)
             }
         }
         
-        self.delegate = activeDelegate
+        delegate = activeDelegate
     }
     
     public func setDidStartCallback(startCallback : FAAnimationDidStart) {
@@ -78,8 +78,9 @@ public extension CAAnimation {
         } else {
             activeDelegate = FAAnimationDelegate()
         }
-        activeDelegate!.setDidStartCallback { (anim) in
-            if let _ = self.delegate as? FAAnimationDelegate {
+        
+        activeDelegate!.setDidStartCallback { [weak self] (anim) in
+            if let _ = self?.delegate as? FAAnimationDelegate {
                 startCallback(anim : anim)
             }
         }
