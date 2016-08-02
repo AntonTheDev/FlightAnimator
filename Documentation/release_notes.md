@@ -1,5 +1,9 @@
 #Release Notes
 
+####Version 0.9.0
+* Refactored Interpolation logic
+* Fix bug, where prior triggers were not getting cancelled
+
 ####Version 0.8.0
 * Added tvOS Support for both Carthage and Cocoapods
 * Added the ability to listen to CAAnimationDelegate by setting a closure on the animator instance within the build closure 
