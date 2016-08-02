@@ -103,19 +103,19 @@ public class PropertyAnimationConfig  {
         //print ("DEINIT PropertyAnimationConfig")
     }
     
-    func duration(duration : CGFloat) -> PropertyAnimationConfig {
+    public func duration(duration : CGFloat) -> PropertyAnimationConfig {
         self.duration = duration
         updateAnimation()
         return self
     }
     
-    func easing(easing : FAEasing) -> PropertyAnimationConfig {
+    public func easing(easing : FAEasing) -> PropertyAnimationConfig {
         self.easingCurve = easing
         updateAnimation()
         return self
     }
     
-    func primary(primary : Bool) -> PropertyAnimationConfig {
+    public func primary(primary : Bool) -> PropertyAnimationConfig {
         self.primary = primary
         updateAnimation()
         return self
