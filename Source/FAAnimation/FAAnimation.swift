@@ -10,6 +10,8 @@ import Foundation
 import UIKit
 
 final public class FAAnimation : CAKeyframeAnimation {
+
+    var interpolator : Interpolator?
     
     weak var weakLayer : CALayer?
     
@@ -46,25 +48,20 @@ final public class FAAnimation : CAKeyframeAnimation {
     // fact they calculate their duration dynamically based on the spring
     // configuration, and if configured with a lower duration than other
     // non spring animations, it may not progress to the final value.
-    private var primaryAnimation : Bool = false
-    
-    var springs : Dictionary<String, FASpring>?
-    
+    private var isPrimary : Bool = false
+
     func setAnimationAsPrimary(primary : Bool) {
-        primaryAnimation = primary
+        isPrimary = primary
     }
     
     func isAnimationPrimary() -> Bool {
-        switch self.easingFunction {
-        case .SpringDecay:
+        if easingFunction.isSpring() || isPrimary {
             return true
-        case .SpringCustom(_, _, _):
-            return true
-        default:
-            return primaryAnimation
         }
+        
+        return false
     }
-    
+
     override init() {
         super.init()
         CALayer.swizzleAddAnimation()
@@ -80,12 +77,13 @@ final public class FAAnimation : CAKeyframeAnimation {
     
     override public func copyWithZone(zone: NSZone) -> AnyObject {
         let animation = super.copyWithZone(zone) as! FAAnimation
+        animation.isPrimary  = isPrimary
         animation.weakLayer         = weakLayer
         animation.fromValue         = fromValue
         animation.toValue           = toValue
         animation.easingFunction    = easingFunction
         animation.startTime         = startTime
-        animation.springs           = springs
+        animation.interpolator      = interpolator
         return animation
     }
     
@@ -94,80 +92,71 @@ final public class FAAnimation : CAKeyframeAnimation {
     }
     
     func scrubToProgress(progress : CGFloat) {
-        self.weakLayer!.speed = 0.0
-        self.weakLayer!.timeOffset = CFTimeInterval(duration * Double(progress))
+        weakLayer?.speed = 0.0
+        weakLayer?.timeOffset = CFTimeInterval(duration * Double(progress))
     }
 }
 
 extension FAAnimation {
 
     private func configureValues(runningAnimation : FAAnimation? = nil) {
-        if let presentationValue = (weakLayer?.presentationLayer() as? CALayer)?.anyValueForKeyPath(self.keyPath!) {
-           if let currentValue = presentationValue as? CGPoint {
-                syncValues(currentValue, runningAnimation : runningAnimation)
+        if let presentationLayer = (weakLayer?.presentationLayer() as? CALayer),
+           let presentationValue = presentationLayer.anyValueForKeyPath(keyPath!) {
+        
+            if let currentValue = presentationValue as? CGPoint {
+                fromValue = NSValue(CGPoint : currentValue)
             } else  if let currentValue = presentationValue as? CGSize {
-                syncValues(currentValue, runningAnimation : runningAnimation)
+                fromValue = NSValue(CGSize : currentValue)
             } else  if let currentValue = presentationValue as? CGRect {
-                syncValues(currentValue, runningAnimation : runningAnimation)
+                fromValue = NSValue(CGRect : currentValue)
             } else  if let currentValue = presentationValue as? CGFloat {
-                syncValues(currentValue, runningAnimation : runningAnimation)
+                fromValue = NSNumber(float : Float(currentValue))
             } else  if let currentValue = presentationValue as? CATransform3D {
-                syncValues(currentValue, runningAnimation : runningAnimation)
+                fromValue = NSValue(CATransform3D : currentValue)
             } else if let currentValue = typeCastCGColor(presentationValue) {
-                syncValues(currentValue, runningAnimation : runningAnimation)
+                fromValue = currentValue 
+            }
+            
+            synchronizeAnimationVelocity(fromValue, runningAnimation: runningAnimation)
+            
+            if let toValue = toValue,
+               let fromValue = fromValue {
+                
+                interpolator  = Interpolator(toValue: toValue,
+                                             fromValue: fromValue,
+                                             previousValue : runningAnimation?.fromValue)
+                
+                let config = interpolator?.interpolatedConfiguration(CGFloat(duration), easingFunction: easingFunction)
+                
+                duration = config!.duration
+                values = config!.values
             }
         }
     }
 
-    private func interpolateValues<T : FAAnimatable>(toValue : T, currentValue : T, previousFromValue : T?) {
-       
-        var interpolator  = FAInterpolator(toValue : toValue,
-                                           fromValue: currentValue,
-                                           previousFromValue : previousFromValue,
-                                           duration: CGFloat(duration),
-                                           easingFunction : easingFunction)
-        
-        let config = interpolator.interpolatedAnimationConfig()
-        
-        springs = config.springs
-        duration = config.duration
-        values = config.values
-    }
-    
-    private func syncValues<T : FAAnimatable>(currentValue : T, runningAnimation : FAAnimation?) {
-        
-        fromValue = currentValue.valueRepresentation()
-        
-        synchronizeAnimationVelocity(currentValue, runningAnimation : runningAnimation)
-        
-        if let typedToValue = (toValue as? NSValue)?.typeValue() as? T {
-            
-            let previousFromValue = (runningAnimation?.fromValue as? NSValue)?.typeValue() as? T
-            interpolateValues(typedToValue, currentValue : currentValue, previousFromValue : previousFromValue)
-
-        } else  if let typedToValue = toValue  as? T {
-            
-            let previousFromValue = runningAnimation?.fromValue as? T
-            interpolateValues(typedToValue, currentValue : currentValue, previousFromValue : previousFromValue)
-        }
-    }
-    
-    private func synchronizeAnimationVelocity<T : FAAnimatable>(fromValue : T, runningAnimation : FAAnimation?) {
+    private func synchronizeAnimationVelocity(fromValue : Any, runningAnimation : FAAnimation?) {
         
         if  let presentationLayer = runningAnimation?.weakLayer?.presentationLayer(),
             let animationStartTime = runningAnimation?.startTime,
-            let oldSprings = runningAnimation?.springs {
+            let oldInterpolator = runningAnimation?.interpolator {
             
             let currentTime = presentationLayer.convertTime(CACurrentMediaTime(), toLayer: runningAnimation!.weakLayer)
-            let deltaTime = CGFloat(currentTime - animationStartTime)
+            let deltaTime = CGFloat(currentTime - animationStartTime) - FAAnimationConfig.AnimationTimeAdjustment
             
-            let newVelocity =  fromValue.springVelocity(oldSprings, deltaTime: deltaTime)
+            if easingFunction.isSpring() {
+                easingFunction = oldInterpolator.adjustedEasingVelocity(deltaTime, easingFunction:  easingFunction)
+            }
+
+        } else {
             
             switch easingFunction {
             case .SpringDecay(_):
-                easingFunction = .SpringDecay(velocity: newVelocity)
+                easingFunction =  FAEasing.SpringDecay(velocity: interpolator?.zeroVelocityValue())
+            
             case let .SpringCustom(_,frequency,damping):
-                easingFunction = .SpringCustom(velocity: newVelocity, frequency: frequency, ratio: damping)
+                easingFunction = FAEasing.SpringCustom(velocity: interpolator?.zeroVelocityValue() ,
+                                                       frequency: frequency,
+                                                       ratio: damping)
             default:
                 break
             }
@@ -178,21 +167,8 @@ extension FAAnimation {
 extension FAAnimation {
     
     func valueProgress() -> CGFloat {
-        if let presentationValue = (weakLayer?.presentationLayer() as? CALayer)?.anyValueForKeyPath(self.keyPath!) {
-            
-            if let currentValue = presentationValue as? CGPoint {
-                return valueProgress(currentValue)
-            } else  if let currentValue = presentationValue as? CGSize {
-                return valueProgress(currentValue)
-            } else  if let currentValue = presentationValue as? CGRect {
-                return valueProgress(currentValue)
-            } else  if let currentValue = presentationValue as? CGFloat {
-                return valueProgress(currentValue)
-            } else  if let currentValue = presentationValue as? CATransform3D {
-                return valueProgress(currentValue)
-            } else if let currentValue = typeCastCGColor(presentationValue) {
-                return valueProgress(currentValue)
-            }
+        if let presentationValue = (weakLayer?.presentationLayer() as? CALayer)?.anyValueForKeyPath(keyPath!) {
+            return interpolator!.valueProgress(presentationValue)
         }
     
         return 0.0
@@ -202,23 +178,7 @@ extension FAAnimation {
         let currentTime = weakLayer?.presentationLayer()!.convertTime(CACurrentMediaTime(), toLayer: nil)
         let difference = currentTime! - startTime!
         
-        return CGFloat(round(100 * (difference / duration))/100) + 0.03333333333
-    }
-    
-    private func valueProgress<T : FAAnimatable>(currentValue : T) -> CGFloat {
-       
-        if let typedToValue = (toValue as? NSValue)?.typeValue() as? T,
-           let typedFromValue = (fromValue as? NSValue)?.typeValue() as? T{
-            
-            return currentValue.magnitudeToValue(typedToValue) / typedFromValue.magnitudeToValue(typedToValue)
-       
-        } else if let typedToValue = toValue  as? T,
-                  let typedFromValue = fromValue  as? T {
-            
-            return currentValue.magnitudeToValue(typedToValue) / typedFromValue.magnitudeToValue(typedToValue)
-        }
-        
-        return 0.0
+        return CGFloat(round(100 * (difference / duration))/100)
     }
 }
 

@@ -35,15 +35,26 @@ extension CALayer {
             } else {
                 method_exchangeImplementations(originalMethod, swizzledMethod);
             }
+            
+            UIColor.swizzleGetRed()
         }
     }
     
     internal func FA_addAnimation(anim: CAAnimation, forKey key: String?) {
         if let animation = anim as? FAAnimationGroup {
+            animation.stopTriggerTimer()
             animation.weakLayer = self
             animation.animationKey = key
             animation.startTime = self.convertTime(CACurrentMediaTime(), fromLayer: nil)
-            animation.synchronizeAnimationGroup((self.animationForKey(key!) as? FAAnimationGroup))
+            
+            if let oldAnimation = self.animationForKey(key!) as? FAAnimationGroup{
+                self.removeAnimationForKey(key!)
+                oldAnimation.stopTriggerTimer()
+                animation.synchronizeAnimationGroup(oldAnimation)
+            } else {
+                self.removeAnimationForKey(key!)
+                animation.synchronizeAnimationGroup(nil)                
+            }
         }
 
         removeAllAnimations()
@@ -85,14 +96,63 @@ extension CALayer {
     }
 }
 
-public func typeCastCGColor(value : Any) -> CGColor? {
-    if let currentValue = value as? AnyObject {
-        //TODO: There appears to be no way of unwrapping a CGColor by type casting
-        //Fix when the following bug is fixed https://bugs.swift.org/browse/SR-1612
-        if CFGetTypeID(currentValue) == CGColorGetTypeID() {
-            return (currentValue as! CGColor)
+extension UIColor {
+    
+    // This is needed to fix the following radar
+    // http://openradar.appspot.com/radar?id=3114410
+    
+    final public class func swizzleGetRed() {
+        struct Static {
+            static var token: dispatch_once_t = 0
+        }
+        
+        if self !== CALayer.self {
+            return
+        }
+        
+        dispatch_once(&Static.token) {
+            let originalSelector = #selector(UIColor.getRed(_:green:blue:alpha:))
+            let swizzledSelector = #selector(UIColor.FA_getRed(_:green:blue:alpha:))
+            
+            let originalMethod = class_getInstanceMethod(self, originalSelector)
+            let swizzledMethod = class_getInstanceMethod(self, swizzledSelector)
+            
+            let didAddMethod = class_addMethod(self, originalSelector, method_getImplementation(swizzledMethod), method_getTypeEncoding(swizzledMethod))
+            
+            if didAddMethod {
+                class_replaceMethod(self, swizzledSelector, method_getImplementation(originalMethod), method_getTypeEncoding(originalMethod))
+            } else {
+                method_exchangeImplementations(originalMethod, swizzledMethod);
+            }
         }
     }
     
-    return nil
+    internal func FA_getRed(red: UnsafeMutablePointer<CGFloat>,
+                            green: UnsafeMutablePointer<CGFloat>,
+                            blue: UnsafeMutablePointer<CGFloat>,
+                            alpha: UnsafeMutablePointer<CGFloat>) -> Bool {
+        
+        if CGColorGetNumberOfComponents(self.CGColor) == 4 {
+            
+            var red: CGFloat = 0, green: CGFloat = 0, blue: CGFloat = 0, alpha: CGFloat = 0
+            return  self.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+        
+        } else if CGColorGetNumberOfComponents(self.CGColor) == 2 {
+            
+            var white: CGFloat = 0, whiteAlpha: CGFloat = 0
+            
+            if self.getWhite(&white, alpha: &whiteAlpha) {
+                red.memory = white * 1.0
+                green.memory = white * 1.0
+                blue.memory = white * 1.0
+                alpha.memory = whiteAlpha
+                
+                return true
+            }
+        }
+
+        return false
+    }
 }
+
+

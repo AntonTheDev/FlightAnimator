@@ -9,6 +9,14 @@
 import Foundation
 import UIKit
 
+internal class AnimationTrigger : Equatable {
+    var isTimedBased = true
+    var triggerProgessValue : CGFloat?
+    var animationKey : NSString?
+    weak var animatedView : UIView?
+}
+
+
 public class FAAnimationMaker {
     
     internal weak var associatedView : UIView?
@@ -27,15 +35,21 @@ public class FAAnimationMaker {
     private func configureNewGroup() {
         
         if associatedView!.cachedAnimations == nil {
-            associatedView!.cachedAnimations = [String : FAAnimationGroup]()
+            associatedView!.cachedAnimations = [NSString : FAAnimationGroup]()
+        }
+       
+        if associatedView!.cachedAnimations!.keys.contains(NSString(string: animationKey!)) {
+            associatedView!.cachedAnimations![NSString(string: animationKey!)]?.stopTriggerTimer()
+            associatedView!.cachedAnimations![NSString(string: animationKey!)] = nil
         }
         
+       
         let newGroup = FAAnimationGroup()
         newGroup.animationKey = animationKey
         newGroup.weakLayer = associatedView?.layer
         newGroup.primaryTimingPriority = primaryTimingPriority
         
-        associatedView!.cachedAnimations![animationKey!] = newGroup
+        associatedView!.cachedAnimations![NSString(string: animationKey!)] = newGroup
     }
     
     internal func triggerAnimation(timingPriority : FAPrimaryTimingPriority = .MaxTime,
@@ -45,14 +59,17 @@ public class FAAnimationMaker {
                                    progress: CGFloat = 0.0,
                                    @noescape animator: (animator : FlightAnimator) -> Void) {
 
-        if let animationGroup = associatedView!.cachedAnimations![animationKey!] {
+        if let animationGroup = associatedView!.cachedAnimations![NSString(string: animationKey!)] {
             
-            animationGroup._segmentArray.append(AnimationTrigger(isTimedBased: timeBased,
-                                                            triggerProgessValue: progress,
-                                                            animationKey: animationKey!,
-                                                            animatedView: view))
+            let animationTrigger = AnimationTrigger()
+            animationTrigger.isTimedBased = timeBased
+            animationTrigger.triggerProgessValue = progress
+            animationTrigger.animationKey = animationKey!
+            animationTrigger.animatedView = view
+            
+            animationGroup._segmentArray.append(animationTrigger)
 
-            associatedView!.attachAnimation(animationGroup, forKey: animationKey!)
+            associatedView!.appendAnimation(animationGroup, forKey: animationKey!)
         }
         
         let newAnimator = FlightAnimator(withView: view, forKey : animationKey!, priority : timingPriority)
@@ -60,76 +77,108 @@ public class FAAnimationMaker {
     }
 }
 
-public protocol PropertyAnimationConfig {
-    var easingCurve : FAEasing { get }
-    var duration : CGFloat { get }
-    
-    func duration(duration : CGFloat) -> PropertyAnimationConfig
-    func easing(easing : FAEasing) -> PropertyAnimationConfig
-    func primary(primary : Bool) -> PropertyAnimationConfig
-}
-
-private class Configuration {
-    var value: PropertyAnimationConfig
-    
-    init<T : FAAnimatable>(value: T, forKeyPath key : String, view : UIView, animationKey : String) {
-        self.value = ConfigurationValue(value: value, forKeyPath : key, view : view, animationKey : animationKey)
-    }
-}
-
-internal class ConfigurationValue<T : FAAnimatable> : PropertyAnimationConfig {
+public class PropertyAnimationConfig  {
     
     private weak var associatedView : UIView?
     private var animationKey : String?
     private var keyPath : String?
     
-    var toValue : T
+    var toValue : Any
     var easingCurve : FAEasing = .Linear
     var duration : CGFloat
     var primary : Bool
     
-    init(value: T, forKeyPath key : String, view : UIView, animationKey : String) {
+    init(value: Any, forKeyPath key : String, view : UIView, animationKey : String) {
         self.animationKey = animationKey
-        self.associatedView = view
-        self.keyPath = key
-        self.toValue = value
-        self.easingCurve = .Linear
-        self.duration = 0.0
-        self.primary = false
+        associatedView = view
+        keyPath = key
+        toValue = value
+        easingCurve = .Linear
+        duration = 0.0
+        primary = false
     }
     
-    func duration(duration : CGFloat) -> PropertyAnimationConfig {
+    deinit {
+        associatedView = nil
+        //print ("DEINIT PropertyAnimationConfig")
+    }
+    
+    public func duration(duration : CGFloat) -> PropertyAnimationConfig {
         self.duration = duration
         updateAnimation()
         return self
     }
     
-    func easing(easing : FAEasing) -> PropertyAnimationConfig {
+    public func easing(easing : FAEasing) -> PropertyAnimationConfig {
         self.easingCurve = easing
         updateAnimation()
         return self
     }
     
-    func primary(primary : Bool) -> PropertyAnimationConfig {
+    public func primary(primary : Bool) -> PropertyAnimationConfig {
         self.primary = primary
         updateAnimation()
         return self
     }
     
     private func updateAnimation() {
-        guard let animationGroup = associatedView!.cachedAnimations![animationKey!] else {
+        guard let animationGroup = associatedView!.cachedAnimations![NSString(string: animationKey!)] else {
             return
         }
         
+        if let animations = animationGroup.animations {
+            var animation = (animations as! [FAAnimation]).filter ({ $0.keyPath == self.keyPath }).first
+            
+            if let animation = animation {
+                animation.easingFunction = easingCurve
+                
+                if let currentValue = toValue as? CGPoint {
+                    animation.toValue =  NSValue(CGPoint :currentValue)
+                } else  if let currentValue = toValue as? CGSize {
+                    animation.toValue = NSValue( CGSize :currentValue)
+                } else  if let currentValue = toValue as? CGRect {
+                    animation.toValue = NSValue( CGRect : currentValue)
+                } else  if let currentValue = toValue as? CGFloat {
+                    animation.toValue = currentValue
+                } else  if let currentValue = toValue as? CATransform3D {
+                    animation.toValue =  NSValue( CATransform3D : currentValue)
+                } else if let currentValue = typeCastCGColor(toValue) {
+                    animation.toValue = currentValue
+                }
+                
+                animation.duration = Double(duration)
+                animation.setAnimationAsPrimary(primary)
+                animationGroup.weakLayer = associatedView?.layer
+                animationGroup.animations!.append(animation)
+                
+                associatedView!.cachedAnimations![NSString(string: animationKey!)] = animationGroup
+                return
+            }
+        }
+        
+        
         let animation = FAAnimation(keyPath: keyPath)
         animation.easingFunction = easingCurve
-        animation.toValue = toValue.valueRepresentation()
+       
+        if let currentValue = toValue as? CGPoint {
+            animation.toValue =  NSValue(CGPoint :currentValue)
+        } else  if let currentValue = toValue as? CGSize {
+            animation.toValue = NSValue( CGSize :currentValue)
+        } else  if let currentValue = toValue as? CGRect {
+            animation.toValue = NSValue( CGRect : currentValue)
+        } else  if let currentValue = toValue as? CGFloat {
+            animation.toValue = currentValue
+        } else  if let currentValue = toValue as? CATransform3D {
+            animation.toValue =  NSValue( CATransform3D : currentValue)
+        } else if let currentValue = typeCastCGColor(toValue) {
+            animation.toValue = currentValue
+        }
+        
         animation.duration = Double(duration)
         animation.setAnimationAsPrimary(primary)
-        
         animationGroup.weakLayer = associatedView?.layer
         animationGroup.animations!.append(animation)
         
-        associatedView!.cachedAnimations![animationKey!] = animationGroup
+        associatedView!.cachedAnimations![NSString(string: animationKey!)] = animationGroup
     }
 }

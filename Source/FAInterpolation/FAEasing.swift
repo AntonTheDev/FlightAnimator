@@ -269,6 +269,17 @@ public enum FAEasing : Equatable {
             return p
         }
     }
+    
+    func isSpring() -> Bool {
+        switch self {
+        case SpringCustom(_, _ , _):
+            return true
+        case .SpringDecay(_):
+            return true
+        default:
+            return false
+        }
+    }
 }
 
 public func ==(lhs : FAEasing, rhs : FAEasing) -> Bool {

@@ -1,5 +1,11 @@
 #Release Notes
 
+####Version 0.9.0
+* No API differences
+* Refactored Interpolation logic, simplified the structure to using vectors
+* Fix bug, where prior triggers were not getting cancelled
+* Fixed Issue animating between color spaces with different numbers of components
+
 ####Version 0.8.1
 * Fixed Bug Issue #13 reported by @springlo, M33 Property sprign pointing to M34
 
@@ -9,7 +15,6 @@
 * Added the ability to interpolate CGColor, RGBA, HSBA, and Monochromatic
 * Added property accessors for backgroundColor, borderColor, shadowColor
 * Fix for synchronizing, it was running the sychronization logic twice, 30%+ performance improvement
-
 
 ####Version 0.7.3
 * Removed unnecessary Type Conversion between Doubles and CGFloats
