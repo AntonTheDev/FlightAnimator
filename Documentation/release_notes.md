@@ -1,5 +1,9 @@
 #Release Notes
 
+####Version 0.9.1
+* No API differences
+* Fixed Decay Configuration
+
 ####Version 0.9.0
 * No API differences
 * Refactored Interpolation logic, simplified the structure to using vectors
