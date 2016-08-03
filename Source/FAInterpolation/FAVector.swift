@@ -30,7 +30,6 @@ public func ==(lhs:FAVector, rhs:FAVector) -> Bool {
     return true
 }
 
-
 /// FAValue class. Contains a vectorized version of an Interpolatable type.
 public class FAVector : Equatable {
     
@@ -72,30 +71,18 @@ public class FAVector : Equatable {
         }
         else if let currentValue = typeCastCGColor(value) {
             let color = UIColor(CGColor : currentValue)
+            var red: CGFloat = 0, green: CGFloat = 0, blue: CGFloat = 0, alpha: CGFloat = 0
             
-            if CGColorGetNumberOfComponents(currentValue) == 2 {
-                var white: CGFloat = 0, whiteAlpha: CGFloat = 0
-                
-                if color.getWhite(&white, alpha: &whiteAlpha) {
-                    components = [white, whiteAlpha]
-                    return
-                }
-            } else {
-                
-                var red: CGFloat = 0, green: CGFloat = 0, blue: CGFloat = 0, alpha: CGFloat = 0
-                
-                if color.getRed(&red, green: &green, blue: &blue, alpha: &alpha) {
-                    components = [red, green, blue, alpha]
-                    return
-                }
-                
-                var hue: CGFloat = 0, saturation: CGFloat = 0, brightness: CGFloat = 0, HSBAlpha: CGFloat = 0
-                
-                if color.getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &HSBAlpha) {
-                    
-                    components = [hue, saturation, brightness, HSBAlpha]
-                    return
-                }
+            if color.getRed(&red, green: &green, blue: &blue, alpha: &alpha) {
+                components = [red, green, blue, alpha]
+                return
+            }
+            
+            var hue: CGFloat = 0, saturation: CGFloat = 0, brightness: CGFloat = 0, HSBAlpha: CGFloat = 0
+            
+            if color.getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &HSBAlpha) {
+                components = [hue, saturation, brightness, HSBAlpha]
+                return
             }
         }
         
@@ -133,29 +120,24 @@ public class FAVector : Equatable {
         }
         else  if value is CATransform3D {
             let valueRepresentation = NSValue(CATransform3D : CATransform3D(m11: components[0],  m12: components[1],  m13: components[2],  m14: components[3],
-                                                         m21: components[4],  m22: components[5],  m23: components[6],  m24: components[7],
-                                                         m31: components[8],  m32: components[9],  m33: components[10], m34: components[11],
-                                                         m41: components[12], m42: components[13], m43: components[14], m44: components[15]))
+                m21: components[4],  m22: components[5],  m23: components[6],  m24: components[7],
+                m31: components[8],  m32: components[9],  m33: components[10], m34: components[11],
+                m41: components[12], m42: components[13], m43: components[14], m44: components[15]))
             return valueRepresentation
         }
         else if let currentValue = typeCastCGColor(value) {
             let color = UIColor(CGColor : currentValue)
             
-            if CGColorGetNumberOfComponents(currentValue) == 2 {
-                return UIColor(white: components[0], alpha: components[1]).CGColor
-            } else {
-                
-                var red: CGFloat = 0, green: CGFloat = 0, blue: CGFloat = 0, alpha: CGFloat = 0
-                
-                if color.getRed(&red, green: &green, blue: &blue, alpha: &alpha) {
-                    return UIColor(red: components[0],  green: components[1],  blue: components[2],  alpha: components[3]).CGColor
-                }
-                
-                var hue: CGFloat = 0, saturation: CGFloat = 0, brightness: CGFloat = 0, HSBAlpha: CGFloat = 0
-                
-                if color.getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &HSBAlpha) {
-                    return UIColor(hue: components[0],  saturation: components[1],  brightness: components[2],  alpha: components[3]).CGColor
-                }
+            var red: CGFloat = 0, green: CGFloat = 0, blue: CGFloat = 0, alpha: CGFloat = 0
+            
+            if color.getRed(&red, green: &green, blue: &blue, alpha: &alpha) {
+                return UIColor(red: components[0],  green: components[1],  blue: components[2],  alpha: components[3]).CGColor
+            }
+            
+            var hue: CGFloat = 0, saturation: CGFloat = 0, brightness: CGFloat = 0, HSBAlpha: CGFloat = 0
+            
+            if color.getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &HSBAlpha) {
+                return UIColor(hue: components[0],  saturation: components[1],  brightness: components[2],  alpha: components[3]).CGColor
             }
         }
         
@@ -185,21 +167,16 @@ public class FAVector : Equatable {
         else if let currentValue = typeCastCGColor(value) {
             let color = UIColor(CGColor : currentValue)
             
-            if CGColorGetNumberOfComponents(currentValue) == 2 {
-                return UIColor(white: components[0], alpha: components[1]).CGColor
-            } else {
-                
-                var red: CGFloat = 0, green: CGFloat = 0, blue: CGFloat = 0, alpha: CGFloat = 0
-                
-                if color.getRed(&red, green: &green, blue: &blue, alpha: &alpha) {
-                    return UIColor(red: components[0],  green: components[1],  blue: components[2],  alpha: components[3]).CGColor
-                }
-                
-                var hue: CGFloat = 0, saturation: CGFloat = 0, brightness: CGFloat = 0, HSBAlpha: CGFloat = 0
-                
-                if color.getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &HSBAlpha) {
-                    return UIColor(hue: components[0],  saturation: components[1],  brightness: components[2],  alpha: components[3]).CGColor
-                }
+            var red: CGFloat = 0, green: CGFloat = 0, blue: CGFloat = 0, alpha: CGFloat = 0
+            
+            if color.getRed(&red, green: &green, blue: &blue, alpha: &alpha) {
+                return UIColor(red: components[0],  green: components[1],  blue: components[2],  alpha: components[3]).CGColor
+            }
+            
+            var hue: CGFloat = 0, saturation: CGFloat = 0, brightness: CGFloat = 0, HSBAlpha: CGFloat = 0
+            
+            if color.getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &HSBAlpha) {
+                return UIColor(hue: components[0],  saturation: components[1],  brightness: components[2],  alpha: components[3]).CGColor
             }
         }
         

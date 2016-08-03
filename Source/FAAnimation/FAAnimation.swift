@@ -114,19 +114,23 @@ extension FAAnimation {
             } else  if let currentValue = presentationValue as? CATransform3D {
                 fromValue = NSValue(CATransform3D : currentValue)
             } else if let currentValue = typeCastCGColor(presentationValue) {
-                fromValue = currentValue
+                fromValue = currentValue 
             }
             
             synchronizeAnimationVelocity(fromValue, runningAnimation: runningAnimation)
             
-            interpolator  = Interpolator(toValue: toValue,
-                                         fromValue: fromValue,
-                                         previousValue : runningAnimation?.fromValue)
-            
-            let config = interpolator?.interpolatedConfiguration(CGFloat(duration), easingFunction: easingFunction)
-            
-            duration = config!.duration
-            values = config!.values
+            if let toValue = toValue,
+               let fromValue = fromValue {
+                
+                interpolator  = Interpolator(toValue: toValue,
+                                             fromValue: fromValue,
+                                             previousValue : runningAnimation?.fromValue)
+                
+                let config = interpolator?.interpolatedConfiguration(CGFloat(duration), easingFunction: easingFunction)
+                
+                duration = config!.duration
+                values = config!.values
+            }
         }
     }
 
