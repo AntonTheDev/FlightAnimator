@@ -197,18 +197,21 @@ extension Interpolator {
 
 extension Interpolator {
     
-    private mutating func decayComponentSprings(initialVelocity: Any) {
+    private mutating func decayComponentSprings(initialVelocity: Any?) {
         customComponentSprings(initialVelocity,
                                angularFrequency: FAAnimationConfig.SpringDecayFrequency,
-                               dampingRatio: FAAnimationConfig.SpringDecayFrequency)
+                               dampingRatio: FAAnimationConfig.SpringDecayDamping)
     }
     
     private mutating func customComponentSprings(initialVelocity: Any?,
                                         angularFrequency: CGFloat,
                                         dampingRatio: CGFloat) {
      
-        let velocity = (initialVelocity != nil) ? initialVelocity : zeroVelocityValue()
-        let vectorVelocity = FAVector(value :velocity)
+        var vectorVelocity = FAVector(value :zeroVelocityValue())
+        
+        if let velocity = initialVelocity {
+            vectorVelocity = FAVector(value :velocity)
+        }
 
         springs = [FASpring]()
         
@@ -270,6 +273,7 @@ extension Interpolator {
         case .SpringDecay(_):
             repeat {
                 let newValue = interpolatedSpringValue(animationTime)
+                print(newValue.magnitudeToVector(toVector))
                 animationComplete = newValue.magnitudeToVector(toVector) < FAAnimationConfig.SpringDecayMagnitudeThreshold
                 valueArray.append(newValue.valueRepresentation(toValue)!)
                 animationTime += frameRateTimeUnit

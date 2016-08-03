@@ -127,7 +127,7 @@ public class PropertyAnimationConfig  {
         }
         
         if let animations = animationGroup.animations {
-            var animation = (animations as! [FAAnimation]).filter ({ $0.keyPath == self.keyPath }).first
+            let animation = (animations as! [FAAnimation]).filter ({ $0.keyPath == self.keyPath }).first
             
             if let animation = animation {
                 animation.easingFunction = easingCurve
