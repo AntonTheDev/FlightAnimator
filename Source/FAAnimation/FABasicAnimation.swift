@@ -265,7 +265,7 @@ internal extension FASynchronizedAnimation {
     }
     
     func configureFromValueIfNeeded() {        
-        if let presentationLayer = (weakLayer?.presentationLayer()),
+        if let presentationLayer = (weakLayer?.presentationLayer()) ,
             let presentationValue = presentationLayer.anyValueForKeyPath(keyPath!) {
             
             if let currentValue = presentationValue as? CGPoint {
