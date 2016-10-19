@@ -4,30 +4,40 @@
    <Group
       location = "group:Source"
       name = "Source">
-      <FileRef
-         location = "group:FlightAnimator.swift">
-      </FileRef>
+      <Group
+         location = "group:Extensions"
+         name = "Extensions">
+         <FileRef
+            location = "group:CALayer+FAAnimation.swift">
+         </FileRef>
+         <FileRef
+            location = "group:NSValue+FAAnimation.swift">
+         </FileRef>
+         <FileRef
+            location = "group:UIView+FAAnimation.swift">
+         </FileRef>
+      </Group>
       <Group
          location = "group:FAAnimation"
          name = "FAAnimation">
          <FileRef
-            location = "group:FAAnimation.swift">
-         </FileRef>
-         <FileRef
             location = "group:FAAnimationGroup.swift">
          </FileRef>
          <FileRef
-            location = "group:FAAnimationMaker.swift">
+            location = "group:FABasicAnimation.swift">
+         </FileRef>
+         <FileRef
+            location = "group:FlightAnimator.swift">
          </FileRef>
       </Group>
       <Group
          location = "group:FAInterpolation"
          name = "FAInterpolation">
          <FileRef
-            location = "group:FAInterpolator.swift">
+            location = "group:FAEasing.swift">
          </FileRef>
          <FileRef
-            location = "group:FAEasing.swift">
+            location = "group:FAInterpolator.swift">
          </FileRef>
          <FileRef
             location = "group:FASpring.swift">
@@ -36,22 +46,15 @@
             location = "group:FAVector.swift">
          </FileRef>
       </Group>
-      <Group
-         location = "group:Extensions"
-         name = "Extensions">
-         <FileRef
-            location = "group:CALayer+FAAnimation.swift">
-         </FileRef>
-         <FileRef
-            location = "group:UIView+FAAnimation.swift">
-         </FileRef>
-         <FileRef
-            location = "group:NSValue+FAAnimation.swift">
-         </FileRef>
-         <FileRef
-            location = "group:FAAnimation+Callbacks.swift">
-         </FileRef>
-      </Group>
+      <FileRef
+         location = "group:FlightAnimator+API.swift">
+      </FileRef>
+      <FileRef
+         location = "group:FlightAnimator+Cache.swift">
+      </FileRef>
+      <FileRef
+         location = "group:FlightAnimator+Callbacks.swift">
+      </FileRef>
    </Group>
    <FileRef
       location = "group:FlightAnimator/FlightAnimator.xcodeproj">

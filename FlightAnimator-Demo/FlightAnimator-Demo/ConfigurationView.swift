@@ -341,15 +341,15 @@ class ConfigurationView : UIView {
             atProgressLabel.animate { (animator) in
                 animator.alpha(0.0).duration(0.5).easing(.OutSine)
                 
-                animator.triggerAtTimeProgress(atProgress: 0.01, onView: self.progressLabel, animator: { (animator) in
+                animator.triggerOnProgress(0.01, onView: self.progressLabel, animator: { (animator) in
                     animator.alpha(0.0).duration(0.5).easing(.OutSine)
                 })
                 
-                animator.triggerAtTimeProgress(atProgress: 0.7, onView: self.enableSecondaryViewLabel, animator: { (animator) in
+                animator.triggerOnProgress(0.7, onView: self.enableSecondaryViewLabel, animator: { (animator) in
                     animator.position(adjustedPosition).duration(0.5).easing(.InSine)
                 })
                 
-                animator.triggerAtTimeProgress(atProgress: 0.1, onView: self.progressTriggerSlider, animator: { (animator) in
+                animator.triggerOnProgress(0.1, onView: self.progressTriggerSlider, animator: { (animator) in
                     animator.alpha(0.0).duration(0.5).easing(.InSine)
                 })
             }
@@ -359,15 +359,15 @@ class ConfigurationView : UIView {
             enableSecondaryViewLabel.animate { (animator) in
                 animator.position(self.initialCenter).duration(0.5).easing(.OutSine)
                 
-                animator.triggerAtTimeProgress(atProgress: 0.61, onView: self.atProgressLabel, animator: { (animator) in
+                animator.triggerOnProgress(0.61, onView: self.atProgressLabel, animator: { (animator) in
                     animator.alpha(1.0).duration(0.5).easing(.OutSine)
                 })
                 
-                animator.triggerAtTimeProgress(atProgress: 0.6, onView: self.progressLabel, animator: { (animator) in
+                animator.triggerOnProgress(0.6, onView: self.progressLabel, animator: { (animator) in
                     animator.alpha(1.0).duration(0.5).easing(.OutSine)
                 })
                 
-                animator.triggerAtTimeProgress(atProgress: 0.7, onView: self.progressTriggerSlider, animator: { (animator) in
+                animator.triggerOnProgress(0.7, onView: self.progressTriggerSlider, animator: { (animator) in
                     animator.alpha(1.0).duration(0.5).easing(.OutSine)
                 })
             }

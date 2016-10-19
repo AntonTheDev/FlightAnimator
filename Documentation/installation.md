@@ -2,33 +2,38 @@
 
 ###Manual Install
 
-1. Clone the [FlightAnimator](git@github.com:AntonTheDev/flight-animator.git) repository 
-2. Add the contents of the Source Directory to the project
+1. Clone the both [CoreFlightAnimation](https://github.com/AntonTheDev/CoreFlightAnimation.git) and [FlightAnimator](https://github.com/AntonTheDev/FlightAnimator.git) repositories 
+2. Add the contents of ***/FlightAnimator/Source*** and  ***/CoreFlightAnimation/Source*** directories
 
+<br>
+
+****
 ###CocoaPods
 
 1. Edit the project's podfile, and save
 
 	```
-    pod 'FlightAnimator', '~> 0.9.1'
+    pod 'FlightAnimator', '~> 0.9.2'
 	```
 2. Install FlightAnimator by running
 
     ```
     pod install
-    ```
     
+    ```
+<br>
+**** 
 ###Carthage
 
-The installation instruction below a OSX for iOS.
+The installation instruction below for iOS and AppleTV
 
 ####Installation
 
 1. Create/Update the Cartfile with with the following
 	
 	```
-#FlightAnimator
-git "https://github.com/AntonTheDev/FlightAnimator.git" >= 0.9.1
+	#FlightAnimator
+	git "https://github.com/AntonTheDev/FlightAnimator.git" >= 0.9.2
 	```
 2. Run `carthage update`. This will fetch dependencies into a [Carthage/Checkouts][] folder, then build each one.
 3. In the application targets’ “General” settings tab, in the “Embedded Binaries” section, drag and drop each framework for use from the Carthage/Build folder on disk.
@@ -38,18 +43,23 @@ git "https://github.com/AntonTheDev/FlightAnimator.git" >= 0.9.1
 
   	```
   	/usr/local/bin/carthage copy-frameworks
+  	
   	```
   	
 6. Add the paths to the frameworks you want to use under “Input Files” within the carthage build phase as follows e.g.:
 
 	```
 	// iOS
+	$(SRCROOT)/Carthage/Build/iOS/CoreFlightAnimation.framework
  	$(SRCROOT)/Carthage/Build/iOS/FlightAnimator.framework
   	
   	or
   	
   	// tvOS
+  	$(SRCROOT)/Carthage/Build/tvOS/CoreFlightAnimation.framework
   	$(SRCROOT)/Carthage/Build/tvOS/FlightAnimator.framework
   	
   	
   	```
+
+<br>
