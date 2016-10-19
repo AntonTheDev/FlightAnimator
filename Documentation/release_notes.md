@@ -20,7 +20,8 @@
 	public func triggerOnStart(onView:, timingPriority: ,animator:)
 	public func triggerOnProgress(progress:, onView :, timingPriority :, animator:)
 	public func triggerOnValueProgress(progress:, onView:, timingPriority:, animator:)
-
+    
+    // New
 	public func triggerOnCompletion(onView:, timingPriority:, animator:)  
 
 
@@ -30,14 +31,14 @@
 	func cacheAnimation(forKey: String, timingPriority:, animator:)
 	func cacheAnimation(animation: , forKey:, timingPriority :)   
 
-
+    func applyAnimation(forKey key: String, animated : Bool = true)
+	  
 	Global Definitions
 
 	// Removed
 	registerAnimation(onView : UIView, forKey: String, timingPriority :, animator :) 
                             
 	```
-* Refactored FAAnimation and FAAnimationGroup in preparation for version 0.9.3, planning on splitting base `CoreAnimation` logic into separate repo for reusability as a module [CoreFlightAnimationFramework](https://github.com/AntonTheDev/CoreFlightAnimation)
 
 * Bug fixes:
  	- Sequencing Animations:  You can not trigger an animation by an animation on the triggering view 
