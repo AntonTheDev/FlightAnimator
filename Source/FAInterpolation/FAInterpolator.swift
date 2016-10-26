@@ -1,5 +1,5 @@
 //
-//  FAAnimatable+Interpolation.swift
+//  FAInterpolator.swift
 //  FlightAnimator-Demo
 //
 //  Created by Anton on 6/30/16.
@@ -29,23 +29,23 @@ struct FAAnimationConfig {
     static let SpringCustomBounceCount  : Int = 4
     
     static let SpringDecayMagnitudeThreshold  : CGFloat = 1.35
-
+    
     static let AnimationTimeAdjustment   : CGFloat = 2.0 * (1.0 / FAAnimationConfig.InterpolationFrameCount)
 }
 
-public struct Interpolator {
+public class FAInterpolator {
     
     var toValue : Any
     var fromValue : Any
     var previousValue : Any?
     
-    var toVector : FAVector
-    var fromVector : FAVector
+    var toVector : FAVector?
+    var fromVector : FAVector?
     var previousValueVector : FAVector?
     
     var springs : [FASpring]?
     
-    init(toValue : Any, fromValue : Any, previousValue : Any?) {
+    init(_ toValue : Any, _ fromValue : Any, relativeTo previousValue : Any?) {
         
         if let typedToValue = (toValue as? NSValue)?.typeValue(),
             let typedFromValue = (fromValue as? NSValue)?.typeValue() {
@@ -70,69 +70,100 @@ public struct Interpolator {
         }
     }
     
-    mutating func interpolatedConfiguration(duration : CGFloat, easingFunction : FAEasing) ->  (duration : Double,  values : [AnyObject])? {
-        switch easingFunction {
+    deinit {
+        previousValue = nil
+        
+        toVector = nil
+        fromVector = nil
+        previousValueVector = nil
+        
+        springs = nil
+    }
+    
+    func interpolatedConfigurationFor(animation : FABasicAnimation, relativeTo oldAnimation : FABasicAnimation?) ->  (duration : Double, easing : FAEasing,  values : [AnyObject])? {
+        
+        var easing = animation.easingFunction
+        
+        switch easing {
         case let .SpringDecay(velocity):
+            
             if springs == nil {
                 decayComponentSprings(velocity)
             }
             
-            return interpolatedSpringValues(easingFunction)
+            easing = adjustedVelocitySpring(easing, relativeTo : oldAnimation)
+            
+            let springConfig = interpolatedSpringValues(easing)
+            
+            return (duration : springConfig.duration, easing : easing, values : springConfig.values)
             
         case let .SpringCustom(velocity, frequency, damping):
             if springs == nil {
                 customComponentSprings(velocity, angularFrequency: frequency, dampingRatio: damping)
             }
-            return interpolatedSpringValues(easingFunction)
+            
+            easing = adjustedVelocitySpring(easing, relativeTo : oldAnimation)
+            
+            let springConfig = interpolatedSpringValues(easing)
+            
+            return (duration : springConfig.duration, easing : easing, values : springConfig.values)
         default:
             break
         }
         
-        let adjustedDuration = duration * relativeProgress()
-        return (Double(adjustedDuration), interpolatedParametricValues(adjustedDuration, easingFunction: easingFunction))
+        let adjustedDuration = CGFloat(animation.duration) * relativeProgress()
+        let values = interpolatedParametricValues(adjustedDuration, easingFunction: easing)
+        
+        return (duration : Double(adjustedDuration), easing :easing, values : values)
     }
     
-    public func adjustedEasingVelocity(deltaTime: CGFloat, easingFunction : FAEasing) ->  FAEasing {
+    internal func adjustedVelocitySpring(easingFunction : FAEasing, relativeTo animation : FABasicAnimation?) -> FAEasing {
         
-        var progressComponents = [CGFloat]()
+        var adjustedVelocity = zeroVelocityValue()
+        
+        if let animation = animation,
+            presentationLayer  = animation.animatingLayer?.presentationLayer(),
+            animationStartTime = animation.startTime {
+            
+            let currentTime = presentationLayer.convertTime(CACurrentMediaTime(), toLayer: animation.animatingLayer)
+            let deltaTime = CGFloat(currentTime - animationStartTime) - FAAnimationConfig.AnimationTimeAdjustment
+            
+            adjustedVelocity = self.adjustedVelocity(at : deltaTime)
+        }
         
         switch easingFunction {
         case .SpringDecay(_):
-            
-            for index in 0..<toVector.components.count {
-                progressComponents.append(springs![index].velocity(deltaTime))
-            }
-            
-            let decayVelocity = FAVector(comps : progressComponents).typeRepresentation(toValue)
-        
-            return .SpringDecay(velocity:decayVelocity)
-            
+            return .SpringDecay(velocity:adjustedVelocity)
         case let .SpringCustom(_,frequency,damping):
-            
-            for index in 0..<toVector.components.count {
-                progressComponents.append(springs![index].velocity(deltaTime))
-            }
-            
-            let springVelocity = FAVector(comps : progressComponents).typeRepresentation(toValue)
-        
-            return .SpringCustom(velocity:springVelocity ,
-                                 frequency: frequency,
-                                 ratio: damping)
+            return .SpringCustom(velocity:adjustedVelocity, frequency: frequency, ratio: damping)
         default:
-            break
+            return easingFunction
+        }
+    }
+    
+    internal func adjustedVelocity(at deltaTime : CGFloat?) -> Any {
+        
+        guard let deltaTime = deltaTime else {
+            return zeroVelocityValue()
         }
         
-        return easingFunction
+        var progressComponents = [CGFloat]()
+        
+        for index in 0..<toVectoCount {
+            progressComponents.append(springs![index].velocity(deltaTime))
+        }
+        
+        return FAVector(comps : progressComponents).typeRepresentation(toValue)
     }
 }
 
-extension Interpolator {
+extension FAInterpolator {
     
     public func valueProgress(value : Any) -> CGFloat {
         let currentVector = FAVector(value: value)
         
-        let progressedMagnitude = currentVector.magnitudeToVector(fromVector)
-        let overallMagnitude = fromVector.magnitudeToVector(toVector)
+        let progressedMagnitude = currentVector.magnitudeToVector(fromVector!)
+        let overallMagnitude = fromVector!.magnitudeToVector(toVector!)
         return progressedMagnitude / overallMagnitude
     }
     
@@ -145,8 +176,8 @@ extension Interpolator {
         var progress : CGFloat  = 1.0
         
         if previousValueVector != nil {
-            let progressedMagnitude = previousValueVector!.magnitudeToVector(fromVector)
-            let overallMagnitude = fromVector.magnitudeToVector(toVector)
+            let progressedMagnitude = previousValueVector!.magnitudeToVector(fromVector!)
+            let overallMagnitude = fromVector!.magnitudeToVector(toVector!)
             
             progress = progressedMagnitude / overallMagnitude
         }
@@ -191,32 +222,32 @@ extension Interpolator {
         
         return zeroValue
     }
-
+    
 }
 
-extension Interpolator {
+extension FAInterpolator {
     
-    private mutating func decayComponentSprings(initialVelocity: Any?) {
+    private func decayComponentSprings(initialVelocity: Any?) {
         customComponentSprings(initialVelocity,
                                angularFrequency: FAAnimationConfig.SpringDecayFrequency,
                                dampingRatio: FAAnimationConfig.SpringDecayDamping)
     }
     
-    private mutating func customComponentSprings(initialVelocity: Any?,
+    private func customComponentSprings(initialVelocity: Any?,
                                         angularFrequency: CGFloat,
                                         dampingRatio: CGFloat) {
-     
+        
         var vectorVelocity = FAVector(value :zeroVelocityValue())
         
         if let velocity = initialVelocity {
             vectorVelocity = FAVector(value :velocity)
         }
-
+        
         springs = [FASpring]()
         
-        for index in 0..<toVector.components.count {
-            let floatSpring = FASpring(finalValue   : toVector.components[index],
-                                       initialValue : fromVector.components[index],
+        for index in 0..<toVectoCount {
+            let floatSpring = FASpring(finalValue   : toVector!.components[index],
+                                       initialValue : fromVector!.components[index],
                                        positionVelocity: vectorVelocity.components[index],
                                        angularFrequency:angularFrequency,
                                        dampingRatio: dampingRatio)
@@ -226,7 +257,7 @@ extension Interpolator {
     }
 }
 
-extension Interpolator {
+extension FAInterpolator {
     
     private func interpolatedParametricValues(duration : CGFloat, easingFunction : FAEasing) -> [AnyObject] {
         var newArray = [AnyObject]()
@@ -240,7 +271,10 @@ extension Interpolator {
             animationTime += frameRateTimeUnit
             let progress = easingFunction.parametricProgress(CGFloat(animationTime / duration))
             let newValue = interpolatedValue(progress)
-            newArray.append(newValue.valueRepresentation(toValue)!)
+            if let valueRep = newValue.valueRepresentation(toValue) {
+                newArray.append(valueRep)
+            }
+            
         } while (animationTime <= duration)
         
         newArray.removeLast()
@@ -253,8 +287,8 @@ extension Interpolator {
     private func interpolatedValue(progress : CGFloat) -> FAVector {
         var progressComponents = [CGFloat]()
         
-        for index in 0..<toVector.components.count {
-            progressComponents.append(interpolateCGFloat(fromVector.components[index], end : toVector.components[index], progress: progress))
+        for index in 0..<toVectoCount {
+            progressComponents.append(interpolateCGFloat(fromVector!.components[index], end : toVector!.components[index], progress: progress))
         }
         
         return FAVector(comps: progressComponents)
@@ -272,8 +306,7 @@ extension Interpolator {
         case .SpringDecay(_):
             repeat {
                 let newValue = interpolatedSpringValue(animationTime)
-                print(newValue.magnitudeToVector(toVector))
-                animationComplete = newValue.magnitudeToVector(toVector) < FAAnimationConfig.SpringDecayMagnitudeThreshold
+                animationComplete = newValue.magnitudeToVector(toVector!) < FAAnimationConfig.SpringDecayMagnitudeThreshold
                 valueArray.append(newValue.valueRepresentation(toValue)!)
                 animationTime += frameRateTimeUnit
             } while (animationComplete == false)
@@ -283,7 +316,7 @@ extension Interpolator {
             
             repeat {
                 let newValue = interpolatedSpringValue(animationTime)
-                if floor(newValue.magnitudeToVector(toVector)) == 0.0 {
+                if floor(newValue.magnitudeToVector(toVector!)) == 0.0 {
                     bouncCount += 1
                 }
                 
@@ -294,7 +327,7 @@ extension Interpolator {
             break
         }
         
-        valueArray.append(toVector.valueRepresentation(toValue)!)
+        valueArray.append(toVector!.valueRepresentation(toValue)!)
         animationTime += frameRateTimeUnit
         
         return (Double(animationTime),  values : valueArray)
@@ -303,11 +336,23 @@ extension Interpolator {
     private func interpolatedSpringValue(deltaTime: CGFloat) -> FAVector {
         var progressComponents = [CGFloat]()
         
-        for index in 0..<toVector.components.count {
+        for index in 0..<toVectoCount {
             progressComponents.append(springs![index].updatedValue(deltaTime))
         }
         
         return FAVector(comps: progressComponents)
+    }
+    
+    var toVectoCount :Int {
+        get {
+            if let toVector = toVector {
+                return toVector.components.count
+            } else if let fromVector = fromVector {
+                return fromVector.components.count
+            } else {
+                return 0
+            }
+        }
     }
     
     /**

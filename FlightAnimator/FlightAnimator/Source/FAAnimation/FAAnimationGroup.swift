@@ -14,7 +14,7 @@ import UIKit
  */
 
 func ==(lhs:FAAnimationGroup, rhs:FAAnimationGroup) -> Bool {
-    return lhs.weakLayer == rhs.weakLayer &&
+    return lhs.animatingLayer == rhs.animatingLayer &&
         lhs.animationKey == rhs.animationKey
 }
 
@@ -188,7 +188,7 @@ public class FAAnimationGroup : FASynchronizedGroup {
      */
     public func applyFinalState(animated : Bool = false) {
         
-        if let animationLayer = weakLayer {
+        if let animationLayer = animatingLayer {
             if animated {
                 animationLayer.speed = 1.0
                 animationLayer.timeOffset = 0.0
@@ -232,8 +232,8 @@ public class FAAnimationGroup : FASynchronizedGroup {
      - parameter progress: scrub "to progress" value
      */
     private func scrubToProgress(progress : CGFloat) {
-        weakLayer?.speed = 0.0
-        weakLayer?.timeOffset = CFTimeInterval(duration * Double(progress))
+        animatingLayer?.speed = 0.0
+        animatingLayer?.timeOffset = CFTimeInterval(duration * Double(progress))
     }
 }
 
@@ -252,17 +252,17 @@ public class FASynchronizedGroup : CAAnimationGroup {
     internal var _autoreverseConfigured: Bool = false
     internal var _reverseEasingCurve: Bool = false
     
-    internal weak var weakLayer : CALayer? {
+    internal weak var animatingLayer : CALayer? {
         didSet {
             if let currentAnimations = animations {
                 for animation in currentAnimations {
                     if let customAnimation = animation as? FABasicAnimation {
-                        customAnimation.weakLayer = weakLayer
+                        customAnimation.animatingLayer = animatingLayer
                     }
                 }
             }
             
-            startTime = weakLayer?.convertTime(CACurrentMediaTime(), fromLayer: nil)
+            startTime = animatingLayer?.convertTime(CACurrentMediaTime(), fromLayer: nil)
         }
     }
 
@@ -303,7 +303,7 @@ public class FASynchronizedGroup : CAAnimationGroup {
     
     override public func copyWithZone(zone: NSZone) -> AnyObject {
         let animationGroup = super.copyWithZone(zone) as! FASynchronizedGroup
-        animationGroup.weakLayer                = weakLayer
+        animationGroup.animatingLayer                = animatingLayer
         animationGroup.startTime                = startTime
         animationGroup.animationKey             = animationKey
         animationGroup.segmentArray             = segmentArray
@@ -322,16 +322,16 @@ public class FASynchronizedGroup : CAAnimationGroup {
     
     final public func configureAnimationGroup(withLayer layer: CALayer?, animationKey key: String?) {
         animationKey = key
-        weakLayer = layer
+        animatingLayer = layer
     }
     
     final public func synchronizeAnimationGroup(withLayer layer: CALayer, animationKey key: String?) {
         
         configureAnimationGroup(withLayer: layer, animationKey: key)
         
-        if let keys = weakLayer?.animationKeys() {
+        if let keys = animatingLayer?.animationKeys() {
             for key in Array(Set(keys)) {
-                if let oldAnimation = weakLayer?.animationForKey(key) as? FAAnimationGroup {
+                if let oldAnimation = animatingLayer?.animationForKey(key) as? FAAnimationGroup {
                     oldAnimation.stopTriggerTimer()
                     _autoreverseActiveCount = oldAnimation._autoreverseActiveCount
                     synchronizeAnimations(oldAnimation)
@@ -374,7 +374,7 @@ internal extension FASynchronizedGroup {
 
         let animationGroup = FAAnimationGroup()
         animationGroup.animationKey             = animationKey! + "REVERSE"
-        animationGroup.weakLayer                = weakLayer
+        animationGroup.animatingLayer                = animatingLayer
         animationGroup.animations               = reverseAnimationArray()
         animationGroup.duration                 = duration
         animationGroup.primaryTimingPriority    = _primaryTimingPriority
@@ -383,7 +383,7 @@ internal extension FASynchronizedGroup {
         animationGroup._autoreverseActiveCount  = _autoreverseActiveCount
         animationGroup._reverseEasingCurve      = _reverseEasingCurve
        
-        if let view =  weakLayer?.owningView() {
+        if let view =  animatingLayer?.owningView() {
             let progressDelay = max(0.0 , _autoreverseDelay/duration)
             configureAnimationTrigger(animationGroup, onView: view, atTimeProgress : 1.0 + CGFloat(progressDelay))
         }
@@ -432,51 +432,63 @@ internal extension FASynchronizedGroup {
      
      - parameter oldAnimationGroup: old animation in flight
      */
-    func synchronizeAnimations(oldAnimationGroup : FAAnimationGroup?) {
-        
-        var durationArray =  [Double]()
+    internal func synchronizeAnimations(oldAnimationGroup : FAAnimationGroup?) {
         
         var oldAnimations = animationDictionaryForGroup(oldAnimationGroup)
         var newAnimations = animationDictionaryForGroup(self)
         
-        // Find all Primary Animations
-        let filteredPrimaryAnimations = newAnimations.filter({ $0.1.isPrimary == true })
-        let filteredNonPrimaryAnimations = newAnimations.filter({ $0.1.isPrimary == false })
-        
-        var primaryAnimations = [String : FABasicAnimation]()
-        var nonPrimaryAnimations = [String : FABasicAnimation]()
-        
-        for result in filteredPrimaryAnimations {
-            primaryAnimations[result.0] = result.1
-        }
-        
-        for result in filteredNonPrimaryAnimations {
-            nonPrimaryAnimations[result.0] = result.1
-        }
-        
-        //If no animation is primary, all animations become primary
-        if primaryAnimations.count == 0 {
-            primaryAnimations = newAnimations
-            nonPrimaryAnimations = [String : FABasicAnimation]()
-        }
-        
-        for key in primaryAnimations.keys {
+        for key in newAnimations.keys {
             
-            if  let newPrimaryAnimation = primaryAnimations[key] {
-                let oldAnimation : FABasicAnimation? = oldAnimations[key]
+            newAnimations[key]!.animatingLayer = animatingLayer
+            
+            if let oldAnimation = oldAnimations[key] {
+                newAnimations[key]!.synchronize(relativeTo: oldAnimation)
+            } else {
+                newAnimations[key]!.synchronize(relativeTo: nil)
+            }
+        }
+        
+        var primaryAnimations = newAnimations.filter({ $0.1.isPrimary == true })
+        let hasPrimaryAnimations : Bool = (primaryAnimations.count > 0)
+        
+        if hasPrimaryAnimations == false {
+            primaryAnimations = newAnimations.filter({ $0.1 != nil })
+        }
+        
+        let durationsArray = primaryAnimations.map({ $0.1.duration})
+        
+        switch timingPriority {
+        case .MaxTime:
+            duration = durationsArray.maxElement()!
+        case .MinTime:
+            duration = durationsArray.minElement()!
+        case .Median:
+            duration = durationsArray.sort(<)[durationsArray.count / 2]
+        case .Average:
+            duration = durationsArray.reduce(0, combine: +) / Double(durationsArray.count)
+        }
+        
+        let nonSynchronizedAnimations = newAnimations.filter({ $0.1.duration != duration })
+        
+        if hasPrimaryAnimations {
+            primaryAnimation = (primaryAnimations.filter({ $0.1.duration == duration})).first?.1
+        } else {
+            primaryAnimation = (newAnimations.filter({ $0.1.duration == duration})).first?.1
+        }
+        
+        for animation in nonSynchronizedAnimations {
+            if animation.1.keyPath != primaryAnimation?.keyPath &&
+                animation.1.duration > primaryAnimation?.duration {
                 
-                newPrimaryAnimation.synchronize(runningAnimation: oldAnimation)
                 
-                durationArray.append(newPrimaryAnimation.duration)
-                newAnimations[key] = newPrimaryAnimation
+                newAnimations[animation.1.keyPath!]!.duration = duration
+                newAnimations[animation.1.keyPath!]!.synchronize()
             }
         }
         
         animations = newAnimations.map {$1}
-        updateGroupDurationBasedOnTimePriority(durationArray)
-        
-        configureAutoreverseIfNeeded()
     }
+
     
     /**
      Updates and syncronizes animations based on timing priority 
@@ -614,7 +626,7 @@ public extension FASynchronizedGroup {
         }
         
         animationGroup?.animationKey = String(NSUUID().UUIDString)
-        animationGroup?.weakLayer = view.layer
+        animationGroup?.animatingLayer = view.layer
         
         let animationTrigger = AnimationTrigger()
         animationTrigger.isTimedBased = timeBased
