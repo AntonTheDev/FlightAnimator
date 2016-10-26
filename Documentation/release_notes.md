@@ -1,5 +1,10 @@
 #Release Notes
 
+####Version 0.9.3
+
+* Stability Updates / Performance Improvements
+* Bug Fixes for the .Average / .Median priority calculations
+
 ####Version 0.9.2
 
 * For consistency APIs have been updated,
