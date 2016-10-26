@@ -69,7 +69,7 @@ internal extension UIView {
             
             let newAnimationGroup = FAAnimationGroup()
             newAnimationGroup.animations = [newAnimation]
-            newAnimationGroup.weakLayer = layer
+            newAnimationGroup.animatingLayer = layer
             cachedAnimations![NSString(string: key)] = newAnimationGroup
         }
         else if let newAnimationGroup = animation as? FAAnimationGroup {
@@ -78,7 +78,7 @@ internal extension UIView {
                 oldAnimation.stopTriggerTimer()
             }
             
-            newAnimationGroup.weakLayer = layer
+            newAnimationGroup.animatingLayer = layer
             cachedAnimations![NSString(string: key)] = newAnimationGroup
         }
     }

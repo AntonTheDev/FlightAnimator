@@ -108,8 +108,8 @@ public class FABasicAnimation : FASynchronizedAnimation {
      - parameter progress: scrub "to progress" value
      */
     private func scrubToProgress(progress : CGFloat) {
-        weakLayer?.speed = 0.0
-        weakLayer?.timeOffset = CFTimeInterval(duration * Double(progress))
+        animatingLayer?.speed = 0.0
+        animatingLayer?.timeOffset = CFTimeInterval(duration * Double(progress))
     }
 }
 
@@ -124,7 +124,7 @@ public class FASynchronizedAnimation : CAKeyframeAnimation {
     internal var _easingFunction : FAEasing = FAEasing.Linear
     internal var _isPrimary : Bool = false
     
-    internal weak var weakLayer : CALayer?
+    internal weak var animatingLayer : CALayer?
     internal var interpolator : Interpolator?
     internal var startTime : CFTimeInterval?
     
@@ -167,7 +167,7 @@ public class FASynchronizedAnimation : CAKeyframeAnimation {
     
     override public func copyWithZone(zone: NSZone) -> AnyObject {
         let animation = super.copyWithZone(zone) as! FABasicAnimation
-        animation.weakLayer             = weakLayer
+        animation.animatingLayer             = animatingLayer
         animation.startTime             = startTime
         animation.interpolator          = interpolator
         animation._easingFunction       = _easingFunction
@@ -188,7 +188,7 @@ public class FASynchronizedAnimation : CAKeyframeAnimation {
     final public func groupRepresentation() -> FAAnimationGroup {
         let newAnimationGroup = FAAnimationGroup()
         
-        newAnimationGroup.weakLayer             = weakLayer
+        newAnimationGroup.animatingLayer             = animatingLayer
         newAnimationGroup.startTime             = startTime
       
         newAnimationGroup._autoreverse             = _autoreverse
@@ -204,7 +204,7 @@ public class FASynchronizedAnimation : CAKeyframeAnimation {
     }
     
     final public func configureAnimation(withLayer layer: CALayer?) {
-        weakLayer = layer
+        animatingLayer = layer
     }
 }
 
@@ -218,11 +218,11 @@ internal extension FASynchronizedAnimation {
     
     func synchronizeAnimationVelocity(fromValue : Any, runningAnimation : FABasicAnimation?) {
         
-        if  let presentationLayer = runningAnimation?.weakLayer?.presentationLayer(),
+        if  let presentationLayer = runningAnimation?.animatingLayer?.presentationLayer(),
             let animationStartTime = runningAnimation?.startTime,
             let oldInterpolator = runningAnimation?.interpolator {
             
-            let currentTime = presentationLayer.convertTime(CACurrentMediaTime(), toLayer: runningAnimation!.weakLayer)
+            let currentTime = presentationLayer.convertTime(CACurrentMediaTime(), toLayer: runningAnimation!.animatingLayer)
             let deltaTime = CGFloat(currentTime - animationStartTime) - FAAnimationConfig.AnimationTimeAdjustment
             
             if _easingFunction.isSpring() {
@@ -265,7 +265,7 @@ internal extension FASynchronizedAnimation {
     }
     
     func configureFromValueIfNeeded() {        
-        if let presentationLayer = (weakLayer?.presentationLayer()),
+        if let presentationLayer = (animatingLayer?.presentationLayer()),
             let presentationValue = presentationLayer.anyValueForKeyPath(keyPath!) {
             
             if let currentValue = presentationValue as? CGPoint {
@@ -291,7 +291,7 @@ internal extension FASynchronizedAnimation {
 internal extension FASynchronizedAnimation {
     
     func valueProgress() -> CGFloat {
-        if let presentationValue = (weakLayer?.presentationLayer())?.anyValueForKeyPath(keyPath!) {
+        if let presentationValue = (animatingLayer?.presentationLayer())?.anyValueForKeyPath(keyPath!) {
             return interpolator!.valueProgress(presentationValue)
         }
         
@@ -299,7 +299,7 @@ internal extension FASynchronizedAnimation {
     }
     
     func timeProgress() -> CGFloat {
-        let currentTime = weakLayer?.presentationLayer()!.convertTime(CACurrentMediaTime(), toLayer: nil)
+        let currentTime = animatingLayer?.presentationLayer()!.convertTime(CACurrentMediaTime(), toLayer: nil)
         let difference = currentTime! - startTime!
         
         return CGFloat(round(100 * (difference / duration))/100)

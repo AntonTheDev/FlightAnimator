@@ -34,7 +34,7 @@ public extension UIView {
         
         if let group = animation as? FAAnimationGroup {
             group.animationKey = key
-            group.weakLayer = layer
+            group.animatingLayer = layer
             group.primaryTimingPriority = timingPriority
             
             cachedAnimations![NSString(string: key)] = group
@@ -42,7 +42,7 @@ public extension UIView {
             
             let newGroup = FAAnimationGroup()
             newGroup.animationKey = key
-            newGroup.weakLayer = layer
+            newGroup.animatingLayer = layer
             newGroup.primaryTimingPriority = timingPriority
             newGroup.animations = [animation]
             
