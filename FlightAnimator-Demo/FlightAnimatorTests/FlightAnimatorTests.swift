@@ -22,22 +22,22 @@ class FlightAnimatorTests: XCTestCase {
     
     func testPerformanceExample() {
         // This is an example of a performance test case.
-        self.measureBlock {
+        self.measure {
             // Put the code you want to measure the time of here.
         }
     }
     
     func testFAVectorComponents() {
         
-        XCTAssertEqual(FAVector(value: CGSizeMake(10,10)).components.count, 2, "CGSize Vector has incorrectnumber of components")
-        XCTAssertEqual(FAVector(value: CGPointMake(10,10)).components.count, 2, "CGPoint Vector  has incorrectnumber of components")
-        XCTAssertEqual(FAVector(value: CGRectMake(0,0, 10, 10)).components.count, 4, "CGRect Vector has incorrectnumber of components")
+        XCTAssertEqual(FAVector(value: CGSize(width: 10,height: 10)).components.count, 2, "CGSize Vector has incorrectnumber of components")
+        XCTAssertEqual(FAVector(value: CGPoint(x: 10,y: 10)).components.count, 2, "CGPoint Vector  has incorrectnumber of components")
+        XCTAssertEqual(FAVector(value: CGRect(x: 0,y: 0, width: 10, height: 10)).components.count, 4, "CGRect Vector has incorrectnumber of components")
         XCTAssertEqual(FAVector(value: CGFloat(1.0)).components.count, 1, "CGFloat Vector has incorrectnumber of components")
         XCTAssertEqual(FAVector(value: CATransform3DIdentity).components.count, 16, "CATransform3D Vector has incorrectnumber of components")
         
-        let RGBColor = UIColor(red: 0.2, green: 0.2, blue: 0.2, alpha: 0.2).CGColor
-        let HSBColor = UIColor(hue: 0.2, saturation: 0.2, brightness: 0.2, alpha: 0.2).CGColor
-        let MonochromaticColor = UIColor(white: 0.2, alpha: 0.2).CGColor
+        let RGBColor = UIColor(red: 0.2, green: 0.2, blue: 0.2, alpha: 0.2).cgColor
+        let HSBColor = UIColor(hue: 0.2, saturation: 0.2, brightness: 0.2, alpha: 0.2).cgColor
+        let MonochromaticColor = UIColor(white: 0.2, alpha: 0.2).cgColor
         
         XCTAssertEqual(FAVector(value: RGBColor).components.count, 4, "RGBColor Vector has incorrectnumber of components")
         XCTAssertEqual(FAVector(value: HSBColor).components.count, 4, "HSBColor Vector has incorrectnumber of components")
@@ -46,8 +46,8 @@ class FlightAnimatorTests: XCTestCase {
     
     func testSizeVectorDifference() {
         
-        let sizeVectorOne = FAVector(value: CGSizeMake(10,8))
-        let sizeVectorTwo = FAVector(value: CGSizeMake(4,5))
+        let sizeVectorOne = FAVector(value: CGSize(width: 10,height: 8))
+        let sizeVectorTwo = FAVector(value: CGSize(width: 4,height: 5))
         
         let sizeVectorDifference = sizeVectorOne - sizeVectorTwo
         
@@ -61,8 +61,8 @@ class FlightAnimatorTests: XCTestCase {
     }
     
     func testPointVectorDifference() {
-        let pointVectorOne = FAVector(value: CGPointMake(10,8))
-        let pointVectorTwo = FAVector(value: CGPointMake(4,5))
+        let pointVectorOne = FAVector(value: CGPoint(x: 10,y: 8))
+        let pointVectorTwo = FAVector(value: CGPoint(x: 4,y: 5))
         
         let pointVectorDifference = pointVectorOne - pointVectorTwo
         
@@ -88,8 +88,8 @@ class FlightAnimatorTests: XCTestCase {
     }
     
     func testRectVectorDifference() {
-        let rectVectorOne = FAVector(value: CGRectMake(8, 6, 10, 8))
-        let rectVectorTwo = FAVector(value: CGRectMake(2, 3, 4, 5))
+        let rectVectorOne = FAVector(value: CGRect(x: 8, y: 6, width: 10, height: 8))
+        let rectVectorTwo = FAVector(value: CGRect(x: 2, y: 3, width: 4, height: 5))
         
         let rectVectorDifference = rectVectorOne - rectVectorTwo
         

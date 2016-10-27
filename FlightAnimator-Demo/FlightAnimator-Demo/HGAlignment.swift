@@ -9,151 +9,151 @@
 import Foundation
 import UIKit
 
-func CGCSRectGetTopLeft(rect : CGRect) -> CGPoint {
-    return CGPointMake(CGRectGetMinX(rect), CGRectGetMinY(rect))
+func CGCSRectGetTopLeft(_ rect : CGRect) -> CGPoint {
+    return CGPoint(x: rect.minX, y: rect.minY)
 }
 
-func CGCSRectGetBottomLeft(rect : CGRect) -> CGPoint {
-    return CGPointMake(CGRectGetMinX(rect), CGRectGetMaxY(rect))
+func CGCSRectGetBottomLeft(_ rect : CGRect) -> CGPoint {
+    return CGPoint(x: rect.minX, y: rect.maxY)
 }
 
-func CGCSRectGetTopRight(rect : CGRect) -> CGPoint {
-    return CGPointMake(CGRectGetMaxX(rect), CGRectGetMinY(rect))
+func CGCSRectGetTopRight(_ rect : CGRect) -> CGPoint {
+    return CGPoint(x: rect.maxX, y: rect.minY)
 }
 
-func CGCSRectGetBottomRight(rect : CGRect) -> CGPoint {
-    return CGPointMake(CGRectGetMaxX(rect), CGRectGetMaxY(rect))
+func CGCSRectGetBottomRight(_ rect : CGRect) -> CGPoint {
+    return CGPoint(x: rect.maxX, y: rect.maxY)
 }
 
-func CGCSRectEdgeInset(inputFrame : CGRect, edgeInsets : UIEdgeInsets) -> CGRect {
-    var retval :CGRect  = CGRectMake(inputFrame.origin.x + edgeInsets.left, inputFrame.origin.y + edgeInsets.top, 0, 0)
-    retval.size.width = CGRectGetWidth(inputFrame) - (edgeInsets.left + edgeInsets.right)
-    retval.size.height = CGRectGetHeight(inputFrame) - (edgeInsets.top + edgeInsets.bottom)
+func CGCSRectEdgeInset(_ inputFrame : CGRect, edgeInsets : UIEdgeInsets) -> CGRect {
+    var retval :CGRect  = CGRect(x: inputFrame.origin.x + edgeInsets.left, y: inputFrame.origin.y + edgeInsets.top, width: 0, height: 0)
+    retval.size.width = inputFrame.width - (edgeInsets.left + edgeInsets.right)
+    retval.size.height = inputFrame.height - (edgeInsets.top + edgeInsets.bottom)
     return retval
 }
 
-func CGCSRectEdgeOutset(inputFrame : CGRect, edgeInsets : UIEdgeInsets) -> CGRect {
+func CGCSRectEdgeOutset(_ inputFrame : CGRect, edgeInsets : UIEdgeInsets) -> CGRect {
     let invertedEdgeInsets : UIEdgeInsets = UIEdgeInsetsMake(-edgeInsets.top, -edgeInsets.left, -edgeInsets.bottom, -edgeInsets.right)
     return CGCSRectEdgeInset(inputFrame, edgeInsets: invertedEdgeInsets)
 }
 
-func CGCSRectCenterInRect(sourceRect : CGRect, destRect : CGRect) -> CGRect {
+func CGCSRectCenterInRect(_ sourceRect : CGRect, destRect : CGRect) -> CGRect {
     var newRect : CGRect = sourceRect
     newRect.origin.x = destRect.origin.x + (destRect.size.width - sourceRect.size.width) / 2.0
     newRect.origin.y = destRect.origin.y + (destRect.size.height - sourceRect.size.height) / 2.0
     return newRect
 }
 
-func CGCSPointVerticalCenterBetweenRect(topRect : CGRect, bottomRect : CGRect) -> CGPoint {
+func CGCSPointVerticalCenterBetweenRect(_ topRect : CGRect, bottomRect : CGRect) -> CGPoint {
     let topCenter : CGPoint = CGCSRectGetCenter(topRect)
-    let topBottomY = CGRectGetMaxY(topRect)
-    let bottomTopY = CGRectGetMinY(bottomRect)
-    return CGPointMake(topCenter.x, topBottomY + (bottomTopY - topBottomY) / 2.0)
+    let topBottomY = topRect.maxY
+    let bottomTopY = bottomRect.minY
+    return CGPoint(x: topCenter.x, y: topBottomY + (bottomTopY - topBottomY) / 2.0)
 }
 
-func CGCSRectAspectFitRatio(inRect : CGRect, maxRect : CGRect) -> CGFloat {
-    if (CGRectGetWidth(inRect) == 0 || CGRectGetHeight(inRect) == 0) {
+func CGCSRectAspectFitRatio(_ inRect : CGRect, maxRect : CGRect) -> CGFloat {
+    if (inRect.width == 0 || inRect.height == 0) {
         return 1.0
     }
     
-    let horizontalRatio = CGRectGetWidth(maxRect) / CGRectGetWidth(inRect)
-    let verticalRatio = CGRectGetHeight(maxRect) / CGRectGetHeight(inRect)
+    let horizontalRatio = maxRect.width / inRect.width
+    let verticalRatio = maxRect.height / inRect.height
     return (horizontalRatio < verticalRatio ? horizontalRatio : verticalRatio)
 }
 
-func CGCSRectAspectFit(inRect : CGRect, maxRect : CGRect) -> CGRect {
+func CGCSRectAspectFit(_ inRect : CGRect, maxRect : CGRect) -> CGRect {
     let ratio = CGCSRectAspectFitRatio(inRect, maxRect: maxRect)
-    let newSize = CGSizeMake(CGRectGetWidth(inRect) * ratio, CGRectGetHeight(inRect) * ratio)
+    let newSize = CGSize(width: inRect.width * ratio, height: inRect.height * ratio)
     
-    return CGRectMake((CGRectGetWidth(maxRect) - newSize.width) / 2.0 + maxRect.origin.x,
-                      (CGRectGetHeight(maxRect) - newSize.height) / 2.0 + maxRect.origin.y,
-                      newSize.width,
-                      newSize.height)
+    return CGRect(x: (maxRect.width - newSize.width) / 2.0 + maxRect.origin.x,
+                      y: (maxRect.height - newSize.height) / 2.0 + maxRect.origin.y,
+                      width: newSize.width,
+                      height: newSize.height)
 }
 
-func CGCSRectAspectFillRatio(inRect : CGRect, maxRect : CGRect) -> CGFloat {
-    if CGRectGetWidth(inRect) == 0 || CGRectGetHeight(inRect) == 0 {
+func CGCSRectAspectFillRatio(_ inRect : CGRect, maxRect : CGRect) -> CGFloat {
+    if inRect.width == 0 || inRect.height == 0 {
         return 1.0
     }
     
-    let horizontalRatio = CGRectGetWidth(maxRect) / CGRectGetWidth(inRect)
-    let verticalRatio = CGRectGetHeight(maxRect) / CGRectGetHeight(inRect)
+    let horizontalRatio = maxRect.width / inRect.width
+    let verticalRatio = maxRect.height / inRect.height
     return (horizontalRatio < verticalRatio ? verticalRatio : horizontalRatio)
 }
 
-func CGCSRectAspectFill(inRect : CGRect, maxRect : CGRect) -> CGRect {
+func CGCSRectAspectFill(_ inRect : CGRect, maxRect : CGRect) -> CGRect {
     let ratio = CGCSRectAspectFillRatio(inRect, maxRect: maxRect)
-    let newSize = CGSizeMake(CGRectGetWidth(inRect) * ratio, CGRectGetHeight(inRect) * ratio)
+    let newSize = CGSize(width: inRect.width * ratio, height: inRect.height * ratio)
     
-    return CGRectMake((CGRectGetWidth(maxRect) - newSize.width) / 2.0 + maxRect.origin.x,
-                      (CGRectGetHeight(maxRect) - newSize.height) / 2.0 + maxRect.origin.y,
-                      newSize.width,
-                      newSize.height)
+    return CGRect(x: (maxRect.width - newSize.width) / 2.0 + maxRect.origin.x,
+                      y: (maxRect.height - newSize.height) / 2.0 + maxRect.origin.y,
+                      width: newSize.width,
+                      height: newSize.height)
 }
 
-func CGCSRectGetCenter(inRect : CGRect) -> CGPoint {
-    return CGPointMake(ceil(inRect.origin.x + inRect.width * 0.5), ceil(inRect.origin.y + inRect.height * 0.5))
+func CGCSRectGetCenter(_ inRect : CGRect) -> CGPoint {
+    return CGPoint(x: ceil(inRect.origin.x + inRect.width * 0.5), y: ceil(inRect.origin.y + inRect.height * 0.5))
 }
 
-func alignedHorizontalOriginWithFrame(source : CGRect,  dest : CGRect, align : HGHorizontalAlign) -> CGFloat {
+func alignedHorizontalOriginWithFrame(_ source : CGRect,  dest : CGRect, align : HGHorizontalAlign) -> CGFloat {
     var origin = source.origin.x
     
     switch (align) {
-    case .Left:
+    case .left:
         origin = dest.origin.x - source.size.width;
-    case .Right:
-        origin = CGRectGetMaxX(dest);
-    case .Center:
+    case .right:
+        origin = dest.maxX;
+    case .center:
         origin = dest.origin.x + ((dest.size.width - source.size.width) / 2.0);
-    case .LeftEdge:
+    case .leftEdge:
         origin = dest.origin.x;
-    case .RightEdge:
-        origin = CGRectGetMaxX(dest) - source.size.width;
+    case .rightEdge:
+        origin = dest.maxX - source.size.width;
     }
     return round(origin)
 }
 
-func alignedVerticalOriginWithFrame(source : CGRect,  dest : CGRect, align : HGVerticalAlign) -> CGFloat {
+func alignedVerticalOriginWithFrame(_ source : CGRect,  dest : CGRect, align : HGVerticalAlign) -> CGFloat {
     var origin = source.origin.x
     
     switch (align) {
-    case .Top:
+    case .top:
         origin = dest.origin.y
-    case .Base:
-        origin = CGRectGetMaxY(dest) - source.size.height
-    case .Center:
+    case .base:
+        origin = dest.maxY - source.size.height
+    case .center:
         origin = dest.origin.y + ((dest.size.height - source.size.height) / 2.0)
-    case .Above:
+    case .above:
         origin = dest.origin.y - source.size.height
-    case .Below:
-        origin = CGRectGetMaxY(dest)
+    case .below:
+        origin = dest.maxY
     }
     return round(origin)
 }
 
 enum HGVerticalAlign {
-    case Top
-    case Base
-    case Center
-    case Above
-    case Below
+    case top
+    case base
+    case center
+    case above
+    case below
 }
 
 enum HGHorizontalAlign {
-    case Left
-    case Right
-    case Center
-    case RightEdge
-    case LeftEdge
+    case left
+    case right
+    case center
+    case rightEdge
+    case leftEdge
 }
 
 extension UIView {
     
-    func alignToView(otherView : UIView, horizontal:  HGHorizontalAlign, vertical : HGVerticalAlign , horizontalOffset : CGFloat = 0.0, verticalOffset : CGFloat = 0.0) {
+    func alignToView(_ otherView : UIView, horizontal:  HGHorizontalAlign, vertical : HGVerticalAlign , horizontalOffset : CGFloat = 0.0, verticalOffset : CGFloat = 0.0) {
         self.alignToFrame(otherView.frame, horizontal : horizontal, vertical : vertical,  horizontalOffset : horizontalOffset, verticalOffset : verticalOffset)
     }
     
-    func alignToFrame(otherFrame : CGRect,
+    func alignToFrame(_ otherFrame : CGRect,
                       horizontal       : HGHorizontalAlign,
                       vertical         : HGVerticalAlign,
                       horizontalOffset : CGFloat = 0.0,
@@ -162,22 +162,22 @@ extension UIView {
         let x = alignedHorizontalOriginWithFrame(self.frame, dest:otherFrame, align : horizontal)
         let y = alignedVerticalOriginWithFrame(self.frame, dest:otherFrame, align :  vertical)
         
-        self.frame = CGRectIntegral(CGRectMake(x + horizontalOffset, y + verticalOffset, self.frame.size.width, self.frame.size.height))
+        self.frame = CGRect(x: x + horizontalOffset, y: y + verticalOffset, width: self.frame.size.width, height: self.frame.size.height).integral
     }
     
-    func alignWithSize(newSize : CGSize,
+    func alignWithSize(_ newSize : CGSize,
                        toFrame          : CGRect,
                        horizontal       : HGHorizontalAlign,
                        vertical         : HGVerticalAlign,
                        horizontalOffset : CGFloat = 0.0,
                        verticalOffset   : CGFloat = 0.0) {
         
-        var  newRect =  CGRectMake(0,0, newSize.width, newSize.height)
+        var  newRect =  CGRect(x: 0,y: 0, width: newSize.width, height: newSize.height)
         
         newRect.origin.x = alignedHorizontalOriginWithFrame(newRect, dest:toFrame, align : horizontal) + horizontalOffset
         newRect.origin.y = alignedVerticalOriginWithFrame(newRect, dest:toFrame, align :  vertical) + verticalOffset
         
-        if CGRectEqualToRect(self.frame, CGRectIntegral(newRect)) == false {
+        if self.frame.equalTo(newRect.integral) == false {
             self.frame = newRect
         }
     }

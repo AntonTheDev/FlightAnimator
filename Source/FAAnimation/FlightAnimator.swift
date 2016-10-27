@@ -11,22 +11,22 @@ import UIKit
 
 internal let DebugTriggerLogEnabled = false
 
-public class FlightAnimator {
+open class FlightAnimator {
     
     internal weak var associatedView : UIView?
     internal var animationKey : String?
     
     var animationConfigurations = [String : PropertyAnimator]()
-    var primaryTimingPriority : FAPrimaryTimingPriority = .MaxTime
+    var primaryTimingPriority : FAPrimaryTimingPriority = .maxTime
     
-    init(withView view : UIView, forKey key: String, priority : FAPrimaryTimingPriority = .MaxTime) {
+    init(withView view : UIView, forKey key: String, priority : FAPrimaryTimingPriority = .maxTime) {
         animationKey = key
         associatedView = view
         primaryTimingPriority = priority
         configureNewGroup()
     }
     
-    private func configureNewGroup() {
+    fileprivate func configureNewGroup() {
         
         if associatedView!.cachedAnimations == nil {
             associatedView!.cachedAnimations = [NSString : FAAnimationGroup]()
@@ -44,20 +44,20 @@ public class FlightAnimator {
         associatedView!.cachedAnimations![NSString(string: animationKey!)] = newGroup
     }
     
-    internal func triggerAnimation(timingPriority : FAPrimaryTimingPriority = .MaxTime,
+    internal func triggerAnimation(_ timingPriority : FAPrimaryTimingPriority = .maxTime,
                                    timeBased : Bool,
                                    view: UIView,
                                    progress: CGFloat = 0.0,
-                                   @noescape animator: (animator : FlightAnimator) -> Void) {
+                                   animator: (_ animator : FlightAnimator) -> Void) {
 
-        let triggerKey = NSUUID().UUIDString
+        let triggerKey = UUID().uuidString
         
         if let animationGroup = associatedView!.cachedAnimations![NSString(string: animationKey!)] {
             
             let animationTrigger = AnimationTrigger()
             animationTrigger.isTimedBased = timeBased
             animationTrigger.triggerProgessValue = progress
-            animationTrigger.animationKey = triggerKey
+            animationTrigger.animationKey = triggerKey as NSString?
             animationTrigger.animatedView = view
             
             animationGroup._segmentArray.append(animationTrigger)
@@ -66,18 +66,18 @@ public class FlightAnimator {
         }
         
         let newAnimator = FlightAnimator(withView: view, forKey : triggerKey,  priority : timingPriority)
-        animator(animator : newAnimator)
+        animator(newAnimator)
     }
 }
 
-public class PropertyAnimator  {
+open class PropertyAnimator  {
     
-    private weak var associatedView : UIView?
-    private var animationKey : String?
-    private var keyPath : String?
+    fileprivate weak var associatedView : UIView?
+    fileprivate var animationKey : String?
+    fileprivate var keyPath : String?
     
     var toValue : Any
-    var easingCurve : FAEasing = .Linear
+    var easingCurve : FAEasing = .linear
     var duration : CGFloat
     var primary : Bool
     
@@ -86,7 +86,7 @@ public class PropertyAnimator  {
         associatedView = view
         keyPath = key
         toValue = value
-        easingCurve = .Linear
+        easingCurve = .linear
         duration = 0.0
         primary = false
     }
@@ -96,25 +96,25 @@ public class PropertyAnimator  {
         //print ("DEINIT PropertyAnimationConfig")
     }
     
-    public func duration(duration : CGFloat) -> PropertyAnimator {
+    @discardableResult open func duration(_ duration : CGFloat) -> PropertyAnimator {
         self.duration = duration
         updateAnimation()
         return self
     }
     
-    public func easing(easing : FAEasing) -> PropertyAnimator {
+    @discardableResult open func easing(_ easing : FAEasing) -> PropertyAnimator {
         self.easingCurve = easing
         updateAnimation()
         return self
     }
     
-    public func primary(primary : Bool) -> PropertyAnimator {
+    @discardableResult open func primary(_ primary : Bool) -> PropertyAnimator {
         self.primary = primary
         updateAnimation()
         return self
     }
     
-    private func updateAnimation() {
+    fileprivate func updateAnimation() {
         guard let animationGroup = associatedView!.cachedAnimations![NSString(string: animationKey!)] else {
             return
         }
@@ -126,15 +126,15 @@ public class PropertyAnimator  {
                 animation.easingFunction = easingCurve
                 
                 if let currentValue = toValue as? CGPoint {
-                    animation.toValue =  NSValue(CGPoint :currentValue)
+                    animation.toValue =  NSValue(cgPoint :currentValue)
                 } else  if let currentValue = toValue as? CGSize {
-                    animation.toValue = NSValue( CGSize :currentValue)
+                    animation.toValue = NSValue( cgSize :currentValue)
                 } else  if let currentValue = toValue as? CGRect {
-                    animation.toValue = NSValue( CGRect : currentValue)
+                    animation.toValue = NSValue( cgRect : currentValue)
                 } else  if let currentValue = toValue as? CGFloat {
-                    animation.toValue = currentValue
+                    animation.toValue = currentValue as AnyObject?
                 } else  if let currentValue = toValue as? CATransform3D {
-                    animation.toValue =  NSValue( CATransform3D : currentValue)
+                    animation.toValue =  NSValue( caTransform3D : currentValue)
                 } else if let currentValue = typeCastCGColor(toValue) {
                     animation.toValue = currentValue
                 }
@@ -150,20 +150,19 @@ public class PropertyAnimator  {
             }
         }
         
-        
         let animation = FABasicAnimation(keyPath: keyPath)
         animation.easingFunction = easingCurve
        
         if let currentValue = toValue as? CGPoint {
-            animation.toValue =  NSValue(CGPoint :currentValue)
+            animation.toValue =  NSValue(cgPoint :currentValue)
         } else  if let currentValue = toValue as? CGSize {
-            animation.toValue = NSValue( CGSize :currentValue)
+            animation.toValue = NSValue( cgSize :currentValue)
         } else  if let currentValue = toValue as? CGRect {
-            animation.toValue = NSValue( CGRect : currentValue)
+            animation.toValue = NSValue( cgRect : currentValue)
         } else  if let currentValue = toValue as? CGFloat {
-            animation.toValue = currentValue
+            animation.toValue = currentValue as AnyObject?
         } else  if let currentValue = toValue as? CATransform3D {
-            animation.toValue =  NSValue( CATransform3D : currentValue)
+            animation.toValue =  NSValue( caTransform3D : currentValue)
         } else if let currentValue = typeCastCGColor(toValue) {
             animation.toValue = currentValue
         }

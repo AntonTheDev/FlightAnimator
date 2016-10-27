@@ -12,16 +12,16 @@ import UIKit
 public extension UIView {
     
     func cacheAnimation(forKey key: String,
-                        timingPriority : FAPrimaryTimingPriority = .MaxTime,
-                        @noescape animator : (animator : FlightAnimator) -> Void ) {
+                        timingPriority : FAPrimaryTimingPriority = .maxTime,
+                        animator : (_ animator : FlightAnimator) -> Void ) {
         
         let newAnimator = FlightAnimator(withView: self, forKey : key, priority : timingPriority)
-        animator(animator : newAnimator)
+        animator(newAnimator)
     }
     
-    func cacheAnimation(animation animation: Any,
+    func cacheAnimation(animation: Any,
                         forKey key: String,
-                        timingPriority : FAPrimaryTimingPriority = .MaxTime) {
+                        timingPriority : FAPrimaryTimingPriority = .maxTime) {
         
         if self.cachedAnimations == nil {
             self.cachedAnimations = [NSString : FAAnimationGroup]()
@@ -54,7 +54,7 @@ public extension UIView {
                         animated : Bool = true) {
         
         if let cachedAnimationsArray = cachedAnimations,
-            let animation = cachedAnimationsArray[key] {
+            let animation = cachedAnimationsArray[key as NSString] {
             animation.applyFinalState(animated)
         }
     }

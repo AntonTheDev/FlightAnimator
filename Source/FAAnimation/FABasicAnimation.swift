@@ -11,15 +11,15 @@ import UIKit
 
 //MARK: - FABasicAnimation
 
-public class FABasicAnimation : CAKeyframeAnimation {
+open class FABasicAnimation : CAKeyframeAnimation {
     
-    public weak var animatingLayer : CALayer?
+    open weak var animatingLayer : CALayer?
     
-    public var toValue: AnyObject?
-    public var fromValue: AnyObject?
+    open var toValue: AnyObject?
+    open var fromValue: AnyObject?
     
-    public var easingFunction : FAEasing = .Linear
-    public var isPrimary : Bool = false
+    open var easingFunction : FAEasing = .linear
+    open var isPrimary : Bool = false
     
     internal var interpolator :  FAInterpolator?
     internal var startTime : CFTimeInterval?
@@ -45,12 +45,12 @@ public class FABasicAnimation : CAKeyframeAnimation {
         
         calculationMode = kCAAnimationLinear
         fillMode = kCAFillModeForwards
-        removedOnCompletion = true
+        isRemovedOnCompletion = true
         values = [AnyObject]()
     }
     
-    override public func copyWithZone(zone: NSZone) -> AnyObject {
-        let animation = super.copyWithZone(zone) as! FABasicAnimation
+    override open func copy(with zone: NSZone?) -> Any {
+        let animation = super.copy(with: zone) as! FABasicAnimation
         
         animation.animatingLayer            = animatingLayer
         
@@ -86,20 +86,20 @@ internal extension FABasicAnimation {
     
 
     internal func synchronizeFromValue() {
-        if let presentationLayer = animatingLayer?.presentationLayer(),
+        if let presentationLayer = animatingLayer?.presentation(),
 
             let presentationValue = presentationLayer.anyValueForKeyPath(keyPath!) {
             
             if let currentValue = presentationValue as? CGPoint {
-                fromValue = NSValue(CGPoint : currentValue)
+                fromValue = NSValue(cgPoint : currentValue)
             } else  if let currentValue = presentationValue as? CGSize {
-                fromValue = NSValue(CGSize : currentValue)
+                fromValue = NSValue(cgSize : currentValue)
             } else  if let currentValue = presentationValue as? CGRect {
-                fromValue = NSValue(CGRect : currentValue)
+                fromValue = NSValue(cgRect : currentValue)
             } else  if let currentValue = presentationValue as? CGFloat {
-                fromValue = NSNumber(float : Float(currentValue))
+                fromValue = NSNumber(value: Float(currentValue) as Float)
             } else  if let currentValue = presentationValue as? CATransform3D {
-                fromValue = NSValue(CATransform3D : currentValue)
+                fromValue = NSValue(caTransform3D : currentValue)
             } else if let currentValue = typeCastCGColor(presentationValue) {
                 fromValue = currentValue
             }
@@ -123,15 +123,15 @@ internal extension FABasicAnimation {
         
         print("timingFunction has no effect, converting to 'easingFunction' property\n")
         
-        switch timingFunction?.valueForKey("name") as! String {
+        switch timingFunction?.value(forKey: "name") as! String {
         case kCAMediaTimingFunctionEaseIn:
-            easingFunction = .InCubic
+            easingFunction = .inCubic
         case kCAMediaTimingFunctionEaseOut:
-            easingFunction = .OutCubic
+            easingFunction = .outCubic
         case kCAMediaTimingFunctionEaseInEaseOut:
-            easingFunction = .InOutCubic
+            easingFunction = .inOutCubic
         default:
-            easingFunction = .SmoothStep
+            easingFunction = .smoothStep
         }
     }
 }
@@ -142,7 +142,7 @@ internal extension FABasicAnimation {
 internal extension FABasicAnimation {
     
     func valueProgress() -> CGFloat {
-        if let presentationValue = animatingLayer?.presentationLayer()?.anyValueForKeyPath(keyPath!),
+        if let presentationValue = animatingLayer?.presentation()?.anyValueForKeyPath(keyPath!),
             let interpolator = interpolator {
             return interpolator.valueProgress(presentationValue)
         }
@@ -151,8 +151,8 @@ internal extension FABasicAnimation {
     }
     
     func timeProgress() -> CGFloat {
-        if let presentationLayer = animatingLayer?.presentationLayer() {
-            let currentTime = presentationLayer.convertTime(CACurrentMediaTime(), toLayer: nil)
+        if let presentationLayer = animatingLayer?.presentation() {
+            let currentTime = presentationLayer.convertTime(CACurrentMediaTime(), to: nil)
             let difference = currentTime - startTime!
             
             return CGFloat(round(100 * (difference / duration))/100)

@@ -5,17 +5,17 @@ class ViewController: UIViewController {
     
     var animConfig = AnimationConfiguration()
     
-    static let quareEdgeLength = (UIScreen.mainScreen().bounds.width / 3.0) //- 102.0) / 4.0
-    let buttonSize = CGSizeMake(quareEdgeLength, quareEdgeLength)
+    static let quareEdgeLength = (UIScreen.main.bounds.width / 3.0) //- 102.0) / 4.0
+    let buttonSize = CGSize(width: quareEdgeLength, height: quareEdgeLength)
     
     var panRecognizer : UIPanGestureRecognizer?
-    var initialCenter : CGPoint = CGPointZero
-    var lastToFrame  = CGRectZero
+    var initialCenter : CGPoint = CGPoint.zero
+    var lastToFrame  = CGRect.zero
     override func viewDidLoad() {
         super.viewDidLoad()
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setupInterface()
         layoutInterface()
@@ -25,7 +25,7 @@ class ViewController: UIViewController {
         panRecognizer = UIPanGestureRecognizer(target:self, action: #selector(ViewController.respondToPanRecognizer(_:)))
         dragView.addGestureRecognizer(panRecognizer!)
         
-        gradient.colors = [ UIColor(rgba: "#007368").CGColor, UIColor(rgba: "#00a781").CGColor]
+        gradient.colors = [ UIColor(rgba: "#007368").cgColor, UIColor(rgba: "#00a781").cgColor]
         gradient.frame = view.bounds
         
         view.layer.addSublayer(gradient)
@@ -59,132 +59,132 @@ class ViewController: UIViewController {
     func layoutInterface() {
         
         dimmerView.frame = view.bounds
-        configView.frame = CGRectMake(20, self.view.bounds.height + 20, self.view.bounds.width - 40, self.view.bounds.height - 40)
-        closeButton.alignWithSize(CGSizeMake(200, 50),
+        configView.frame = CGRect(x: 20, y: self.view.bounds.height + 20, width: self.view.bounds.width - 40, height: self.view.bounds.height - 40)
+        closeButton.alignWithSize(CGSize(width: 200, height: 50),
                                   toFrame: configView.bounds,
-                                  horizontal: HGHorizontalAlign.Center,
-                                  vertical: HGVerticalAlign.Base,
+                                  horizontal: HGHorizontalAlign.center,
+                                  vertical: HGVerticalAlign.base,
                                   verticalOffset : 0)
         
-        let animateTopButtonSize = CGSizeMake(UIScreen.mainScreen().bounds.width - 100, 50)
+        let animateTopButtonSize = CGSize(width: UIScreen.main.bounds.width - 100, height: 50)
         
         topLeftButton.alignWithSize(buttonSize,
                                     toFrame: view.bounds,
-                                    horizontal: HGHorizontalAlign.LeftEdge,
-                                    vertical: HGVerticalAlign.Top)
+                                    horizontal: HGHorizontalAlign.leftEdge,
+                                    vertical: HGVerticalAlign.top)
         
         topCenterButton.alignWithSize(buttonSize,
                                       toFrame: view.bounds,
-                                      horizontal: HGHorizontalAlign.Center,
-                                      vertical: HGVerticalAlign.Top)
+                                      horizontal: HGHorizontalAlign.center,
+                                      vertical: HGVerticalAlign.top)
         topRightButton.alignWithSize(buttonSize,
                                      toFrame: view.bounds,
-                                     horizontal: HGHorizontalAlign.RightEdge,
-                                     vertical: HGVerticalAlign.Top)
+                                     horizontal: HGHorizontalAlign.rightEdge,
+                                     vertical: HGVerticalAlign.top)
         
         centerLeftButton.alignWithSize(buttonSize,
                                        toFrame: topLeftButton.frame,
-                                       horizontal: HGHorizontalAlign.Center,
-                                       vertical: HGVerticalAlign.Below)
+                                       horizontal: HGHorizontalAlign.center,
+                                       vertical: HGVerticalAlign.below)
         
         centerCenterButton.alignWithSize(buttonSize,
                                          toFrame: topCenterButton.frame,
-                                         horizontal: HGHorizontalAlign.Center,
-                                         vertical: HGVerticalAlign.Below)
+                                         horizontal: HGHorizontalAlign.center,
+                                         vertical: HGVerticalAlign.below)
         
         centerRightButton.alignWithSize(buttonSize,
                                         toFrame: topRightButton.frame,
-                                        horizontal: HGHorizontalAlign.Center,
-                                        vertical: HGVerticalAlign.Below)
+                                        horizontal: HGHorizontalAlign.center,
+                                        vertical: HGVerticalAlign.below)
         
         bottomLeftButton.alignWithSize(buttonSize,
                                        toFrame: centerLeftButton.frame,
-                                       horizontal: HGHorizontalAlign.Center,
-                                       vertical: HGVerticalAlign.Below)
+                                       horizontal: HGHorizontalAlign.center,
+                                       vertical: HGVerticalAlign.below)
         
         bottomCenterButton.alignWithSize(buttonSize,
                                          toFrame: centerCenterButton.frame,
-                                         horizontal: HGHorizontalAlign.Center,
-                                         vertical: HGVerticalAlign.Below)
+                                         horizontal: HGHorizontalAlign.center,
+                                         vertical: HGVerticalAlign.below)
         
         bottomRightButton.alignWithSize(buttonSize,
                                         toFrame: centerRightButton.frame,
-                                        horizontal: HGHorizontalAlign.Center,
-                                        vertical: HGVerticalAlign.Below)
+                                        horizontal: HGHorizontalAlign.center,
+                                        vertical: HGVerticalAlign.below)
         
         animateToBottomButton.alignWithSize(animateTopButtonSize,
                                             toFrame:view.bounds,
-                                            horizontal: HGHorizontalAlign.LeftEdge,
-                                            vertical: HGVerticalAlign.Base,
+                                            horizontal: HGHorizontalAlign.leftEdge,
+                                            vertical: HGVerticalAlign.base,
                                             horizontalOffset: 0)
         
         animateToTopButton.alignWithSize(animateTopButtonSize,
                                          toFrame: animateToBottomButton.frame,
-                                         horizontal: HGHorizontalAlign.LeftEdge,
-                                         vertical: HGVerticalAlign.Above,
+                                         horizontal: HGHorizontalAlign.leftEdge,
+                                         vertical: HGVerticalAlign.above,
                                          horizontalOffset: 0)
         
-        let bottomBottomSize = CGSizeMake(212, 212)
+        let bottomBottomSize = CGSize(width: 212, height: 212)
         
         bottomBottomCenterButton.alignWithSize(bottomBottomSize,
                                                toFrame: animateToTopButton.frame,
-                                               horizontal: HGHorizontalAlign.Center,
-                                               vertical: HGVerticalAlign.Above,
+                                               horizontal: HGHorizontalAlign.center,
+                                               vertical: HGVerticalAlign.above,
                                                horizontalOffset: 50)
         
         bottomBottomLeftButton.alignWithSize(buttonSize,
                                              toFrame: animateToTopButton.frame,
-                                             horizontal: HGHorizontalAlign.LeftEdge,
-                                             vertical: HGVerticalAlign.Above,
+                                             horizontal: HGHorizontalAlign.leftEdge,
+                                             vertical: HGVerticalAlign.above,
                                              horizontalOffset:0)
         
         
         
-        settingsButton.alignWithSize(CGSizeMake(100, 100),
+        settingsButton.alignWithSize(CGSize(width: 100, height: 100),
                                      toFrame: animateToTopButton.frame,
-                                     horizontal: HGHorizontalAlign.Right,
-                                     vertical: HGVerticalAlign.Top)
+                                     horizontal: HGHorizontalAlign.right,
+                                     vertical: HGVerticalAlign.top)
         
         bottomBottomRightButton.alignWithSize(buttonSize,
                                               toFrame: settingsButton.frame,
-                                              horizontal: HGHorizontalAlign.RightEdge,
-                                              vertical: HGVerticalAlign.Above,
+                                              horizontal: HGHorizontalAlign.rightEdge,
+                                              vertical: HGVerticalAlign.above,
                                               horizontalOffset: 0)
         
         dragView.frame = topCenterButton.frame
         dragView2.frame = bottomCenterButton.frame
         
         lastToFrame = dragView.frame
-        separator.alignWithSize(CGSizeMake(view.bounds.width, 1),
+        separator.alignWithSize(CGSize(width: view.bounds.width, height: 1),
                                 toFrame: bottomCenterButton.frame,
-                                horizontal: HGHorizontalAlign.Center,
-                                vertical: HGVerticalAlign.Below,
+                                horizontal: HGHorizontalAlign.center,
+                                vertical: HGVerticalAlign.below,
                                 verticalOffset :0)
         
-        titleLabel.alignWithSize(CGSizeMake(300, 50),
+        titleLabel.alignWithSize(CGSize(width: 300, height: 50),
                                  toFrame: separator.frame,
-                                 horizontal: HGHorizontalAlign.Center,
-                                 vertical: HGVerticalAlign.Center,
+                                 horizontal: HGHorizontalAlign.center,
+                                 vertical: HGVerticalAlign.center,
                                  verticalOffset : 120)
         
         
         
     }
     
-    func respondToPanRecognizer(recognizer : UIPanGestureRecognizer) {
+    func respondToPanRecognizer(_ recognizer : UIPanGestureRecognizer) {
         switch recognizer.state {
-        case .Began:
+        case .began:
             self.initialCenter = self.dragView.center
             dragView.layer.removeAllAnimations()
-        case .Changed:
-            let translationPoint = recognizer.translationInView(view)
+        case .changed:
+            let translationPoint = recognizer.translation(in: view)
             var adjustedCenter = self.initialCenter
             adjustedCenter.y += translationPoint.y
             adjustedCenter.x += translationPoint.x
             self.dragView.center = adjustedCenter
-        case .Ended:
-            let finalFrame = CGRectMake(0, 0, UIScreen.mainScreen().bounds.width, 240)
-            let currentVelocity = recognizer.velocityInView(view)
+        case .ended:
+            let finalFrame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 240)
+            let currentVelocity = recognizer.velocity(in: view)
             
             finalizePanAnimation(finalFrame, velocity: currentVelocity)
             lastToFrame = finalFrame
@@ -195,51 +195,51 @@ class ViewController: UIViewController {
     
     lazy var separator: UIView = {
         var view = UIView()
-        view.backgroundColor = UIColor.whiteColor()
+        view.backgroundColor = UIColor.white
         return view
     }()
     
     lazy var dragView: UIView = {
-        var view = UIView(frame : CGRectZero)
+        var view = UIView(frame : CGRect.zero)
         view.alpha = 1.0
         view.backgroundColor = UIColor(rgba: "#006258")
         return view
     }()
     
     lazy var dragView2: UIView = {
-        var view = UIView(frame : CGRectZero)
+        var view = UIView(frame : CGRect.zero)
         view.alpha = 0.0
-        view.hidden =  true
+        view.isHidden =  true
         view.backgroundColor = UIColor(rgba: "#006258")
         return view
     }()
     
     lazy var settingsButton: UIButton = {
         var button = UIButton()
-        button.setImage(UIImage(named:"settingsIcon"), forState: .Normal)
+        button.setImage(UIImage(named:"settingsIcon"), for: UIControlState())
         button.imageEdgeInsets = UIEdgeInsetsMake(20, 20, 20, 20)
         button.backgroundColor = UIColor(rgba: "#2364c6")
-        button.addTarget(self, action: #selector(ViewController.tappedShowConfig), forControlEvents: .TouchUpInside)
+        button.addTarget(self, action: #selector(ViewController.tappedShowConfig), for: .touchUpInside)
         return button
     }()
     
     lazy var closeButton: UIButton = {
         var button = UIButton()
         button.imageEdgeInsets = UIEdgeInsetsMake(20, 20, 20, 20)
-        button.setTitle("▼", forState: .Normal)
-        button.backgroundColor = UIColor.clearColor()
-        button.setTitleColor(UIColor.whiteColor(), forState: .Normal)
-        button.addTarget(self, action: #selector(ViewController.tappedCloseConfig), forControlEvents: .TouchUpInside)
+        button.setTitle("▼", for: UIControlState())
+        button.backgroundColor = UIColor.clear
+        button.setTitleColor(UIColor.white, for: UIControlState())
+        button.addTarget(self, action: #selector(ViewController.tappedCloseConfig), for: .touchUpInside)
         return button
     }()
     
     lazy var titleLabel: UILabel = {
         var label = UILabel()
-        label.textColor = UIColor.whiteColor()
+        label.textColor = UIColor.white
         label.text = "Panable Area\n\nTap here to pan view"
-        label.backgroundColor = UIColor.clearColor()
+        label.backgroundColor = UIColor.clear
         label.font = UIFont(name: "Helvetica", size: 13)
-        label.textAlignment = .Center
+        label.textAlignment = .center
         label.numberOfLines = 3
         return label
     }()
@@ -281,31 +281,31 @@ class ViewController: UIViewController {
     }()
     
     lazy var animateToTopButton: UIButton = {
-        let button = UIButton(type: .Custom)
-        button.setTitle("   ▲      Top and Expand                  ".uppercaseString, forState: .Normal)
+        let button = UIButton(type: .custom)
+        button.setTitle("   ▲      Top and Expand                  ".uppercased(), for: UIControlState())
         
         button.backgroundColor = UIColor(rgba: "#2364c6")
-        button.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        button.setTitleColor(UIColor.white, for: UIControlState())
         button.titleLabel?.font = UIFont(name: "Helvetica", size: 11)
         button.titleLabel?.numberOfLines = 3
-        button.titleLabel?.textAlignment = .Left
+        button.titleLabel?.textAlignment = .left
         button.showsTouchWhenHighlighted = true
-        button.addTarget(self, action:  #selector(ViewController.animateToTop), forControlEvents: .TouchUpInside)
+        button.addTarget(self, action:  #selector(ViewController.animateToTop), for: .touchUpInside)
         return button
     }()
     
     lazy var animateToBottomButton: UIButton = {
         
-        let button = UIButton(type: .Custom)
-        button.setTitle("   ▼      Bottom and Expand          ".uppercaseString, forState: .Normal)
+        let button = UIButton(type: .custom)
+        button.setTitle("   ▼      Bottom and Expand          ".uppercased(), for: UIControlState())
         
         button.backgroundColor = UIColor(rgba: "#2364c6")
-        button.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        button.setTitleColor(UIColor.white, for: UIControlState())
         button.titleLabel?.font = UIFont(name: "Helvetica", size: 11)
         button.titleLabel?.numberOfLines = 3
-        button.titleLabel?.textAlignment = .Left
+        button.titleLabel?.textAlignment = .left
         button.showsTouchWhenHighlighted = true
-        button.addTarget(self, action:  #selector(ViewController.animateToBottom), forControlEvents: .TouchUpInside)
+        button.addTarget(self, action:  #selector(ViewController.animateToBottom), for: .touchUpInside)
         return button
     }()
     
@@ -322,17 +322,17 @@ class ViewController: UIViewController {
         return self.newButton(withTitle: "", action: #selector(ViewController.bottomCenter))
     }()
     
-    func newButton(withTitle title : String , action: Selector, backgroundColor : UIColor = UIColor.clearColor(), textColor : UIColor = UIColor.whiteColor()) -> UIButton {
-        let button = UIButton(type: .Custom)
-        button.setTitle(title, forState: .Normal)
+    func newButton(withTitle title : String , action: Selector, backgroundColor : UIColor = UIColor.clear, textColor : UIColor = UIColor.white) -> UIButton {
+        let button = UIButton(type: .custom)
+        button.setTitle(title, for: UIControlState())
         
         button.backgroundColor = backgroundColor
-        button.setTitleColor(textColor, forState: .Normal)
+        button.setTitleColor(textColor, for: UIControlState())
         button.titleLabel?.font = UIFont(name: "Helvetica", size: 11)
         button.titleLabel?.numberOfLines = 3
-        button.titleLabel?.textAlignment = .Center
+        button.titleLabel?.textAlignment = .center
         button.showsTouchWhenHighlighted = true
-        button.addTarget(self, action: action, forControlEvents: .TouchUpInside)
+        button.addTarget(self, action: action, for: .touchUpInside)
         return button
     }
     
@@ -344,7 +344,7 @@ class ViewController: UIViewController {
         var view = ConfigurationView()
         view.interactionDelegate = self
         view.cellDelegate = self
-        view.layer.borderColor = UIColor.lightGrayColor().CGColor
+        view.layer.borderColor = UIColor.lightGray.cgColor
         view.layer.borderWidth = 1.0
         view.layer.cornerRadius = 4.0
         view.alpha = 1.0
@@ -353,7 +353,7 @@ class ViewController: UIViewController {
     
     lazy var dimmerView: UIView = {
         var view = UIView()
-        view.backgroundColor = UIColor.blackColor()
+        view.backgroundColor = UIColor.black
         view.alpha = 0.0
         return view
     }()
@@ -362,46 +362,46 @@ class ViewController: UIViewController {
 extension ViewController {
     
     func animateToTop() {
-        let finalFrame = CGRectMake(0, 0, UIScreen.mainScreen().bounds.width, 240)
+        let finalFrame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 240)
         animateView(finalFrame)
     }
     
     func animateToBottom() {
         let bottomButtonOffset : CGFloat = 100.0
-        let finalFrame = CGRectMake(0, UIScreen.mainScreen().bounds.height - 240.0 - bottomButtonOffset, UIScreen.mainScreen().bounds.width, 240)
+        let finalFrame = CGRect(x: 0, y: UIScreen.main.bounds.height - 240.0 - bottomButtonOffset, width: UIScreen.main.bounds.width, height: 240)
         animateView(finalFrame)
     }
     
-    func degree2radian(a:CGFloat)->CGFloat {
+    func degree2radian(_ a:CGFloat)->CGFloat {
         let b = CGFloat(M_PI) * a/180
         return b
     }
     
-    func toButtonRect(sender : UIButton) {
+    func toButtonRect(_ sender : UIButton) {
         animateView(sender.frame)
     }
     
-    func topRight(sender : UIButton) {
+    func topRight(_ sender : UIButton) {
         animateView(sender.frame)
     }
     
-    func topLeft(sender : UIButton) {
+    func topLeft(_ sender : UIButton) {
         animateView(sender.frame, toAlpha : 0.0)
     }
     
-    func topCenter(sender : UIButton) {
+    func topCenter(_ sender : UIButton) {
         animateView(sender.frame)
     }
     
-    func centerRight(sender : UIButton) {
+    func centerRight(_ sender : UIButton) {
         animateView(sender.frame)
     }
     
-    func centerLeft(sender : UIButton) {
+    func centerLeft(_ sender : UIButton) {
         animateView(sender.frame)
     }
     
-    func centerCenter(sender : UIButton) {
+    func centerCenter(_ sender : UIButton) {
         let initialFrame = sender.frame
         
         let initialTransform = CATransform3DIdentity
@@ -411,15 +411,15 @@ extension ViewController {
         animateView(initialFrame, transform : rotateTransform)
     }
     
-    func bottomRight(sender : UIButton) {
+    func bottomRight(_ sender : UIButton) {
         animateView(sender.frame)
     }
     
-    func bottomLeft(sender : UIButton) {
+    func bottomLeft(_ sender : UIButton) {
         animateView(sender.frame)
     }
     
-    func bottomCenter(sender : UIButton) {
+    func bottomCenter(_ sender : UIButton) {
         animateView(sender.frame)
     }
     
@@ -427,21 +427,21 @@ extension ViewController {
 
 extension ViewController : ConfigurationViewDelegate, CurveCollectionViewCellDelegate {
     
-    func didUpdateTriggerType(type : Int) {
+    func didUpdateTriggerType(_ type : Int) {
         animConfig.triggerType = type
     }
     
-    func didUpdateTriggerProgressPriority(progress : CGFloat) {
+    func didUpdateTriggerProgressPriority(_ progress : CGFloat) {
         animConfig.triggerProgress = progress
     }
     
-    func selectedTimingPriority(priority : FAPrimaryTimingPriority) {
+    func selectedTimingPriority(_ priority : FAPrimaryTimingPriority) {
         animConfig.primaryTimingPriority = priority
     }
     
-    func cell(cell : CurveSelectionCollectionViewCell , didSelectEasing function: FAEasing) {
-        if let index = self.configView.contentCollectionView.indexPathForCell(cell) {
-            switch index.row {
+    func cell(_ cell : CurveSelectionCollectionViewCell , didSelectEasing function: FAEasing) {
+        if let index = self.configView.contentCollectionView.indexPath(for: cell) {
+            switch (index as NSIndexPath).row {
             case 0:
                 //size
                 animConfig.sizeFunction = function
@@ -458,9 +458,9 @@ extension ViewController : ConfigurationViewDelegate, CurveCollectionViewCellDel
         }
     }
     
-    func currentPrimaryValue(cell : CurveSelectionCollectionViewCell) -> Bool {
-        if let index = self.configView.contentCollectionView.indexPathForCell(cell) {
-            switch index.row {
+    func currentPrimaryValue(_ cell : CurveSelectionCollectionViewCell) -> Bool {
+        if let index = self.configView.contentCollectionView.indexPath(for: cell) {
+            switch (index as NSIndexPath).row {
             case 0:
                 //size
                 return animConfig.sizePrimary
@@ -480,9 +480,9 @@ extension ViewController : ConfigurationViewDelegate, CurveCollectionViewCellDel
     }
     
     
-    func currentEAsingFuntion(cell : CurveSelectionCollectionViewCell) -> FAEasing {
-        if let index = self.configView.contentCollectionView.indexPathForCell(cell) {
-            switch index.row {
+    func currentEAsingFuntion(_ cell : CurveSelectionCollectionViewCell) -> FAEasing {
+        if let index = self.configView.contentCollectionView.indexPath(for: cell) {
+            switch (index as NSIndexPath).row {
             case 0:
                 //size
                 return animConfig.sizeFunction
@@ -498,13 +498,13 @@ extension ViewController : ConfigurationViewDelegate, CurveCollectionViewCellDel
             }
         }
         
-        return .Linear
+        return .linear
     }
     
     
-    func cell(cell : CurveSelectionCollectionViewCell , didSelectPrimary isPrimary : Bool) {
-        if let index = self.configView.contentCollectionView.indexPathForCell(cell) {
-            switch index.row {
+    func cell(_ cell : CurveSelectionCollectionViewCell , didSelectPrimary isPrimary : Bool) {
+        if let index = self.configView.contentCollectionView.indexPath(for: cell) {
+            switch (index as NSIndexPath).row {
             case 0:
                 //size
                 animConfig.sizePrimary = isPrimary
@@ -522,7 +522,7 @@ extension ViewController : ConfigurationViewDelegate, CurveCollectionViewCellDel
     }
     
     
-    func currentPrimaryFlagValue(atIndex : Int) -> Bool {
+    func currentPrimaryFlagValue(_ atIndex : Int) -> Bool {
         switch atIndex {
         case 0:
             //size
@@ -539,7 +539,7 @@ extension ViewController : ConfigurationViewDelegate, CurveCollectionViewCellDel
         }
     }
     
-    func currentEAsingFuntion(atIndex : Int) -> FAEasing {
+    func currentEAsingFuntion(_ atIndex : Int) -> FAEasing {
         switch atIndex {
         case 0:
             //size
@@ -556,36 +556,36 @@ extension ViewController : ConfigurationViewDelegate, CurveCollectionViewCellDel
         }
     }
     
-    func configCellDidSelectEasingFuntion(function: FAEasing, propertyType : PropertyConfigType, functionTitle: String) {
+    func configCellDidSelectEasingFuntion(_ function: FAEasing, propertyType : PropertyConfigType, functionTitle: String) {
         
         switch propertyType {
-        case .Bounds:
+        case .bounds:
             animConfig.sizeFunction = function
-        case .Position:
+        case .position:
             animConfig.positionFunction = function
-        case .Alpha:
+        case .alpha:
             animConfig.alphaFunction = function
-        case .Transform:
+        case .transform:
             animConfig.transformFunction = function
         }
     }
     
-    func toggleSecondaryView(enabled : Bool) {
+    func toggleSecondaryView(_ enabled : Bool) {
         self.animConfig.enableSecondaryView = enabled
         
         self.dragView2.alpha = enabled ? 1.0 : 0.0
-        self.dragView2.hidden = !enabled
+        self.dragView2.isHidden = !enabled
     }
     
-    func primaryValueFor(propertyType : PropertyConfigType) -> Bool {
+    func primaryValueFor(_ propertyType : PropertyConfigType) -> Bool {
         switch propertyType {
-        case .Bounds:
+        case .bounds:
             return animConfig.sizePrimary
-        case .Position:
+        case .position:
             return animConfig.positionPrimary
-        case .Alpha:
+        case .alpha:
             return animConfig.alphaPrimary
-        case .Transform:
+        case .transform:
             return animConfig.transformPrimary
         }
     }

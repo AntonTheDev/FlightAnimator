@@ -11,16 +11,16 @@ import UIKit
 
 extension NSValue {    
    final public func typeValue() -> Any? {
-        let type = String.fromCString(self.objCType) ?? ""
+        let type = String(cString: self.objCType)
     
         if type.hasPrefix("{CGPoint") {
-            return self.CGPointValue()
+            return self.cgPointValue
         } else if type.hasPrefix("{CGSize") {
-            return self.CGSizeValue()
+            return self.cgSizeValue
         } else if type.hasPrefix("{CGRect") {
-            return self.CGRectValue()
+            return self.cgRectValue
         } else if type.hasPrefix("{CATransform3D") {
-            return self.CATransform3DValue
+            return self.caTransform3DValue
         } else {
             return self
         }

@@ -10,11 +10,11 @@ import Foundation
 import UIKit
 
 protocol CurveCollectionViewCellDelegate : class {
-    func cell(cell : CurveSelectionCollectionViewCell , didSelectEasing easing: FAEasing)
-    func cell(cell : CurveSelectionCollectionViewCell , didSelectPrimary isPrimary: Bool)
+    func cell(_ cell : CurveSelectionCollectionViewCell , didSelectEasing easing: FAEasing)
+    func cell(_ cell : CurveSelectionCollectionViewCell , didSelectPrimary isPrimary: Bool)
    
-    func currentPrimaryValue(cell : CurveSelectionCollectionViewCell) -> Bool
-    func currentEAsingFuntion(cell : CurveSelectionCollectionViewCell) -> FAEasing
+    func currentPrimaryValue(_ cell : CurveSelectionCollectionViewCell) -> Bool
+    func currentEAsingFuntion(_ cell : CurveSelectionCollectionViewCell) -> FAEasing
 }
 
 class CurveSelectionCollectionViewCell : UICollectionViewCell {
@@ -25,16 +25,16 @@ class CurveSelectionCollectionViewCell : UICollectionViewCell {
         }
     }
     
-    var propertyConfigType : PropertyConfigType = PropertyConfigType.Bounds {
+    var propertyConfigType : PropertyConfigType = PropertyConfigType.bounds {
         didSet {
             switch propertyConfigType {
-            case .Bounds:
+            case .bounds:
                 titleLabel.text = "Bounds"
-            case .Position:
+            case .position:
                 titleLabel.text = "Position"
-            case .Alpha:
+            case .alpha:
                 titleLabel.text = "Alpha"
-            case .Transform:
+            case .transform:
                 titleLabel.text = "Transform"
             }
         }
@@ -61,48 +61,48 @@ class CurveSelectionCollectionViewCell : UICollectionViewCell {
     }
     
     func layoutInterface() {
-        gradient.colors = [ UIColor(rgba: "#444444").CGColor, UIColor(rgba: "#4B4C51").CGColor]
+        gradient.colors = [ UIColor(rgba: "#444444").cgColor, UIColor(rgba: "#4B4C51").cgColor]
         gradient.frame = contentView.bounds
         curveSelectionLabel.frame = self.contentView.bounds
         
-        titleLabel.alignWithSize(CGSizeMake(200, 24),
+        titleLabel.alignWithSize(CGSize(width: 200, height: 24),
                                  toFrame: contentView.bounds,
-                                 horizontal: HGHorizontalAlign.LeftEdge,
-                                 vertical: HGVerticalAlign.Center,
+                                 horizontal: HGHorizontalAlign.leftEdge,
+                                 vertical: HGVerticalAlign.center,
                                  horizontalOffset:  16,
                                  verticalOffset: 0)
         
-        curveSelectionLabel.alignWithSize(CGSizeMake(contentView.bounds.width, 24),
+        curveSelectionLabel.alignWithSize(CGSize(width: contentView.bounds.width, height: 24),
                                           toFrame: titleLabel.frame,
-                                          horizontal: HGHorizontalAlign.LeftEdge,
-                                          vertical: HGVerticalAlign.Below,
+                                          horizontal: HGHorizontalAlign.leftEdge,
+                                          vertical: HGVerticalAlign.below,
                                           verticalOffset: 4)
         primarySwitch.sizeToFit()
         primarySwitch.alignWithSize(primarySwitch.bounds.size,
                                     toFrame: contentView.bounds,
-                                    horizontal: HGHorizontalAlign.RightEdge,
-                                    vertical: HGVerticalAlign.Center,
+                                    horizontal: HGHorizontalAlign.rightEdge,
+                                    vertical: HGVerticalAlign.center,
                                     horizontalOffset: -16,
                                     verticalOffset: 0)
         
         pickerView.sizeToFit()
-        pickerView.alignWithSize(CGSizeMake(200, contentView.bounds.height),
+        pickerView.alignWithSize(CGSize(width: 200, height: contentView.bounds.height),
                                  toFrame: contentView.bounds,
-                                 horizontal: HGHorizontalAlign.LeftEdge,
-                                 vertical: HGVerticalAlign.Center,
+                                 horizontal: HGHorizontalAlign.leftEdge,
+                                 vertical: HGVerticalAlign.center,
                                  horizontalOffset : 90)
         
         for subview in pickerView.subviews{
-            subview.backgroundColor = UIColor.clearColor()
+            subview.backgroundColor = UIColor.clear
         }
     }
  
     lazy var titleLabel: UILabel = {
         var label = UILabel()
-        label.textColor = UIColor.whiteColor()
-        label.backgroundColor = UIColor.clearColor()
+        label.textColor = UIColor.white
+        label.backgroundColor = UIColor.clear
         label.font = UIFont(name: "Helvetica", size: 15)
-        label.textAlignment = .Left
+        label.textAlignment = .left
         return label
     }()
     
@@ -112,10 +112,10 @@ class CurveSelectionCollectionViewCell : UICollectionViewCell {
     
     lazy var curveSelectionLabel: UILabel = {
         var label = UILabel()
-        label.textColor = UIColor.whiteColor()
-        label.backgroundColor = UIColor.clearColor()
+        label.textColor = UIColor.white
+        label.backgroundColor = UIColor.clear
         label.font = UIFont(name: "Helvetica", size: 15)
-        label.textAlignment = .Left
+        label.textAlignment = .left
         return label
     }()
     
@@ -123,19 +123,19 @@ class CurveSelectionCollectionViewCell : UICollectionViewCell {
         var picker = UIPickerView()
         picker.dataSource = self
         picker.delegate = self
-        picker.opaque = false
-        picker.backgroundColor = UIColor.clearColor()
+        picker.isOpaque = false
+        picker.backgroundColor = UIColor.clear
         return picker
     }()
     
-    func value_changed(sender : UISwitch) {
-      self.delegate?.cell(self, didSelectPrimary : sender.on)
+    func value_changed(_ sender : UISwitch) {
+      self.delegate?.cell(self, didSelectPrimary : sender.isOn)
     }
     
     lazy var primarySwitch: UISwitch = {
         var tempSwitch = UISwitch()
-        tempSwitch.backgroundColor = UIColor.clearColor()
-        tempSwitch.addTarget(self, action: #selector(CurveSelectionCollectionViewCell.value_changed(_:)), forControlEvents: UIControlEvents.ValueChanged)
+        tempSwitch.backgroundColor = UIColor.clear
+        tempSwitch.addTarget(self, action: #selector(CurveSelectionCollectionViewCell.value_changed(_:)), for: UIControlEvents.valueChanged)
         return tempSwitch
     }()
 }
@@ -143,19 +143,19 @@ class CurveSelectionCollectionViewCell : UICollectionViewCell {
 
 extension CurveSelectionCollectionViewCell: UIPickerViewDataSource, UIPickerViewDelegate {
     
-    func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
     
-    func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         return functionTypes.count
     }
     
-    func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         self.delegate?.cell(self, didSelectEasing : functions[row])
     }
     
-    func pickerView(pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusingView view: UIView?) -> UIView {
+    func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
         
         var pickerLabel = view as? UILabel
         
@@ -163,8 +163,8 @@ extension CurveSelectionCollectionViewCell: UIPickerViewDataSource, UIPickerView
             pickerLabel = UILabel()
             
             pickerLabel?.font = UIFont(name: "MenloiPhoneiPad", size: 14)
-            pickerLabel?.textColor = UIColor.whiteColor()
-            pickerLabel?.textAlignment = NSTextAlignment.Center
+            pickerLabel?.textColor = UIColor.white
+            pickerLabel?.textAlignment = NSTextAlignment.center
         }
         
         pickerLabel?.text = functionTypes[row]
@@ -172,7 +172,7 @@ extension CurveSelectionCollectionViewCell: UIPickerViewDataSource, UIPickerView
         return pickerLabel!
     }
     
-    func primarySelectionUpdated(propertyType : PropertyConfigType,  isPrimary : Bool) {
+    func primarySelectionUpdated(_ propertyType : PropertyConfigType,  isPrimary : Bool) {
         self.delegate?.cell(self, didSelectPrimary : isPrimary)
     }
 }

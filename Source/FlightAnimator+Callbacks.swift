@@ -11,8 +11,8 @@ import UIKit
 import QuartzCore
 
 
-public typealias FAAnimationDidStart = ((anim: CAAnimation) -> Void)
-public typealias FAAnimationDidStop  = ((anim: CAAnimation, complete: Bool) -> Void)
+public typealias FAAnimationDidStart = ((_ anim: CAAnimation) -> Void)
+public typealias FAAnimationDidStop  = ((_ anim: CAAnimation, _ complete: Bool) -> Void)
 
 #if swift(>=2.3)
     
@@ -21,51 +21,51 @@ public typealias FAAnimationDidStop  = ((anim: CAAnimation, complete: Bool) -> V
         var animationDidStart : FAAnimationDidStart?
         var animationDidStop : FAAnimationDidStop?
         
-        public func animationDidStart(anim: CAAnimation) {
+        public func animationDidStart(_ anim: CAAnimation) {
             if let startCallback = animationDidStart {
-                startCallback(anim : anim)
+                startCallback(anim)
             }
         }
         
-        public func animationDidStop(anim: CAAnimation, finished flag: Bool) {
+        public func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
             if let stopCallback = animationDidStop {
-                stopCallback(anim : anim, complete: flag)
+                stopCallback(anim, flag)
             }
         }
         
-        public func setDidStopCallback(stopCallback : FAAnimationDidStop) {
+        public func setDidStopCallback(stopCallback : @escaping FAAnimationDidStop) {
             animationDidStop = stopCallback
         }
         
-        public func setDidStartCallback(startCallback : FAAnimationDidStart) {
+        public func setDidStartCallback(startCallback : @escaping FAAnimationDidStart) {
             animationDidStart = startCallback
         }
     }
     
 #else
     
-    public class FAAnimationDelegate : NSObject {
+    open class FAAnimationDelegate : NSObject {
     
     var animationDidStart : FAAnimationDidStart?
     var animationDidStop : FAAnimationDidStop?
     
-    public override func animationDidStart(anim: CAAnimation) {
+    open override func animationDidStart(_ anim: CAAnimation) {
     if let startCallback = animationDidStart {
     startCallback(anim : anim)
     }
     }
     
-    public override func animationDidStop(anim: CAAnimation, finished flag: Bool) {
+    open override func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
     if let stopCallback = animationDidStop {
     stopCallback(anim : anim, complete: flag)
     }
     }
     
-    public func setDidStopCallback(stopCallback : FAAnimationDidStop) {
+    open func setDidStopCallback(_ stopCallback : FAAnimationDidStop) {
     animationDidStop = stopCallback
     }
     
-    public func setDidStartCallback(startCallback : FAAnimationDidStart) {
+    open func setDidStartCallback(_ startCallback : FAAnimationDidStart) {
     animationDidStart = startCallback
     }
     }
@@ -74,7 +74,7 @@ public typealias FAAnimationDidStop  = ((anim: CAAnimation, complete: Bool) -> V
 
 public extension CAAnimation {
     
-    public func setDidStopCallback(stopCallback : FAAnimationDidStop) {
+    public func setDidStopCallback(_ stopCallback : @escaping FAAnimationDidStop) {
         
         if callbacksSupported() == false {
             print("DidStopCallbacks are not supported for \(self)")
@@ -90,14 +90,14 @@ public extension CAAnimation {
         
         activeDelegate!.setDidStopCallback { (anim, complete) in
             if let _ = self.delegate as? FAAnimationDelegate {
-                stopCallback(anim : anim, complete: complete)
+                stopCallback(anim, complete)
             }
         }
         
         delegate = activeDelegate
     }
     
-    public func setDidStartCallback(startCallback : FAAnimationDidStart) {
+    public func setDidStartCallback(_ startCallback : @escaping FAAnimationDidStart) {
         
         if callbacksSupported() == false {
             print("DidStartCallback are not supported for \(self)")
@@ -113,14 +113,14 @@ public extension CAAnimation {
         
         activeDelegate!.setDidStartCallback { (anim) in
             if let _ = self.delegate as? FAAnimationDelegate {
-                startCallback(anim : anim)
+                startCallback(anim)
             }
         }
         
         delegate = activeDelegate
     }
     
-    private func callbacksSupported() -> Bool {
+    fileprivate func callbacksSupported() -> Bool {
         if let _ = self as? FAAnimationGroup {
         } else if let _ = self as? FABasicAnimation {
         } else{

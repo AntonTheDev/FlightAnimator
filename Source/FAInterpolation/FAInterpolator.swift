@@ -9,15 +9,26 @@
 import Foundation
 import UIKit
 
-public func typeCastCGColor(value : Any) -> CGColor? {
+public func typeCastCGColor(_ value : Any) -> CGColor? {
+    /*
+    if CFGetTypeID(value) == CGColor.typeID {
+        return (value as! CGColor)
+    }
+     */
+   // if value.self is AnyObject.Type {
+        if CFGetTypeID(value as AnyObject) == CGColor.typeID {
+            return (value as! CGColor)
+        }
+   // }
+   /*
     if let currentValue = value as? AnyObject {
         //TODO: There appears to be no way of unwrapping a CGColor by type casting
         //Fix when the following bug is fixed https://bugs.swift.org/browse/SR-1612
-        if CFGetTypeID(currentValue) == CGColorGetTypeID() {
+        if CFGetTypeID(currentValue) == CGColor.typeID {
             return (currentValue as! CGColor)
         }
     }
-    
+        */
     return nil
 }
 
@@ -33,7 +44,7 @@ struct FAAnimationConfig {
     static let AnimationTimeAdjustment   : CGFloat = 2.0 * (1.0 / FAAnimationConfig.InterpolationFrameCount)
 }
 
-public class FAInterpolator {
+open class FAInterpolator {
     
     var toValue : Any
     var fromValue : Any
@@ -80,12 +91,12 @@ public class FAInterpolator {
         springs = nil
     }
     
-    func interpolatedConfigurationFor(animation : FABasicAnimation, relativeTo oldAnimation : FABasicAnimation?) ->  (duration : Double, easing : FAEasing,  values : [AnyObject])? {
+    func interpolatedConfigurationFor(_ animation : FABasicAnimation, relativeTo oldAnimation : FABasicAnimation?) ->  (duration : Double, easing : FAEasing,  values : [AnyObject])? {
         
         var easing = animation.easingFunction
         
         switch easing {
-        case let .SpringDecay(velocity):
+        case let .springDecay(velocity):
             
             if springs == nil {
                 decayComponentSprings(velocity)
@@ -97,7 +108,7 @@ public class FAInterpolator {
             
             return (duration : springConfig.duration, easing : easing, values : springConfig.values)
             
-        case let .SpringCustom(velocity, frequency, damping):
+        case let .springCustom(velocity, frequency, damping):
             if springs == nil {
                 customComponentSprings(velocity, angularFrequency: frequency, dampingRatio: damping)
             }
@@ -117,25 +128,25 @@ public class FAInterpolator {
         return (duration : Double(adjustedDuration), easing :easing, values : values)
     }
     
-    internal func adjustedVelocitySpring(easingFunction : FAEasing, relativeTo animation : FABasicAnimation?) -> FAEasing {
+    internal func adjustedVelocitySpring(_ easingFunction : FAEasing, relativeTo animation : FABasicAnimation?) -> FAEasing {
         
         var adjustedVelocity = zeroVelocityValue()
         
         if let animation = animation,
-            presentationLayer  = animation.animatingLayer?.presentationLayer(),
-            animationStartTime = animation.startTime {
+            let presentationLayer  = animation.animatingLayer?.presentation(),
+            let animationStartTime = animation.startTime {
             
-            let currentTime = presentationLayer.convertTime(CACurrentMediaTime(), toLayer: animation.animatingLayer)
+            let currentTime = presentationLayer.convertTime(CACurrentMediaTime(), to: animation.animatingLayer)
             let deltaTime = CGFloat(currentTime - animationStartTime) - FAAnimationConfig.AnimationTimeAdjustment
             
             adjustedVelocity = self.adjustedVelocity(at : deltaTime)
         }
         
         switch easingFunction {
-        case .SpringDecay(_):
-            return .SpringDecay(velocity:adjustedVelocity)
-        case let .SpringCustom(_,frequency,damping):
-            return .SpringCustom(velocity:adjustedVelocity, frequency: frequency, ratio: damping)
+        case .springDecay(_):
+            return .springDecay(velocity:adjustedVelocity)
+        case let .springCustom(_,frequency,damping):
+            return .springCustom(velocity:adjustedVelocity, frequency: frequency, ratio: damping)
         default:
             return easingFunction
         }
@@ -159,7 +170,7 @@ public class FAInterpolator {
 
 extension FAInterpolator {
     
-    public func valueProgress(value : Any) -> CGFloat {
+    public func valueProgress(_ value : Any) -> CGFloat {
         let currentVector = FAVector(value: value)
         
         let progressedMagnitude = currentVector.magnitudeToVector(fromVector!)
@@ -167,7 +178,7 @@ extension FAInterpolator {
         return progressedMagnitude / overallMagnitude
     }
     
-    private func relativeProgress() -> CGFloat {
+    fileprivate func relativeProgress() -> CGFloat {
         if previousValueVector != nil ||
             previousValueVector == toVector {
             return 1.0
@@ -195,27 +206,27 @@ extension FAInterpolator {
         
         guard let presentationValue = toValue as? NSValue else {
             if let _ = toValue as? CGPoint {
-                zeroValue = CGPointZero
+                zeroValue = CGPoint.zero
             } else if let _ = toValue as? CGSize {
-                zeroValue = CGSizeZero
+                zeroValue = CGSize.zero
             } else  if let _ = toValue as? CGRect {
-                zeroValue = CGRectZero
+                zeroValue = CGRect.zero
             } else  if let _ = toValue as? CGFloat {
                 zeroValue = CGFloat(0.0)
             } else  if let _ = toValue as? CATransform3D {
                 zeroValue =  CATransform3DIdentity
             } else if let _ = typeCastCGColor(toValue) {
-                zeroValue = UIColor().CGColor
+                zeroValue = UIColor().cgColor
             }
             return zeroValue
         }
         
         if let _ = presentationValue.typeValue() as? CGPoint {
-            zeroValue = CGPointZero
+            zeroValue = CGPoint.zero
         } else  if let _ = presentationValue.typeValue() as? CGSize {
-            zeroValue = CGSizeZero
+            zeroValue = CGSize.zero
         } else  if let _ = presentationValue.typeValue() as? CGRect {
-            zeroValue = CGRectZero
+            zeroValue = CGRect.zero
         } else  if let _ = presentationValue.typeValue() as? CATransform3D {
             zeroValue = CATransform3DIdentity
         }
@@ -227,13 +238,13 @@ extension FAInterpolator {
 
 extension FAInterpolator {
     
-    private func decayComponentSprings(initialVelocity: Any?) {
+    fileprivate func decayComponentSprings(_ initialVelocity: Any?) {
         customComponentSprings(initialVelocity,
                                angularFrequency: FAAnimationConfig.SpringDecayFrequency,
                                dampingRatio: FAAnimationConfig.SpringDecayDamping)
     }
     
-    private func customComponentSprings(initialVelocity: Any?,
+    fileprivate func customComponentSprings(_ initialVelocity: Any?,
                                         angularFrequency: CGFloat,
                                         dampingRatio: CGFloat) {
         
@@ -259,7 +270,7 @@ extension FAInterpolator {
 
 extension FAInterpolator {
     
-    private func interpolatedParametricValues(duration : CGFloat, easingFunction : FAEasing) -> [AnyObject] {
+    fileprivate func interpolatedParametricValues(_ duration : CGFloat, easingFunction : FAEasing) -> [AnyObject] {
         var newArray = [AnyObject]()
         var animationTime : CGFloat = 0.0
         let frameRateTimeUnit = 1.0 / FAAnimationConfig.InterpolationFrameCount
@@ -284,7 +295,7 @@ extension FAInterpolator {
         return newArray
     }
     
-    private func interpolatedValue(progress : CGFloat) -> FAVector {
+    fileprivate func interpolatedValue(_ progress : CGFloat) -> FAVector {
         var progressComponents = [CGFloat]()
         
         for index in 0..<toVectoCount {
@@ -294,7 +305,7 @@ extension FAInterpolator {
         return FAVector(comps: progressComponents)
     }
     
-    private func interpolatedSpringValues(easingFunction : FAEasing) -> (duration : Double,  values : [AnyObject]) {
+    fileprivate func interpolatedSpringValues(_ easingFunction : FAEasing) -> (duration : Double,  values : [AnyObject]) {
         
         var valueArray: Array<AnyObject> = Array<AnyObject>()
         var animationTime : CGFloat = 0.0
@@ -303,7 +314,7 @@ extension FAInterpolator {
         var animationComplete = false
         
         switch easingFunction {
-        case .SpringDecay(_):
+        case .springDecay(_):
             repeat {
                 let newValue = interpolatedSpringValue(animationTime)
                 animationComplete = newValue.magnitudeToVector(toVector!) < FAAnimationConfig.SpringDecayMagnitudeThreshold
@@ -333,7 +344,7 @@ extension FAInterpolator {
         return (Double(animationTime),  values : valueArray)
     }
     
-    private func interpolatedSpringValue(deltaTime: CGFloat) -> FAVector {
+    fileprivate func interpolatedSpringValue(_ deltaTime: CGFloat) -> FAVector {
         var progressComponents = [CGFloat]()
         
         for index in 0..<toVectoCount {
@@ -366,7 +377,7 @@ extension FAInterpolator {
      - returns: the actual value of hte current progress between the relative start and end point
      */
     
-    func interpolateCGFloat(start : CGFloat, end : CGFloat, progress : CGFloat) -> CGFloat {
+    func interpolateCGFloat(_ start : CGFloat, end : CGFloat, progress : CGFloat) -> CGFloat {
         return start * (1.0 - progress) + end * progress
     }
 }

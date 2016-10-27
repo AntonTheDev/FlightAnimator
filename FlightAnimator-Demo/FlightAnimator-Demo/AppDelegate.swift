@@ -14,10 +14,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var baseViewController: ViewController = ViewController()
     var baseNavViewController: UINavigationController = UINavigationController()
     
-    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        self.baseNavViewController.view.backgroundColor = UIColor.whiteColor()
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+        self.baseNavViewController.view.backgroundColor = UIColor.white
         baseNavViewController.setNavigationBarHidden(true, animated: false)
-        window = UIWindow(frame: UIScreen.mainScreen().bounds)
+        window = UIWindow(frame: UIScreen.main.bounds)
         baseNavViewController.pushViewController(baseViewController, animated: false)
         window?.rootViewController = self.baseNavViewController
         window?.makeKeyAndVisible()
@@ -26,12 +26,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 }
 
-func delay(delay:Double, closure:()->()) {
-    dispatch_after(
-        dispatch_time(
-            DISPATCH_TIME_NOW,
-            Int64(delay * Double(NSEC_PER_SEC))
-        ),
-        dispatch_get_main_queue(), closure)
+func delay(_ delay:Double, closure:@escaping ()->()) {
+    DispatchQueue.main.asyncAfter(
+        deadline: DispatchTime.now() + Double(Int64(delay * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC), execute: closure)
 }
 

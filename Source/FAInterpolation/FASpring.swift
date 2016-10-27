@@ -13,28 +13,28 @@ let CGFLT_EPSILON = CGFloat(FLT_EPSILON)
 
 public struct FASpring {
 
-    private var equilibriumPosition : CGFloat
-    private var angularFrequency    : CGFloat  = 10.0
-    private var dampingRatio        : CGFloat  = 1.0
-    private var positionVelocity    : CGFloat  = 1.0
+    fileprivate var equilibriumPosition : CGFloat
+    fileprivate var angularFrequency    : CGFloat  = 10.0
+    fileprivate var dampingRatio        : CGFloat  = 1.0
+    fileprivate var positionVelocity    : CGFloat  = 1.0
     
-    private var positionValue       : CGFloat  = 1.0
-    private var positionValues      : Array<CGFloat>  = Array<CGFloat>()
+    fileprivate var positionValue       : CGFloat  = 1.0
+    fileprivate var positionValues      : Array<CGFloat>  = Array<CGFloat>()
     
     // Shared Constants
-    private var c1 : CGFloat = 0.0
-    private var c2 : CGFloat = 0.0
+    fileprivate var c1 : CGFloat = 0.0
+    fileprivate var c2 : CGFloat = 0.0
     
     // Over Damped Constants
-    private var za : CGFloat = 0.0
-    private var zb : CGFloat = 0.0
-    private var z1 : CGFloat = 0.0
-    private var z2 : CGFloat = 0.0
+    fileprivate var za : CGFloat = 0.0
+    fileprivate var zb : CGFloat = 0.0
+    fileprivate var z1 : CGFloat = 0.0
+    fileprivate var z2 : CGFloat = 0.0
     
     // Under Damped Constants
-    private var omegaZeta : CGFloat = 0.0
-    private var alpha : CGFloat     = 0.0
-    private var c3 : CGFloat        = 0.0
+    fileprivate var omegaZeta : CGFloat = 0.0
+    fileprivate var alpha : CGFloat     = 0.0
+    fileprivate var c3 : CGFloat        = 0.0
     
     /**
      Designated initializer. Initializes a Spring object stored by the Spring animation to
@@ -94,7 +94,7 @@ public struct FASpring {
      
      - returns: The current value in time, based on the velocity, angular frequency and damping
      */
-    func updatedValue(deltaTime: CGFloat) -> CGFloat {
+    func updatedValue(_ deltaTime: CGFloat) -> CGFloat {
         
         // Over Damped
         if dampingRatio > 1.0 + CGFLT_EPSILON {
@@ -133,7 +133,7 @@ public struct FASpring {
      
      - returns: The current velocity of the single CGFoloat value animating
      */
-    func velocity(deltaTime : CGFloat) -> CGFloat {
+    func velocity(_ deltaTime : CGFloat) -> CGFloat {
         // Over Damped
         if dampingRatio > 1.0 + CGFLT_EPSILON {
             let expTerm1 = exp(z1 * deltaTime)

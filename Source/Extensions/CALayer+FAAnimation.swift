@@ -10,7 +10,7 @@
 import Foundation
 import UIKit
 
-internal func swizzleSelector(cls: AnyClass!, originalSelector : Selector, swizzledSelector : Selector) {
+internal func swizzleSelector(_ cls: AnyClass!, originalSelector : Selector, swizzledSelector : Selector) {
     
     let originalMethod = class_getInstanceMethod(cls, originalSelector)
     let swizzledMethod = class_getInstanceMethod(cls, swizzledSelector)
@@ -24,20 +24,22 @@ internal func swizzleSelector(cls: AnyClass!, originalSelector : Selector, swizz
     }
 }
 
+var executedLayer = false
+var executedColor = false
 extension CALayer {
     
     final public class func swizzleAddAnimation() {
         struct Static {
-            static var token: dispatch_once_t = 0
+            static var token: Int = 0
         }
         
         if self !== CALayer.self {
             return
         }
         
-        dispatch_once(&Static.token) {
+        if executedLayer == false  {
             swizzleSelector(self,
-                            originalSelector: #selector(CALayer.addAnimation(_:forKey:)),
+                            originalSelector: #selector(CALayer.add(_:forKey:)),
                             swizzledSelector: #selector(CALayer.FA_addAnimation(_:forKey:)))
             
             swizzleSelector(self,
@@ -45,15 +47,17 @@ extension CALayer {
                             swizzledSelector: #selector(CALayer.FA_removeAllAnimations))
             
             swizzleSelector(self,
-                            originalSelector: #selector(CALayer.removeAnimationForKey(_:)),
-                            swizzledSelector: #selector(CALayer.FA_removeAnimationForKey(_:)))
+                            originalSelector: #selector(CALayer.removeAnimation(forKey:)),
+                            swizzledSelector: #selector(CALayer.FA_removeAnimationForKey))
             
             
             UIColor.swizzleGetRed()
+            
+            executedLayer = true
         }
     }
     
-    internal func FA_addAnimation(anim: CAAnimation, forKey key: String?) {
+    internal func FA_addAnimation(_ anim: CAAnimation, forKey key: String?) {
         
         guard let animation = anim as? FAAnimationGroup else {
             FA_addAnimation(anim, forKey: key)
@@ -66,9 +70,9 @@ extension CALayer {
         FA_addAnimation(animation, forKey: key)
       
     }
-    internal func FA_removeAnimationForKey(key: String) {
+    internal func FA_removeAnimationForKey(_ key: String) {
 
-        if let animation = self.animationForKey(key) as? FAAnimationGroup  {
+        if let animation = self.animation(forKey: key) as? FAAnimationGroup  {
             if DebugTriggerLogEnabled { print("STOPPED FORKEY ", animation.animationKey) }
             animation.stopTriggerTimer()
         }
@@ -83,7 +87,7 @@ extension CALayer {
         }
         
         for key in keys {
-            if let animation = self.animationForKey(key) as? FAAnimationGroup  {
+            if let animation = self.animation(forKey: key) as? FAAnimationGroup  {
                 if DebugTriggerLogEnabled { print("STOPPED ALL ", animation.animationKey) }
                 animation.stopTriggerTimer()
             }
@@ -92,30 +96,30 @@ extension CALayer {
         FA_removeAllAnimations()
     }
     
-    final public func anyValueForKeyPath(keyPath: String) -> Any? {
-        if let currentFromValue = self.valueForKeyPath(keyPath) {
+    final public func anyValueForKeyPath(_ keyPath: String) -> Any? {
+        if let currentFromValue = self.value(forKeyPath: keyPath) {
             
             if let value = typeCastCGColor(currentFromValue) {
                 return value
             }
             
-            let type = String.fromCString(currentFromValue.objCType) ?? ""
+            let type = String(cString: (currentFromValue as AnyObject).objCType)
             
             if type.hasPrefix("{CGPoint") {
-                return currentFromValue.CGPointValue!
+                return (currentFromValue as AnyObject).cgPointValue!
             } else if type.hasPrefix("{CGSize") {
-                return currentFromValue.CGSizeValue!
+                return (currentFromValue as AnyObject).cgSizeValue!
             } else if type.hasPrefix("{CGRect") {
-                return currentFromValue.CGRectValue!
+                return (currentFromValue as AnyObject).cgRectValue!
             } else if type.hasPrefix("{CATransform3D") {
-                return currentFromValue.CATransform3DValue!
+                return (currentFromValue as AnyObject).caTransform3DValue!
             }
             else {
                 return currentFromValue
             }
         }
         
-        return super.valueForKeyPath(keyPath)
+        return super.value(forKeyPath: keyPath)
     }
     
     final public func owningView() -> UIView? {
@@ -134,39 +138,41 @@ extension UIColor {
     
     final internal class func swizzleGetRed() {
         struct Static {
-            static var token: dispatch_once_t = 0
+            static var token: Int = 0
         }
         
         if self !== CALayer.self {
             return
         }
         
-        dispatch_once(&Static.token) {
+        if executedColor == false {
             swizzleSelector(self,
                             originalSelector: #selector(UIColor.getRed(_:green:blue:alpha:)),
                             swizzledSelector: #selector(UIColor.FA_getRed(_:green:blue:alpha:)))
+            
+            executedColor = true
         }
     }
     
-    internal func FA_getRed(red: UnsafeMutablePointer<CGFloat>,
+    internal func FA_getRed(_ red: UnsafeMutablePointer<CGFloat>,
                             green: UnsafeMutablePointer<CGFloat>,
                             blue: UnsafeMutablePointer<CGFloat>,
                             alpha: UnsafeMutablePointer<CGFloat>) -> Bool {
         
-        if CGColorGetNumberOfComponents(self.CGColor) == 4 {
+        if self.cgColor.numberOfComponents == 4 {
             
             var red: CGFloat = 0, green: CGFloat = 0, blue: CGFloat = 0, alpha: CGFloat = 0
             return  self.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
             
-        } else if CGColorGetNumberOfComponents(self.CGColor) == 2 {
+        } else if self.cgColor.numberOfComponents == 2 {
             
             var white: CGFloat = 0, whiteAlpha: CGFloat = 0
             
             if self.getWhite(&white, alpha: &whiteAlpha) {
-                red.memory = white * 1.0
-                green.memory = white * 1.0
-                blue.memory = white * 1.0
-                alpha.memory = whiteAlpha
+                red.pointee = white * 1.0
+                green.pointee = white * 1.0
+                blue.pointee = white * 1.0
+                alpha.pointee = whiteAlpha
                 
                 return true
             }

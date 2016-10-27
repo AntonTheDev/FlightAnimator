@@ -8,6 +8,35 @@
 
 import Foundation
 import UIKit
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
+
+fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l > r
+  default:
+    return rhs < lhs
+  }
+}
+
+fileprivate func >= <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l >= r
+  default:
+    return !(lhs < rhs)
+  }
+}
+
 
 /**
  Equatable FAAnimationGroup Implementation
@@ -63,15 +92,15 @@ func ==(lhs:FAAnimationGroup, rhs:FAAnimationGroup) -> Bool {
  */
 
 public enum FAPrimaryTimingPriority : Int {
-    case MaxTime
-    case MinTime
-    case Median
-    case Average
+    case maxTime
+    case minTime
+    case median
+    case average
 }
 
 //MARK: - FAAnimationGroup
 
-public class FAAnimationGroup : FASynchronizedGroup {
+open class FAAnimationGroup : FASynchronizedGroup {
     
     override public init() {
         super.init()
@@ -81,7 +110,7 @@ public class FAAnimationGroup : FASynchronizedGroup {
         fatalError("init(coder:) has not been implemented")
     }
     
-    public var primaryTimingPriority : FAPrimaryTimingPriority  {
+    open var primaryTimingPriority : FAPrimaryTimingPriority  {
         get { return _primaryTimingPriority }
         set { _primaryTimingPriority = newValue }
     }
@@ -93,7 +122,7 @@ public class FAAnimationGroup : FASynchronizedGroup {
      Adjust the autoreverseCount to change that
 
      */
-    public var autoreverse: Bool {
+    open var autoreverse: Bool {
         get { return _autoreverse }
         set { _autoreverse = newValue }
     }
@@ -105,7 +134,7 @@ public class FAAnimationGroup : FASynchronizedGroup {
      Default is 1, set to 0 repeats the animation
      indefinitely until is removed manually from the layer.
      */
-    public var autoreverseCount: Int {
+    open var autoreverseCount: Int {
         get { return _autoreverseCount }
         set { _autoreverseCount = newValue }
     }
@@ -119,7 +148,7 @@ public class FAAnimationGroup : FASynchronizedGroup {
      
       Default is 0.0
      */
-    public var autoreverseDelay: NSTimeInterval {
+    open var autoreverseDelay: TimeInterval {
         get { return _autoreverseDelay }
         set { _autoreverseDelay = newValue }
     }
@@ -133,7 +162,7 @@ public class FAAnimationGroup : FASynchronizedGroup {
      
      Default is 0.0
      */
-    public var reverseEasingCurve: Bool {
+    open var reverseEasingCurve: Bool {
         get { return _reverseEasingCurve }
         set { _reverseEasingCurve = newValue }
     }
@@ -160,7 +189,7 @@ public class FAAnimationGroup : FASynchronizedGroup {
      - parameter timeProgress:  the relative time progress to trigger animation on the view
      - parameter valueProgress: the relative value progress to trigger animation on the view
      */
-    public func triggerAnimation(animation : AnyObject,
+    open func triggerAnimation(_ animation : AnyObject,
                                  onView view : UIView,
                                  atTimeProgress timeProgress: CGFloat? = nil,
                                  atValueProgress valueProgress: CGFloat? = nil) {
@@ -180,7 +209,7 @@ public class FAAnimationGroup : FASynchronizedGroup {
      
      - parameter animated: disables animation, defauls to true
      */
-    public func applyFinalState(animated : Bool = false) {
+    open func applyFinalState(_ animated : Bool = false) {
         
         if let animationLayer = animatingLayer {
             if animated {
@@ -188,8 +217,8 @@ public class FAAnimationGroup : FASynchronizedGroup {
                 animationLayer.timeOffset = 0.0
                 
                 if let animationKey = animationKey {
-                    startTime = animationLayer.convertTime(CACurrentMediaTime(), fromLayer: nil)
-                    animationLayer.addAnimation(self, forKey: animationKey)
+                    startTime = animationLayer.convertTime(CACurrentMediaTime(), from: nil)
+                    animationLayer.add(self, forKey: animationKey)
                 }
         
             }
@@ -220,7 +249,7 @@ public class FAAnimationGroup : FASynchronizedGroup {
      
      - parameter progress: scrub "to progress" value
      */
-    private func scrubToProgress(progress : CGFloat) {
+    fileprivate func scrubToProgress(_ progress : CGFloat) {
         animatingLayer?.speed = 0.0
         animatingLayer?.timeOffset = CFTimeInterval(duration * Double(progress))
     }
@@ -229,15 +258,15 @@ public class FAAnimationGroup : FASynchronizedGroup {
 
 //MARK: - FASynchronizedGroup
 
-public class FASynchronizedGroup : CAAnimationGroup {
+open class FASynchronizedGroup : CAAnimationGroup {
     
     internal var animationKey : String?
-    internal var _primaryTimingPriority : FAPrimaryTimingPriority = .MaxTime
+    internal var _primaryTimingPriority : FAPrimaryTimingPriority = .maxTime
     
     internal var _autoreverse : Bool = false
     internal var _autoreverseCount: Int = 1
     internal var _autoreverseActiveCount: Int = 1
-    internal var _autoreverseDelay: NSTimeInterval = 1.0
+    internal var _autoreverseDelay: TimeInterval = 1.0
     internal var _autoreverseConfigured: Bool = false
     internal var _reverseEasingCurve: Bool = false
     
@@ -251,7 +280,7 @@ public class FASynchronizedGroup : CAAnimationGroup {
                 }
             }
             
-            startTime = animatingLayer?.convertTime(CACurrentMediaTime(), fromLayer: nil)
+            startTime = animatingLayer?.convertTime(CACurrentMediaTime(), from: nil)
         }
     }
 
@@ -279,7 +308,7 @@ public class FASynchronizedGroup : CAAnimationGroup {
         super.init()
         animations = [CAAnimation]()
         fillMode = kCAFillModeForwards
-        removedOnCompletion = true
+        isRemovedOnCompletion = true
     }
     
     required public init?(coder aDecoder: NSCoder) {
@@ -290,8 +319,8 @@ public class FASynchronizedGroup : CAAnimationGroup {
         displayLink?.invalidate()
     }
     
-    override public func copyWithZone(zone: NSZone) -> AnyObject {
-        let animationGroup = super.copyWithZone(zone) as! FASynchronizedGroup
+    override open func copy(with zone: NSZone?) -> Any {
+        let animationGroup = super.copy(with: zone) as! FASynchronizedGroup
         animationGroup.animatingLayer                = animatingLayer
         animationGroup.startTime                = startTime
         animationGroup.animationKey             = animationKey
@@ -320,7 +349,7 @@ public class FASynchronizedGroup : CAAnimationGroup {
         
         if let keys = animatingLayer?.animationKeys() {
             for key in Array(Set(keys)) {
-                if let oldAnimation = animatingLayer?.animationForKey(key) as? FAAnimationGroup {
+                if let oldAnimation = animatingLayer?.animation(forKey: key) as? FAAnimationGroup {
                     oldAnimation.stopTriggerTimer()
                     _autoreverseActiveCount = oldAnimation._autoreverseActiveCount
                     synchronizeAnimations(oldAnimation)
@@ -377,12 +406,12 @@ internal extension FASynchronizedGroup {
             configureAnimationTrigger(animationGroup, onView: view, atTimeProgress : 1.0 + CGFloat(progressDelay))
         }
         
-        removedOnCompletion = false
+        isRemovedOnCompletion = false
     }
     
     func clearAutoreverseGroup() {
         _segmentArray = [AnimationTrigger]()
-        removedOnCompletion = true
+        isRemovedOnCompletion = true
         stopTriggerTimer()
     }
     
@@ -398,7 +427,7 @@ internal extension FASynchronizedGroup {
                     newAnimation.easingFunction = _reverseEasingCurve ? customAnimation.easingFunction.reverseEasingCurve() : customAnimation.easingFunction
                     
                     newAnimation.isPrimary = customAnimation.isPrimary
-                    newAnimation.values = customAnimation.values!.reverse()
+                    newAnimation.values = customAnimation.values!.reversed()
                     newAnimation.toValue = customAnimation.fromValue
                     newAnimation.fromValue = customAnimation.toValue
                     
@@ -422,7 +451,7 @@ internal extension FASynchronizedGroup {
      - parameter oldAnimationGroup: old animation in flight
      */
 
-    internal func synchronizeAnimations(oldAnimationGroup : FAAnimationGroup?) {
+    internal func synchronizeAnimations(_ oldAnimationGroup : FAAnimationGroup?) {
         
         var oldAnimations = animationDictionaryForGroup(oldAnimationGroup)
         var newAnimations = animationDictionaryForGroup(self)
@@ -442,20 +471,20 @@ internal extension FASynchronizedGroup {
         let hasPrimaryAnimations : Bool = (primaryAnimations.count > 0)
         
         if hasPrimaryAnimations == false {
-            primaryAnimations = newAnimations.filter({ $0.1 != nil })
+            primaryAnimations = Array(newAnimations.map {$0})  //newAnimations.filter({ $0.1 != nil })
         }
         
         let durationsArray = primaryAnimations.map({ $0.1.duration})
         
         switch _primaryTimingPriority {
-        case .MaxTime:
-            duration = durationsArray.maxElement()!
-        case .MinTime:
-            duration = durationsArray.minElement()!
-        case .Median:
-            duration = durationsArray.sort(<)[durationsArray.count / 2]
-        case .Average:
-            duration = durationsArray.reduce(0, combine: +) / Double(durationsArray.count)
+        case .maxTime:
+            duration = durationsArray.max()!
+        case .minTime:
+            duration = durationsArray.min()!
+        case .median:
+            duration = durationsArray.sorted(by: <)[durationsArray.count / 2]
+        case .average:
+            duration = durationsArray.reduce(0, +) / Double(durationsArray.count)
         }
         
         let nonSynchronizedAnimations = newAnimations.filter({ $0.1.duration != duration })
@@ -479,7 +508,7 @@ internal extension FASynchronizedGroup {
         animations = newAnimations.map {$1}
     }
 
-    func animationDictionaryForGroup(animationGroup : FASynchronizedGroup?) -> [String : FABasicAnimation] {
+    func animationDictionaryForGroup(_ animationGroup : FASynchronizedGroup?) -> [String : FABasicAnimation] {
         var animationDictionary = [String: FABasicAnimation]()
         
         if let group = animationGroup {
@@ -507,18 +536,18 @@ public func ==(lhs:AnimationTrigger, rhs:AnimationTrigger) -> Bool {
 }
 
 
-public class AnimationTrigger : Equatable {
-    public  var isTimedBased = true
-    public var triggerProgessValue : CGFloat?
-    public var animationKey : NSString?
-    public weak var animatedView : UIView?
-    public weak var animation : FAAnimationGroup?
+open class AnimationTrigger : Equatable {
+    open  var isTimedBased = true
+    open var triggerProgessValue : CGFloat?
+    open var animationKey : NSString?
+    open weak var animatedView : UIView?
+    open weak var animation : FAAnimationGroup?
     
     required public init() {
         
     }
 
-    public func copyWithZone(zone: NSZone) -> AnyObject {
+    open func copyWithZone(_ zone: NSZone?) -> AnyObject {
         let animationGroup = AnimationTrigger()
         animationGroup.isTimedBased         = isTimedBased
         animationGroup.triggerProgessValue  = triggerProgessValue
@@ -541,7 +570,7 @@ public extension FASynchronizedGroup {
      - parameter timeProgress:  the relative time progress to trigger animation on the view
      - parameter valueProgress: the relative value progress to trigger animation on the view
      */
-    internal func configureAnimationTrigger(animation : AnyObject,
+    internal func configureAnimationTrigger(_ animation : AnyObject,
                                             onView view : UIView,
                                             atTimeProgress timeProgress: CGFloat? = 0.0,
                                             atValueProgress valueProgress: CGFloat? = nil) {
@@ -566,13 +595,13 @@ public extension FASynchronizedGroup {
             return
         }
         
-        animationGroup?.animationKey = String(NSUUID().UUIDString)
+        animationGroup?.animationKey = String(UUID().uuidString)
         animationGroup?.animatingLayer = view.layer
         
         let animationTrigger = AnimationTrigger()
         animationTrigger.isTimedBased = timeBased
         animationTrigger.triggerProgessValue = progress
-        animationTrigger.animationKey = animationGroup?.animationKey
+        animationTrigger.animationKey = animationGroup?.animationKey as NSString?
         animationTrigger.animatedView = view
         
         _segmentArray.append(animationTrigger)
@@ -594,7 +623,7 @@ public extension FASynchronizedGroup {
         self.displayLink = CADisplayLink(target: self, selector: #selector(FASynchronizedGroup.updateTrigger))
         if DebugTriggerLogEnabled {  print("START ++++++++ KEY \(animationKey)  -  CALINK  \(displayLink)\n") }
         
-        self.displayLink?.addToRunLoop(NSRunLoop.mainRunLoop(), forMode: NSDefaultRunLoopMode)
+        self.displayLink?.add(to: RunLoop.main, forMode: RunLoopMode.defaultRunLoopMode)
         updateTrigger()
     }
     
@@ -637,7 +666,7 @@ public extension FASynchronizedGroup {
         }
     }
     
-    func activeTriggerSegment(segment : AnimationTrigger) -> AnimationTrigger? {
+    func activeTriggerSegment(_ segment : AnimationTrigger) -> AnimationTrigger? {
     
         let fireTimeBasedTrigger  = segment.isTimedBased && primaryAnimation?.timeProgress() >= segment.triggerProgessValue!
         let fireValueBasedTrigger = segment.isTimedBased == false && primaryAnimation?.valueProgress() >= segment.triggerProgessValue!
