@@ -8,12 +8,12 @@
 
 ![alt tag](/Documentation/FlightBanner.jpg?raw=true)
 
-** Swift 3.0 Support added: **
+**Swift 3.0 Support added:**
 
 * For Swift 3.0 - Use Tag Version 0.9.4-3.x 
 * For Swift 2.x - Use Tag Version 0.9.4-2.x 
 
-** NOTE: Migrating from versions lower than 0.9.1? See the [Release Notes](/Documentation/release_notes.md) about API Updates**
+**NOTE: Migrating from versions lower than 0.9.1? See the [Release Notes](/Documentation/release_notes.md) about API Updates**
 
 
 ##Introduction
