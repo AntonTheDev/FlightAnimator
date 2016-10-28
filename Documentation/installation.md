@@ -18,13 +18,11 @@
 
 	Swift 2.2 / Swift 2.3 : 
     pod 'FlightAnimator', '~> 0.9.4-2.x'
-	
 	```
 2. Install FlightAnimator by running
 
     ```
     pod install
-    
     ```
 <br>
 **** 
@@ -55,7 +53,6 @@ The installation instruction below for iOS and AppleTV
 
   	```
   	/usr/local/bin/carthage copy-frameworks
-  	
   	```
   	
 6. Add the paths to the frameworks you want to use under “Input Files” within the carthage build phase as follows e.g.:
@@ -70,8 +67,6 @@ The installation instruction below for iOS and AppleTV
   	// tvOS
   	$(SRCROOT)/Carthage/Build/tvOS/CoreFlightAnimation.framework
   	$(SRCROOT)/Carthage/Build/tvOS/FlightAnimator.framework
-  	
-  	
   	```
 
 <br>
