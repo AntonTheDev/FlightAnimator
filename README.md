@@ -1,14 +1,20 @@
 #FlightAnimator
 
 
-[![Cocoapods Compatible](https://img.shields.io/badge/pod-v0.9.3-blue.svg)]()
+[![Cocoapods Compatible](https://img.shields.io/badge/pod-v0.9.4-blue.svg)]()
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)]()
 [![Platform](https://img.shields.io/badge/platform-ios | tvos-lightgrey.svg)]()
 [![License](https://img.shields.io/badge/license-MIT-343434.svg)](/LICENSE.md)
 
 ![alt tag](/Documentation/FlightBanner.jpg?raw=true)
 
-**API Update!! See [Release Notes](/Documentation/release_notes.md) Migrating from versions lower than 0.9.1**
+**Swift 3.0 Support added:**
+
+* For Swift 3.0 - Use Tag Version 0.9.4-3.x 
+* For Swift 2.x - Use Tag Version 0.9.4-2.x 
+
+**NOTE: Migrating from versions lower than 0.9.1? See the [Release Notes](/Documentation/release_notes.md) about API Updates**
+
 
 ##Introduction
 
@@ -26,12 +32,12 @@ Unlike `CAAnimationGroups`, and `UIViewAnimations`, which animate multiple prope
 - [x] Define, Cache, and Reuse Animations
 
 
-Check out the [FlightAnimato Project Demo](#demoApp) in the video below to <br> experiment with all the different capabilities of the **FlightAnimator**.
+Check out the [FlightAnimator Project Demo](#demoApp) in the video below to <br> experiment with all the different capabilities of the **FlightAnimator**.
 
 <p align=left>
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=8XyH5mpfoC8&vq=hd1080
 " target="_blank"><img src="http://img.youtube.com/vi/8XyH5mpfoC8/0.jpg" 
-alt="FlightAnimatore Demo" border="0" /> </a>
+alt="FlightAnimator Demo" border="0" /> </a>
 </p>
 
 
@@ -58,49 +64,49 @@ Under the hood animations built are `CAAnimationGroup`(s) with multiple custom `
 To really see the power of **FlightAnimator**, let's first start by defining an animation using `CoreAnimation`, then re-define it using the framework's blocks based syntax. The animation below uses a `CAAnimationGroup` to group 3 individual `CABasicAnimations` for alpha, bounds, and position. 
 
 ```swift
-	let alphaAnimation 						= CABasicAnimation(keyPath: "position")
-	alphaAnimation.toValue 					= 0.0
-	alphaAnimation.fromValue 				= 1.0
-	alphaAnimation.fillMode              	= kCAFillModeForwards
-	alphaAnimation.timingFunction        	= CAMediaTimingFunction(name:kCAMediaTimingFunctionEaseOut)
+  let alphaAnimation            = CABasicAnimation(keyPath: "position")
+  alphaAnimation.toValue          = 0.0
+  alphaAnimation.fromValue        = 1.0
+  alphaAnimation.fillMode               = kCAFillModeForwards
+  alphaAnimation.timingFunction         = CAMediaTimingFunction(name:kCAMediaTimingFunctionEaseOut)
 
-	let boundsAnimation 					= CABasicAnimation(keyPath: "bounds")
-	boundsAnimation.toValue 				= NSValue(CGRect : toBounds)
-	boundsAnimation.fromValue 				= NSValue(CGRect : view.layer.bounds)
-	boundsAnimation.fillMode              	= kCAFillModeForwards
-	boundsAnimation.timingFunction        	= CAMediaTimingFunction(name:kCAMediaTimingFunctionEaseOut)
+  let boundsAnimation           = CABasicAnimation(keyPath: "bounds")
+  boundsAnimation.toValue         = NSValue(CGRect : toBounds)
+  boundsAnimation.fromValue         = NSValue(CGRect : view.layer.bounds)
+  boundsAnimation.fillMode                = kCAFillModeForwards
+  boundsAnimation.timingFunction          = CAMediaTimingFunction(name:kCAMediaTimingFunctionEaseOut)
 
-	let positionAnimation 					= CABasicAnimation(keyPath: "position")
-	positionAnimation.toValue 				= NSValue(CGPoint : toPosition)
-	positionAnimation.fromValue 			= NSValue(CGPoint : view.layer.position)
-	positionAnimation.fillMode              = kCAFillModeForwards
-	positionAnimation.timingFunction        = CAMediaTimingFunction(name:kCAMediaTimingFunctionEaseOut)
-	
-	let progressAnimation 					= CABasicAnimation(keyPath: "animatableProgress")
-	progressAnimation.toValue 				= 1.0
-	progressAnimation.fromValue 			= 0
-	progressAnimation.fillMode              = kCAFillModeForwards
-	progressAnimation.timingFunction        = CAMediaTimingFunction(name:kCAMediaTimingFunctionEaseOut)
+  let positionAnimation           = CABasicAnimation(keyPath: "position")
+  positionAnimation.toValue         = NSValue(CGPoint : toPosition)
+  positionAnimation.fromValue       = NSValue(CGPoint : view.layer.position)
+  positionAnimation.fillMode              = kCAFillModeForwards
+  positionAnimation.timingFunction        = CAMediaTimingFunction(name:kCAMediaTimingFunctionEaseOut)
+  
+  let progressAnimation           = CABasicAnimation(keyPath: "animatableProgress")
+  progressAnimation.toValue         = 1.0
+  progressAnimation.fromValue       = 0
+  progressAnimation.fillMode              = kCAFillModeForwards
+  progressAnimation.timingFunction        = CAMediaTimingFunction(name:kCAMediaTimingFunctionEaseOut)
 
-	let animationGroup 						= CAAnimationGroup()
-	animationGroup.duration 				= 0.5
-	animationGroup.removedOnCompletion   	= true
-	animationGroup.animations 				= [alphaAnimation,  boundsAnimation, positionAnimation, progressAnimation]
+  let animationGroup            = CAAnimationGroup()
+  animationGroup.duration         = 0.5
+  animationGroup.removedOnCompletion    = true
+  animationGroup.animations         = [alphaAnimation,  boundsAnimation, positionAnimation, progressAnimation]
 
-	view.layer.addAnimation(animationGroup, forKey: "PositionAnimationKey")
-	view.frame = toFrame
+  view.layer.addAnimation(animationGroup, forKey: "PositionAnimationKey")
+  view.frame = toFrame
 ```
 
 Now that we saw the example above. Let's re-define **FlightAnimator**'s blocks based syntax
 
 
 ```swift
-	view.animate {  [unowned self] (animator) in
-	    animator.alpha(toAlpha).duration(0.5).easing(.OutCubic)
-		animator.bounds(toBounds).duration(0.5).easing(.OutCubic)
-      	animator.position(toPosition).duration(0.5).easing(.OutCubic)
-      	animator.value(toProgress, forKeyPath : "animatableProgress").duration(0.5).easing(.OutCubic)
-	}
+  view.animate {  [unowned self] (animator) in
+      animator.alpha(toAlpha).duration(0.5).easing(.OutCubic)
+    animator.bounds(toBounds).duration(0.5).easing(.OutCubic)
+        animator.position(toPosition).duration(0.5).easing(.OutCubic)
+        animator.value(toProgress, forKeyPath : "animatableProgress").duration(0.5).easing(.OutCubic)
+  }
 ```
 
 Calling `animate(:)` on the **view** begins the `FAAnimationGroup` creation process. Inside the closure the **animator** creates, configures, then appends custom animations to the newly created parent group. Define each individual property animation by calling one of the  [pre-defined property setters](/Documentation/predefined_setters.md), and/or the `func value(:, forKeyPath:) -> PropertyAnimator` method for **any** other animatable property.
@@ -108,9 +114,9 @@ Calling `animate(:)` on the **view** begins the `FAAnimationGroup` creation proc
 Once the property animation is initiated, recursively configure the `PropertyAnimator` by chaining duration, easing, and/or primary designation, to create the final `FABasicAnimation`, and add it to the parent group.
 
 ```swift
-	func duration(duration : CGFloat) -> PropertyAnimator
-	func easing(easing : FAEasing) -> PropertyAnimator
-	func primary(primary : Bool) -> PropertyAnimator
+  func duration(duration : CGFloat) -> PropertyAnimator
+  func easing(easing : FAEasing) -> PropertyAnimator
+  func primary(primary : Bool) -> PropertyAnimator
 ```
 
 Once the function call exits the closure, **FlightAnimator** performs the following:
@@ -125,15 +131,15 @@ Chaining animations together in FlightAnimator is simple.
 
 ### Trigger on Start
 
-The animation created on the secondaryView is triggered once the the primaryView's animation begins.    	
-         	
+The animation created on the secondaryView is triggered once the the primaryView's animation begins.      
+          
 ```swift
-	primaryView.animate { [unowned self] (animator) in
-		....
-		
-    	animator.triggerOnStart(onView: self.secondaryView, animator: { (animator) in
-         	....
-    	})
+  primaryView.animate { [unowned self] (animator) in
+    ....
+    
+      animator.triggerOnStart(onView: self.secondaryView, animator: { (animator) in
+          ....
+      })
     }
 ```
 
@@ -142,12 +148,12 @@ The animation created on the secondaryView is triggered once the the primaryView
 The animation created on the secondaryView is triggered once the the primaryView's animation completes.
 
 ```swift
-	primaryView.animate { [unowned self] (animator) in
-		....
-		
-    	animator.triggerOnCompletion(onView: self.secondaryView, animator: { (animator) in
-         	....
-    	})
+  primaryView.animate { [unowned self] (animator) in
+    ....
+    
+      animator.triggerOnCompletion(onView: self.secondaryView, animator: { (animator) in
+          ....
+      })
     }
 ```
 
@@ -156,12 +162,12 @@ The animation created on the secondaryView is triggered once the the primaryView
 The animation created on the secondaryView is triggered when the driving animation reaches the relative half way point in duration on the primaryView's animation.
 
 ```swift
-	primaryView.animate { [unowned self] (animator) in
-		....
-				
-    	animator.triggerOnProgress(0.5, onView: self.secondaryView, animator: { (animator) in
-         	....
-    	})
+  primaryView.animate { [unowned self] (animator) in
+    ....
+        
+      animator.triggerOnProgress(0.5, onView: self.secondaryView, animator: { (animator) in
+          ....
+      })
     }
 ```
 
@@ -170,12 +176,12 @@ The animation created on the secondaryView is triggered when the driving animati
 The animation created on the secondaryView is triggered when the driving animation reaches the relative half way point between the fromValue and toValue of the primaryView's animation. This is driven 
 
 ```swift
-	primaryView.animate { [unowned self] (animator) in
-		....
-		
-    	animator.triggerOnValueProgress(0.5, onView: self.secondaryView, animator: { (animator) in
-         	....
-    	})
+  primaryView.animate { [unowned self] (animator) in
+    ....
+    
+      animator.triggerOnValueProgress(0.5, onView: self.secondaryView, animator: { (animator) in
+          ....
+      })
     }
 ```
 
@@ -185,29 +191,29 @@ There is built in support for nesting triggers within triggers to sequence anima
 
 
 ```swift
-	primaryView.animate { [unowned self] (animator) in
-		....
-		
-    	animator.triggerOnStart(onView: self.secondaryView, animator: { (animator) in
-         	-> Relative to primaryView animation
-         	 
-         	animator.triggerOnCompletion(onView: self.tertiaryView, animator: { (animator) in
-				-> Relative to secondaryView animation
+  primaryView.animate { [unowned self] (animator) in
+    ....
+    
+      animator.triggerOnStart(onView: self.secondaryView, animator: { (animator) in
+          -> Relative to primaryView animation
+           
+          animator.triggerOnCompletion(onView: self.tertiaryView, animator: { (animator) in
+        -> Relative to secondaryView animation
             
-            	animator.triggerOnProgress(0.5, onView: self.quaternaryView, animator: { (animator) in
-					-> Relative to tertiaryView animation
-    			})
-        	})
-        	
-        	animator.triggerOnValueProgress(0.5, onView: self.quinary, animator: { (animator) in
-         		-> Relative to secondaryView animation
-    		})
-    	})
-    	
-    	animator.triggerOnStart(onView: self.senaryView, animator: { (animator) in
-         	-> Relative to primaryView animation 
-    	})
-	}
+              animator.triggerOnProgress(0.5, onView: self.quaternaryView, animator: { (animator) in
+          -> Relative to tertiaryView animation
+          })
+          })
+          
+          animator.triggerOnValueProgress(0.5, onView: self.quinaryView, animator: { (animator) in
+            -> Relative to secondaryView animation
+        })
+      })
+      
+      animator.triggerOnStart(onView: self.senaryView, animator: { (animator) in
+          -> Relative to primaryView animation 
+      })
+  }
 ```
 
 ### CAAnimationDelegate Callbacks
@@ -232,7 +238,7 @@ These can be nested just as the animation triggers, and be applied animator on t
 
 ##Cache & Reuse Animations
 
-FlighAnimator allows for registering animations (aka states) up front with a unique animation key. Once defined it can be manually triggered at any time in the application flow using the animation key used registration. 
+FlightAnimator allows for registering animations (aka states) up front with a unique animation key. Once defined it can be manually triggered at any time in the application flow using the animation key used registration. 
 
 When the animation is applied, if the view is in mid flight, it will synchronize itself with the current presentation layer values, and animate to its final destination. 
 
@@ -242,7 +248,7 @@ To register an animation, call a globally defined method, and create an animatio
 
 ```swift
 struct AnimationKeys {
-	static let CenterStateFrameAnimation  = "CenterStateFrameAnimation"
+  static let CenterStateFrameAnimation  = "CenterStateFrameAnimation"
 }
 ...
 
@@ -259,7 +265,7 @@ This animation is only cached, and is not performed until it is manually trigger
 
 To trigger the animation call the following 
 
-```
+```swift
 view.applyAnimation(forKey: AnimationKeys.CenterStateFrameAnimation)
 ```
 
@@ -290,14 +296,14 @@ Lets look at the following example of setting the timingPriority on a group anim
 
 ```swift
 func animateView(toFrame : CGRect) {
-	
-	let newBounds = CGRectMake(0,0, toFrame.width, toFrame.height)
-	let newPosition = CGPointMake(toFrame.midX, toFrame.midY)
-	
-	view.animate(.MaxTime) { (animator) in
-      	animator.bounds(newBounds).duration(0.5).easing(.OutCubic)
-      	animator.position(newPositon).duration(0.5).easing(.InSine)
-	}
+  
+  let newBounds = CGRectMake(0,0, toFrame.width, toFrame.height)
+  let newPosition = CGPointMake(toFrame.midX, toFrame.midY)
+  
+  view.animate(.MaxTime) { (animator) in
+        animator.bounds(newBounds).duration(0.5).easing(.OutCubic)
+        animator.position(newPositon).duration(0.5).easing(.InSine)
+  }
 }
 ```
 Just like the demo app, This method gets called by different buttons, and takes on the frame value of button that triggered the method. Let's the animation has been triggered, and is in mid flight. While in mid flight another button is tapped, a new animation is applied, and ehe position changes, but the bounds stay the same. 
@@ -350,12 +356,12 @@ func respondToPanRecognizer(recognizer : UIPanGestureRecognizer) {
     ........
     
     case .Ended:
-    	let currentVelocity = recognizer.velocityInView(view)
+      let currentVelocity = recognizer.velocityInView(view)
         
-      	view.animate { (animator) in
-         	animator.bounds(finalBounds).duration(0.5).easing(.OutCubic)
-  			animator.position(finalPositon).duration(0.5).easing(.SpringDecay(velocity: velocity))
-      	}
+        view.animate { (animator) in
+          animator.bounds(finalBounds).duration(0.5).easing(.OutCubic)
+        animator.position(finalPositon).duration(0.5).easing(.SpringDecay(velocity: velocity))
+        }
     default:
         break
     }
