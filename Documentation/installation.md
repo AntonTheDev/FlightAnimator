@@ -13,10 +13,10 @@
 
 	```
 	Swift 3.0: 
-    pod 'FlightAnimator', '~> 0.9.4-3.x'
+    pod 'FlightAnimator', :git => 'https://github.com/AntonTheDev/FlightAnimator.git', :tag => '0.9.4-3.x'
 
 	Swift 2.2 / Swift 2.3 : 
-    pod 'FlightAnimator', '~> 0.9.4-2.x'
+    pod 'FlightAnimator', :git => 'https://github.com/AntonTheDev/FlightAnimator.git', :tag => '0.9.4-2.x'
 	```
 2. Install FlightAnimator by running
 

@@ -10,8 +10,9 @@
 
 **Swift 3.0 Support added:**
 
-* For Swift 3.0 - Use Tag Version 0.9.4-3.x 
-* For Swift 2.x - Use Tag Version 0.9.4-2.x 
+* For Swift 3.0 - Use **tag** Version 0.9.4-3.x 
+* For Swift 2.x - Use **tag** Version 0.9.4-2.x 
+* See [Installation Instructions](/Documentation/installation.md) for clarification
 
 **NOTE: Migrating from versions lower than 0.9.1? See the [Release Notes](/Documentation/release_notes.md) about API Updates**
 
