@@ -5,7 +5,6 @@
 1. Clone the both [CoreFlightAnimation](https://github.com/AntonTheDev/CoreFlightAnimation.git) and [FlightAnimator](https://github.com/AntonTheDev/FlightAnimator.git) repositories 
 2. Add the contents of ***/FlightAnimator/Source*** and  ***/CoreFlightAnimation/Source*** directories
 
-<br>
 
 ****
 ###CocoaPods
@@ -24,7 +23,6 @@
     ```
     pod install
     ```
-<br>
 **** 
 ###Carthage
 
@@ -68,5 +66,3 @@ The installation instruction below for iOS and AppleTV
   	$(SRCROOT)/Carthage/Build/tvOS/CoreFlightAnimation.framework
   	$(SRCROOT)/Carthage/Build/tvOS/FlightAnimator.framework
   	```
-
-<br>

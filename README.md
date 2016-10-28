@@ -265,7 +265,7 @@ This animation is only cached, and is not performed until it is manually trigger
 
 To trigger the animation call the following 
 
-```
+```swift
 view.applyAnimation(forKey: AnimationKeys.CenterStateFrameAnimation)
 ```
 
