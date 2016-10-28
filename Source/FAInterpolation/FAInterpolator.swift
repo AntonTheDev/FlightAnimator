@@ -9,29 +9,6 @@
 import Foundation
 import UIKit
 
-public func typeCastCGColor(_ value : Any) -> CGColor? {
-    /*
-    if CFGetTypeID(value) == CGColor.typeID {
-        return (value as! CGColor)
-    }
-     */
-   // if value.self is AnyObject.Type {
-        if CFGetTypeID(value as AnyObject) == CGColor.typeID {
-            return (value as! CGColor)
-        }
-   // }
-   /*
-    if let currentValue = value as? AnyObject {
-        //TODO: There appears to be no way of unwrapping a CGColor by type casting
-        //Fix when the following bug is fixed https://bugs.swift.org/browse/SR-1612
-        if CFGetTypeID(currentValue) == CGColor.typeID {
-            return (currentValue as! CGColor)
-        }
-    }
-        */
-    return nil
-}
-
 struct FAAnimationConfig {
     static let InterpolationFrameCount  : CGFloat = 60.0
     
@@ -215,7 +192,7 @@ extension FAInterpolator {
                 zeroValue = CGFloat(0.0)
             } else  if let _ = toValue as? CATransform3D {
                 zeroValue =  CATransform3DIdentity
-            } else if let _ = typeCastCGColor(toValue) {
+            } else if CFGetTypeID(toValue as AnyObject) == CGColor.typeID {
                 zeroValue = UIColor().cgColor
             }
             return zeroValue
@@ -229,7 +206,7 @@ extension FAInterpolator {
             zeroValue = CGRect.zero
         } else  if let _ = presentationValue.typeValue() as? CATransform3D {
             zeroValue = CATransform3DIdentity
-        }
+        } 
         
         return zeroValue
     }
@@ -245,8 +222,8 @@ extension FAInterpolator {
     }
     
     fileprivate func customComponentSprings(_ initialVelocity: Any?,
-                                        angularFrequency: CGFloat,
-                                        dampingRatio: CGFloat) {
+                                            angularFrequency: CGFloat,
+                                            dampingRatio: CGFloat) {
         
         var vectorVelocity = FAVector(value :zeroVelocityValue())
         
@@ -381,7 +358,3 @@ extension FAInterpolator {
         return start * (1.0 - progress) + end * progress
     }
 }
-
-
-
-

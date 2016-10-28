@@ -1,5 +1,14 @@
 #Release Notes
 
+####Version 0.9.4-3.x  / 0.9.4-2.x
+
+* Swift 3.0 / 2.2 / 2.3 Update :
+	- 0.9.4-3.x (Swift 3.0)
+	- 0.9.4-2.x (Swift 2.2 / Swift 2.3)
+
+* Cleanup on Swift 3.0 branch
+
+
 ####Version 0.9.3
 
 * Stability Updates / Performance Improvements

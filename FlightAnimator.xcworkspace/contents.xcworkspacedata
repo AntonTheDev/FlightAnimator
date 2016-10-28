@@ -29,6 +29,9 @@
          <FileRef
             location = "group:FlightAnimator.swift">
          </FileRef>
+         <FileRef
+            location = "group:FAPropertyAnimator.swift">
+         </FileRef>
       </Group>
       <Group
          location = "group:FAInterpolation"

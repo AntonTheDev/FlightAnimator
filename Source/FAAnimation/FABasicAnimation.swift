@@ -92,16 +92,16 @@ internal extension FABasicAnimation {
             
             if let currentValue = presentationValue as? CGPoint {
                 fromValue = NSValue(cgPoint : currentValue)
-            } else  if let currentValue = presentationValue as? CGSize {
+            } else if let currentValue = presentationValue as? CGSize {
                 fromValue = NSValue(cgSize : currentValue)
-            } else  if let currentValue = presentationValue as? CGRect {
+            } else if let currentValue = presentationValue as? CGRect {
                 fromValue = NSValue(cgRect : currentValue)
-            } else  if let currentValue = presentationValue as? CGFloat {
+            } else if let currentValue = presentationValue as? CGFloat {
                 fromValue = NSNumber(value: Float(currentValue) as Float)
-            } else  if let currentValue = presentationValue as? CATransform3D {
+            } else if let currentValue = presentationValue as? CATransform3D {
                 fromValue = NSValue(caTransform3D : currentValue)
-            } else if let currentValue = typeCastCGColor(presentationValue) {
-                fromValue = currentValue
+            } else if CFGetTypeID(presentationValue as AnyObject) == CGColor.typeID {
+                fromValue = presentationValue as! CGColor
             }
         }
     }

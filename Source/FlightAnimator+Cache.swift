@@ -58,21 +58,4 @@ public extension UIView {
             animation.applyFinalState(animated)
         }
     }
-
-    /*
-     
-    func applyAnimationTree(forKey key: String,
-                                   animated : Bool = true) {
-        
-        applyAnimation(forKey : key, animated:  animated)
-        applyAnimationsToSubViews(self, forKey: key, animated: animated)
-    }
-    
-    private func applyAnimationsToSubViews(inView : UIView, forKey key: String, animated : Bool = true) {
-        for subView in inView.subviews {
-            subView.applyAnimation(forKey: key, animated: animated)
-        }
-    }
-     
-    */
 }

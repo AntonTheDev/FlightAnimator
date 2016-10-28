@@ -26,15 +26,15 @@ public extension UIView {
 
 public extension FlightAnimator  {
     
-    @discardableResult public func value(_ value : Any, forKeyPath key : String) -> PropertyAnimator {
+    @discardableResult public func value(_ value : Any, forKeyPath key : String) -> FAPropertyAnimator {
         
         if let value = value as? UIColor {
-            animationConfigurations[key] = PropertyAnimator(value: value.cgColor,
+            animationConfigurations[key] = FAPropertyAnimator(value: value.cgColor,
                                                                    forKeyPath: key,
                                                                    view : associatedView!,
                                                                    animationKey: animationKey!)
         } else {
-            animationConfigurations[key] = PropertyAnimator(value: value,
+            animationConfigurations[key] = FAPropertyAnimator(value: value,
                                                                    forKeyPath: key,
                                                                    view : associatedView!,
                                                                    animationKey: animationKey!)
@@ -43,75 +43,75 @@ public extension FlightAnimator  {
         return animationConfigurations[key]!
     }
     
-    @discardableResult public func alpha(_ value : CGFloat) -> PropertyAnimator {
+    @discardableResult public func alpha(_ value : CGFloat) -> FAPropertyAnimator {
         return self.value(value, forKeyPath : "opacity")
     }
     
-    @discardableResult public func anchorPoint(_ value : CGPoint) -> PropertyAnimator {
+    @discardableResult public func anchorPoint(_ value : CGPoint) -> FAPropertyAnimator {
         return self.value(value, forKeyPath : "anchorPoint")
     }
     
-    @discardableResult public func backgroundColor(_ value : CGColor) -> PropertyAnimator {
+    @discardableResult public func backgroundColor(_ value : CGColor) -> FAPropertyAnimator {
         return self.value(value, forKeyPath : "backgroundColor")
     }
     
-    @discardableResult public func bounds(_ value : CGRect) -> PropertyAnimator {
+    @discardableResult public func bounds(_ value : CGRect) -> FAPropertyAnimator {
         return self.value(value, forKeyPath : "bounds")
     }
 
-    @discardableResult public func borderColor(_ value : CGColor) -> PropertyAnimator {
+    @discardableResult public func borderColor(_ value : CGColor) -> FAPropertyAnimator {
         return self.value(value, forKeyPath : "borderColor")
     }
     
-    @discardableResult public func borderWidth(_ value : CGFloat) -> PropertyAnimator {
+    @discardableResult public func borderWidth(_ value : CGFloat) -> FAPropertyAnimator {
         return self.value(value, forKeyPath : "borderWidth")
     }
 
-    @discardableResult public func contentsRect(_ value : CGRect) -> PropertyAnimator {
+    @discardableResult public func contentsRect(_ value : CGRect) -> FAPropertyAnimator {
         return self.value(value, forKeyPath : "contentsRect")
     }
     
-    @discardableResult public func cornerRadius(_ value : CGPoint) -> PropertyAnimator {
+    @discardableResult public func cornerRadius(_ value : CGPoint) -> FAPropertyAnimator {
         return self.value(value, forKeyPath : "cornerRadius")
     }
     
-    @discardableResult public func opacity(_ value : CGFloat) -> PropertyAnimator {
+    @discardableResult public func opacity(_ value : CGFloat) -> FAPropertyAnimator {
         return self.value(value, forKeyPath : "opacity")
     }
     
-    @discardableResult public func position(_ value : CGPoint) -> PropertyAnimator {
+    @discardableResult public func position(_ value : CGPoint) -> FAPropertyAnimator {
         return self.value(value, forKeyPath : "position")
     }
     
-    @discardableResult public func shadowColor(_ value : CGColor) -> PropertyAnimator {
+    @discardableResult public func shadowColor(_ value : CGColor) -> FAPropertyAnimator {
         return self.value(value, forKeyPath : "shadowColor")
     }
     
-    @discardableResult public func shadowOffset(_ value : CGSize) -> PropertyAnimator {
+    @discardableResult public func shadowOffset(_ value : CGSize) -> FAPropertyAnimator {
         return self.value(value, forKeyPath : "shadowOffset")
     }
     
-    @discardableResult public func shadowOpacity(_ value : CGFloat) -> PropertyAnimator {
+    @discardableResult public func shadowOpacity(_ value : CGFloat) -> FAPropertyAnimator {
         return self.value(value, forKeyPath : "shadowOpacity")
     }
     
-    @discardableResult public func shadowRadius(_ value : CGFloat) -> PropertyAnimator {
+    @discardableResult public func shadowRadius(_ value : CGFloat) -> FAPropertyAnimator {
         return self.value(value, forKeyPath : "shadowRadius")
     }
     
-    @discardableResult public func size(_ value : CGSize) -> PropertyAnimator {
+    @discardableResult public func size(_ value : CGSize) -> FAPropertyAnimator {
         return bounds(CGRect(x: 0, y: 0, width: value.width, height: value.height))
     }
     
-    @discardableResult public func sublayerTransform(_ value : CATransform3D) -> PropertyAnimator {
+    @discardableResult public func sublayerTransform(_ value : CATransform3D) -> FAPropertyAnimator {
         return self.value(value, forKeyPath : "sublayerTransform")
     }
     
-    @discardableResult public func transform(_ value : CATransform3D) -> PropertyAnimator{
+    @discardableResult public func transform(_ value : CATransform3D) -> FAPropertyAnimator{
         return self.value(value, forKeyPath : "transform")
     }
     
-    @discardableResult public func zPosition(_ value : CGFloat) -> PropertyAnimator {
+    @discardableResult public func zPosition(_ value : CGFloat) -> FAPropertyAnimator {
         return self.value(value, forKeyPath : "zPosition")
     }
 }

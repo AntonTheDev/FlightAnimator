@@ -10,67 +10,34 @@ import Foundation
 import UIKit
 import QuartzCore
 
-
 public typealias FAAnimationDidStart = ((_ anim: CAAnimation) -> Void)
 public typealias FAAnimationDidStop  = ((_ anim: CAAnimation, _ complete: Bool) -> Void)
 
-#if swift(>=2.3)
-    
-    public class FAAnimationDelegate : NSObject, CAAnimationDelegate {
-        
-        var animationDidStart : FAAnimationDidStart?
-        var animationDidStop : FAAnimationDidStop?
-        
-        public func animationDidStart(_ anim: CAAnimation) {
-            if let startCallback = animationDidStart {
-                startCallback(anim)
-            }
-        }
-        
-        public func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
-            if let stopCallback = animationDidStop {
-                stopCallback(anim, flag)
-            }
-        }
-        
-        public func setDidStopCallback(stopCallback : @escaping FAAnimationDidStop) {
-            animationDidStop = stopCallback
-        }
-        
-        public func setDidStartCallback(startCallback : @escaping FAAnimationDidStart) {
-            animationDidStart = startCallback
-        }
-    }
-    
-#else
-    
-    open class FAAnimationDelegate : NSObject {
+public class FAAnimationDelegate : NSObject, CAAnimationDelegate {
     
     var animationDidStart : FAAnimationDidStart?
     var animationDidStop : FAAnimationDidStop?
     
-    open override func animationDidStart(_ anim: CAAnimation) {
-    if let startCallback = animationDidStart {
-    startCallback(anim : anim)
-    }
-    }
-    
-    open override func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
-    if let stopCallback = animationDidStop {
-    stopCallback(anim : anim, complete: flag)
-    }
+    public func animationDidStart(_ anim: CAAnimation) {
+        if let startCallback = animationDidStart {
+            startCallback(anim)
+        }
     }
     
-    open func setDidStopCallback(_ stopCallback : FAAnimationDidStop) {
-    animationDidStop = stopCallback
+    public func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
+        if let stopCallback = animationDidStop {
+            stopCallback(anim, flag)
+        }
     }
     
-    open func setDidStartCallback(_ startCallback : FAAnimationDidStart) {
-    animationDidStart = startCallback
-    }
+    public func setDidStopCallback(stopCallback : @escaping FAAnimationDidStop) {
+        animationDidStop = stopCallback
     }
     
-#endif
+    public func setDidStartCallback(startCallback : @escaping FAAnimationDidStart) {
+        animationDidStart = startCallback
+    }
+}
 
 public extension CAAnimation {
     

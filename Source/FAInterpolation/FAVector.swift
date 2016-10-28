@@ -69,8 +69,8 @@ open class FAVector : Equatable {
                           currentValue.m41, currentValue.m42, currentValue.m43, currentValue.m44]
             return
         }
-        else if let currentValue = typeCastCGColor(value) {
-            let color = UIColor(cgColor : currentValue)
+        else if CFGetTypeID(value as AnyObject) == CGColor.typeID {
+            let color = UIColor(cgColor : value as! CGColor)
             var red: CGFloat = 0, green: CGFloat = 0, blue: CGFloat = 0, alpha: CGFloat = 0
             
             if color.getRed(&red, green: &green, blue: &blue, alpha: &alpha) {
@@ -85,7 +85,7 @@ open class FAVector : Equatable {
                 return
             }
         }
-        
+    
         components = [CGFloat]()
     }
     
@@ -125,8 +125,8 @@ open class FAVector : Equatable {
                 m41: components[12], m42: components[13], m43: components[14], m44: components[15]))
             return valueRepresentation
         }
-        else if let currentValue = typeCastCGColor(value) {
-            let color = UIColor(cgColor : currentValue)
+        else if CFGetTypeID(value as AnyObject) == CGColor.typeID {
+            let color = UIColor(cgColor : value as! CGColor)
             
             var red: CGFloat = 0, green: CGFloat = 0, blue: CGFloat = 0, alpha: CGFloat = 0
             
@@ -164,8 +164,8 @@ open class FAVector : Equatable {
                                  m31: components[8],  m32: components[9],  m33: components[10], m34: components[11],
                                  m41: components[12], m42: components[13], m43: components[14], m44: components[15])
         }
-        else if let currentValue = typeCastCGColor(value) {
-            let color = UIColor(cgColor : currentValue)
+        else if CFGetTypeID(value as AnyObject) == CGColor.typeID {
+            let color = UIColor(cgColor :  value as! CGColor)
             
             var red: CGFloat = 0, green: CGFloat = 0, blue: CGFloat = 0, alpha: CGFloat = 0
             

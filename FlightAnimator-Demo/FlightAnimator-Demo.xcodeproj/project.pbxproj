@@ -31,6 +31,7 @@
 		139493A01D0FD232004B0BD4 /* ViewController+Animation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1394939F1D0FD232004B0BD4 /* ViewController+Animation.swift */; };
 		139493A51D107739004B0BD4 /* HGAlignment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 139493A41D107739004B0BD4 /* HGAlignment.swift */; };
 		13D0A12A1D30297900B87760 /* FlightAnimatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13D0A1291D30297900B87760 /* FlightAnimatorTests.swift */; };
+		3A5C3DC81DC39726001E9E74 /* FAPropertyAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A5C3DC71DC39726001E9E74 /* FAPropertyAnimator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -71,6 +72,7 @@
 		13D0A1271D30297900B87760 /* FlightAnimatorTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FlightAnimatorTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		13D0A1291D30297900B87760 /* FlightAnimatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlightAnimatorTests.swift; sourceTree = "<group>"; };
 		13D0A12B1D30297900B87760 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3A5C3DC71DC39726001E9E74 /* FAPropertyAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FAPropertyAnimator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -178,6 +180,7 @@
 				1379E7151DB7C9AF001A32FF /* FAAnimationGroup.swift */,
 				1379E7161DB7C9AF001A32FF /* FABasicAnimation.swift */,
 				1379E7171DB7C9AF001A32FF /* FlightAnimator.swift */,
+				3A5C3DC71DC39726001E9E74 /* FAPropertyAnimator.swift */,
 			);
 			path = FAAnimation;
 			sourceTree = "<group>";
@@ -327,6 +330,7 @@
 				13009D7D1D0B9854008419C8 /* ViewController.swift in Sources */,
 				139493A51D107739004B0BD4 /* HGAlignment.swift in Sources */,
 				1379E72B1DB7C9AF001A32FF /* FlightAnimator+Cache.swift in Sources */,
+				3A5C3DC81DC39726001E9E74 /* FAPropertyAnimator.swift in Sources */,
 				13009D8B1D0B9869008419C8 /* AppDelegate.swift in Sources */,
 				1379E7281DB7C9AF001A32FF /* FASpring.swift in Sources */,
 				1379E7261DB7C9AF001A32FF /* FAEasing.swift in Sources */,

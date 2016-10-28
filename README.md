@@ -1,14 +1,20 @@
 #FlightAnimator
 
 
-[![Cocoapods Compatible](https://img.shields.io/badge/pod-v0.9.3-blue.svg)]()
+[![Cocoapods Compatible](https://img.shields.io/badge/pod-v0.9.4-blue.svg)]()
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)]()
 [![Platform](https://img.shields.io/badge/platform-ios | tvos-lightgrey.svg)]()
 [![License](https://img.shields.io/badge/license-MIT-343434.svg)](/LICENSE.md)
 
 ![alt tag](/Documentation/FlightBanner.jpg?raw=true)
 
-**API Update!! See [Release Notes](/Documentation/release_notes.md) Migrating from versions lower than 0.9.1**
+** Swift 3.0 Support added: **
+
+* For Swift 3.0 - Use Tag Version 0.9.4-3.x 
+* For Swift 2.x - Use Tag Version 0.9.4-2.x 
+
+** NOTE: Migrating from versions lower than 0.9.1? See the [Release Notes](/Documentation/release_notes.md) about API Updates**
+
 
 ##Introduction
 
@@ -26,12 +32,12 @@ Unlike `CAAnimationGroups`, and `UIViewAnimations`, which animate multiple prope
 - [x] Define, Cache, and Reuse Animations
 
 
-Check out the [FlightAnimato Project Demo](#demoApp) in the video below to <br> experiment with all the different capabilities of the **FlightAnimator**.
+Check out the [FlightAnimator Project Demo](#demoApp) in the video below to <br> experiment with all the different capabilities of the **FlightAnimator**.
 
 <p align=left>
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=8XyH5mpfoC8&vq=hd1080
 " target="_blank"><img src="http://img.youtube.com/vi/8XyH5mpfoC8/0.jpg" 
-alt="FlightAnimatore Demo" border="0" /> </a>
+alt="FlightAnimator Demo" border="0" /> </a>
 </p>
 
 
@@ -199,7 +205,7 @@ There is built in support for nesting triggers within triggers to sequence anima
     			})
         	})
         	
-        	animator.triggerOnValueProgress(0.5, onView: self.quinary, animator: { (animator) in
+        	animator.triggerOnValueProgress(0.5, onView: self.quinaryView, animator: { (animator) in
          		-> Relative to secondaryView animation
     		})
     	})
@@ -232,7 +238,7 @@ These can be nested just as the animation triggers, and be applied animator on t
 
 ##Cache & Reuse Animations
 
-FlighAnimator allows for registering animations (aka states) up front with a unique animation key. Once defined it can be manually triggered at any time in the application flow using the animation key used registration. 
+FlightAnimator allows for registering animations (aka states) up front with a unique animation key. Once defined it can be manually triggered at any time in the application flow using the animation key used registration. 
 
 When the animation is applied, if the view is in mid flight, it will synchronize itself with the current presentation layer values, and animate to its final destination. 
 

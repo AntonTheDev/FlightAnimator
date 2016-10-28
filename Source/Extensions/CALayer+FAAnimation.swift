@@ -26,6 +26,7 @@ internal func swizzleSelector(_ cls: AnyClass!, originalSelector : Selector, swi
 
 var executedLayer = false
 var executedColor = false
+
 extension CALayer {
     
     final public class func swizzleAddAnimation() {
@@ -99,10 +100,10 @@ extension CALayer {
     final public func anyValueForKeyPath(_ keyPath: String) -> Any? {
         if let currentFromValue = self.value(forKeyPath: keyPath) {
             
-            if let value = typeCastCGColor(currentFromValue) {
-                return value
+            if CFGetTypeID(currentFromValue as AnyObject) == CGColor.typeID {
+                return currentFromValue
             }
-            
+
             let type = String(cString: (currentFromValue as AnyObject).objCType)
             
             if type.hasPrefix("{CGPoint") {
@@ -181,5 +182,3 @@ extension UIColor {
         return false
     }
 }
-
-

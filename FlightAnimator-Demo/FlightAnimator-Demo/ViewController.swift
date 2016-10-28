@@ -443,7 +443,7 @@ extension ViewController : ConfigurationViewDelegate, CurveCollectionViewCellDel
         if let index = self.configView.contentCollectionView.indexPath(for: cell) {
             switch (index as NSIndexPath).row {
             case 0:
-                //size
+                // size
                 animConfig.sizeFunction = function
             case 1:
                 // position
@@ -462,7 +462,7 @@ extension ViewController : ConfigurationViewDelegate, CurveCollectionViewCellDel
         if let index = self.configView.contentCollectionView.indexPath(for: cell) {
             switch (index as NSIndexPath).row {
             case 0:
-                //size
+                // size
                 return animConfig.sizePrimary
             case 1:
                 // position
