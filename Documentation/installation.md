@@ -2,8 +2,8 @@
 
 ###Manual Install
 
-1. Clone the both [CoreFlightAnimation](https://github.com/AntonTheDev/CoreFlightAnimation.git) and [FlightAnimator](https://github.com/AntonTheDev/FlightAnimator.git) repositories 
-2. Add the contents of ***/FlightAnimator/Source*** and  ***/CoreFlightAnimation/Source*** directories
+1. Clone [FlightAnimator](https://github.com/AntonTheDev/FlightAnimator.git) repositories 
+2. Add the contents of ***/FlightAnimator/Source***
 
 
 ****
@@ -57,12 +57,10 @@ The installation instruction below for iOS and AppleTV
 
 	```
 	// iOS
-	$(SRCROOT)/Carthage/Build/iOS/CoreFlightAnimation.framework
  	$(SRCROOT)/Carthage/Build/iOS/FlightAnimator.framework
   	
   	or
   	
   	// tvOS
-  	$(SRCROOT)/Carthage/Build/tvOS/CoreFlightAnimation.framework
   	$(SRCROOT)/Carthage/Build/tvOS/FlightAnimator.framework
   	```
