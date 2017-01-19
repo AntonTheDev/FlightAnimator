@@ -24,88 +24,24 @@ public extension UIView {
     }
 }
 
-
-public func typeCast<U>(object: Any?) -> U? {
-    if let typed = object as? U {
-        return typed
-    }
-    return nil
-}
-
-extension NSObject {
-    
-    // Returns the property type
-    func getTypeOfProperty (_ name: String) -> String? {
-        
-        var type: Mirror = Mirror(reflecting: self)
-        
-        for child in type.children {
-            if child.label! == name {
-                return String(describing: type(of: child.value))
-            }
-        }
-        while let parent = type.superclassMirror {
-            for child in parent.children {
-                if child.label! == name {
-                    return String(describing: type(of: child.value))
-                }
-            }
-            type = parent
-        }
-        return nil
-    }
-}
-
 extension FlightAnimator  {
-
     
     @discardableResult open func value(_ value : Any, forKeyPath key : String) -> FAPropertyAnimator {
-       
-        if let coreValue = associatedView?.layer.value(forKey: key) as? NSValue,
-           let typedValue = coreValue.typeValue() as? NSNumber {
-            
-                let numberType = CFNumberGetType(typedValue)
-            
-            var formalValue : Any = value
-            
-            
-                switch numberType {
-                case .charType:
-                    print("Bool")
-                case .sInt8Type, .sInt16Type, .sInt32Type, .sInt64Type, .shortType, .intType, .longType, .longLongType, .cfIndexType, .nsIntegerType:
-                     print("Int")
-                case .cgFloatType:
-                    print("CGFloat")
-                case .float32Type, .float64Type, .floatType:
-                    
-                    if type(of :value) == Double.self {
-                        formalValue = CGFloat(value as! Double)
-                    }
-                    
-                    print("Float", type(of :value), type(of :formalValue))
-                    break
-                case .doubleType:
-                    print("Double")
-                }
-            
+    
+        let formalValue : Any = associatedView?.formattedNumericValue(forValue: value, forKey: key)
+
+        if let formalValue = formalValue as? UIColor {
+            animationConfigurations[key] = FAPropertyAnimator(value: formalValue.cgColor,
+                                                              forKeyPath: key,
+                                                              view : associatedView!,
+                                                              animationKey: animationKey!)
+        } else {
             animationConfigurations[key] = FAPropertyAnimator(value: formalValue,
                                                               forKeyPath: key,
                                                               view : associatedView!,
                                                               animationKey: animationKey!)
-
-            
-        } else if let value = value as? UIColor {
-            animationConfigurations[key] = FAPropertyAnimator(value: value.cgColor,
-                                                                   forKeyPath: key,
-                                                                   view : associatedView!,
-                                                                   animationKey: animationKey!)
-        } else {
-                animationConfigurations[key] = FAPropertyAnimator(value: value,
-                                                                  forKeyPath: key,
-                                                                  view : associatedView!,
-                                                                  animationKey: animationKey!)
         }
-    
+        
         return animationConfigurations[key]!
     }
     
@@ -124,7 +60,7 @@ extension FlightAnimator  {
     @discardableResult public func bounds(_ value : CGRect) -> FAPropertyAnimator {
         return self.value(value, forKeyPath : "bounds")
     }
-
+    
     @discardableResult public func borderColor(_ value : CGColor) -> FAPropertyAnimator {
         return self.value(value, forKeyPath : "borderColor")
     }
@@ -132,7 +68,7 @@ extension FlightAnimator  {
     @discardableResult public func borderWidth(_ value : CGFloat) -> FAPropertyAnimator {
         return self.value(value, forKeyPath : "borderWidth")
     }
-
+    
     @discardableResult public func contentsRect(_ value : CGRect) -> FAPropertyAnimator {
         return self.value(value, forKeyPath : "contentsRect")
     }
@@ -185,12 +121,12 @@ extension FlightAnimator  {
 extension FlightAnimator {
     
     public func triggerOnStart(onView view: UIView,
-                              timingPriority : FAPrimaryTimingPriority = .maxTime,
-                              animator: (_ animator : FlightAnimator) -> Void) {
+                               timingPriority : FAPrimaryTimingPriority = .maxTime,
+                               animator: (_ animator : FlightAnimator) -> Void) {
         
         triggerAnimation(timingPriority, timeBased : true, view: view, progress: 0.0, animator: animator)
     }
-
+    
     public func triggerOnCompletion(onView view: UIView,
                                     timingPriority : FAPrimaryTimingPriority = .maxTime,
                                     animator: (_ animator : FlightAnimator) -> Void) {
@@ -216,7 +152,6 @@ extension FlightAnimator {
 }
 
 extension FlightAnimator {
-    
     
     public func setDidCancelCallback(_ cancelCallback : @escaping FAAnimationDelegateCallBack) {
         if ((associatedView?.cachedAnimations?.keys.contains(NSString(string: animationKey!))) != nil) {

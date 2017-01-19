@@ -84,6 +84,50 @@ internal extension UIView {
     }
 }
 
+internal extension UIView {
+    
+    internal func formattedNumericValue(forValue value : Any, forKey key : String) -> Any {
+        
+        var formalValue : Any = value
+        
+        if let coreValue = layer.value(forKey: key) as? NSValue,
+            let typedValue = coreValue.typeValue() as? NSNumber {
+            
+            let numberType = CFNumberGetType(typedValue)
+            
+            switch numberType {
+            case .sInt8Type, .sInt16Type, .sInt32Type, .sInt64Type, .shortType, .intType, .longType, .longLongType, .cfIndexType, .nsIntegerType:
+                
+                if let castValue = value as? Double {
+                    formalValue = Int(castValue)
+                } else if let castValue = value as? Float {
+                    formalValue = Int(castValue)
+                }
+            case .float32Type, .float64Type, .floatType, .cgFloatType:
+                
+                if let castValue = value as? Double {
+                    formalValue = CGFloat(castValue)
+                } else if let castValue = value as? Int {
+                    formalValue = CGFloat(castValue)
+                }
+                
+                break
+            case .doubleType:
+                if let castValue = value as? Float {
+                    formalValue = Double(castValue)
+                } else if let castValue = value as? Int {
+                    formalValue = Double(castValue)
+                }
+            case .charType:
+                print("WARNING Unknown Animatable Value Configured")
+            }
+        }
+        
+        
+        return formalValue
+    }
+}
+
 extension Array where Element : Equatable {
     
     mutating func fa_removeObject(_ object : Iterator.Element) {
