@@ -71,7 +71,7 @@ public extension FlightAnimator  {
         return self.value(value, forKeyPath : "contentsRect")
     }
     
-    @discardableResult public func cornerRadius(_ value : CGPoint) -> FAPropertyAnimator {
+    @discardableResult public func cornerRadius(_ value : CGFloat) -> FAPropertyAnimator {
         return self.value(value, forKeyPath : "cornerRadius")
     }
     
