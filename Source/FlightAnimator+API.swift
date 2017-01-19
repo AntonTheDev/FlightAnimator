@@ -32,28 +32,78 @@ public func typeCast<U>(object: Any?) -> U? {
     return nil
 }
 
+extension NSObject {
+    
+    // Returns the property type
+    func getTypeOfProperty (_ name: String) -> String? {
+        
+        var type: Mirror = Mirror(reflecting: self)
+        
+        for child in type.children {
+            if child.label! == name {
+                return String(describing: type(of: child.value))
+            }
+        }
+        while let parent = type.superclassMirror {
+            for child in parent.children {
+                if child.label! == name {
+                    return String(describing: type(of: child.value))
+                }
+            }
+            type = parent
+        }
+        return nil
+    }
+}
 
 extension FlightAnimator  {
+
     
     @discardableResult open func value(_ value : Any, forKeyPath key : String) -> FAPropertyAnimator {
-        
-        
-        var layerValue = associatedView?.layer.value(forKey: key)
-        layerValue = typeCast(object: value)
-        
-        if let value = value as? UIColor {
+       
+        if let coreValue = associatedView?.layer.value(forKey: key) as? NSValue,
+           let typedValue = coreValue.typeValue() as? NSNumber {
+            
+                let numberType = CFNumberGetType(typedValue)
+            
+            var formalValue : Any = value
+            
+            
+                switch numberType {
+                case .charType:
+                    print("Bool")
+                case .sInt8Type, .sInt16Type, .sInt32Type, .sInt64Type, .shortType, .intType, .longType, .longLongType, .cfIndexType, .nsIntegerType:
+                     print("Int")
+                case .cgFloatType:
+                    print("CGFloat")
+                case .float32Type, .float64Type, .floatType:
+                    
+                    if type(of :value) == Double.self {
+                        formalValue = CGFloat(value as! Double)
+                    }
+                    
+                    print("Float", type(of :value), type(of :formalValue))
+                    break
+                case .doubleType:
+                    print("Double")
+                }
+            
+            animationConfigurations[key] = FAPropertyAnimator(value: formalValue,
+                                                              forKeyPath: key,
+                                                              view : associatedView!,
+                                                              animationKey: animationKey!)
+
+            
+        } else if let value = value as? UIColor {
             animationConfigurations[key] = FAPropertyAnimator(value: value.cgColor,
                                                                    forKeyPath: key,
                                                                    view : associatedView!,
                                                                    animationKey: animationKey!)
         } else {
-            
-            if let layerValue = layerValue {
-                animationConfigurations[key] = FAPropertyAnimator(value: layerValue,
+                animationConfigurations[key] = FAPropertyAnimator(value: value,
                                                                   forKeyPath: key,
                                                                   view : associatedView!,
                                                                   animationKey: animationKey!)
-            }
         }
     
         return animationConfigurations[key]!
