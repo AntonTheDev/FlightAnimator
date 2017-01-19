@@ -9,14 +9,12 @@
 import Foundation
 import UIKit
 
-internal let AutoAnimationKey =  "AutoAnimationKey"
-
 public extension UIView {
     
     func animate(_ timingPriority : FAPrimaryTimingPriority = .maxTime,
-                 animator : (_ animator : FlightAnimator) -> Void ) {
+                 animator : @escaping (_ animator : FlightAnimator) -> Void ) {
         
-        let animationKey = AutoAnimationKey
+        let animationKey = UUID().uuidString
         
         let newAnimator = FlightAnimator(withView: self, forKey : animationKey,  priority : timingPriority)
         animator(newAnimator)
@@ -28,7 +26,7 @@ extension FlightAnimator  {
     
     @discardableResult open func value(_ value : Any, forKeyPath key : String) -> FAPropertyAnimator {
     
-        let formalValue : Any = associatedView?.formattedNumericValue(forValue: value, forKey: key)
+        let formalValue = associatedView?.formattedNumericValue(forValue: value, forKey: key)
 
         if let formalValue = formalValue as? UIColor {
             animationConfigurations[key] = FAPropertyAnimator(value: formalValue.cgColor,
@@ -36,7 +34,7 @@ extension FlightAnimator  {
                                                               view : associatedView!,
                                                               animationKey: animationKey!)
         } else {
-            animationConfigurations[key] = FAPropertyAnimator(value: formalValue,
+            animationConfigurations[key] = FAPropertyAnimator(value: formalValue ?? value,
                                                               forKeyPath: key,
                                                               view : associatedView!,
                                                               animationKey: animationKey!)
