@@ -63,7 +63,7 @@ public enum FAEasing : Equatable {
     case springDecay(velocity: Any?)
     case springCustom(velocity: Any?, frequency: CGFloat , ratio: CGFloat)
     
-    func parametricProgress(_ p : CGFloat) -> CGFloat {
+    public func parametricProgress(_ p : CGFloat) -> CGFloat {
         switch self {
         case .linear:
             return p
@@ -283,7 +283,7 @@ public enum FAEasing : Equatable {
     }
     
     
-    func reverseEasingCurve() -> FAEasing {
+    public func reverseEasingCurve() -> FAEasing {
         switch self {
         case .linear:
             return .linear

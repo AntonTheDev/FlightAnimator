@@ -24,9 +24,9 @@ public extension UIView {
     }
 }
 
-public extension FlightAnimator  {
+extension FlightAnimator  {
     
-    @discardableResult public func value(_ value : Any, forKeyPath key : String) -> FAPropertyAnimator {
+    @discardableResult open func value(_ value : Any, forKeyPath key : String) -> FAPropertyAnimator {
         
         if let value = value as? UIColor {
             animationConfigurations[key] = FAPropertyAnimator(value: value.cgColor,
