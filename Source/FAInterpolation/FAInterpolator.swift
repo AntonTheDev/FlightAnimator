@@ -53,7 +53,7 @@ open class FAInterpolator {
         self.toVector = FAVector(value: self.toValue)
         self.fromVector = FAVector(value: self.fromValue)
         
-        if previousValue != nil {
+        if let previousValue = previousValue {
             self.previousValueVector = FAVector(value: previousValue)
         }
     }
@@ -132,7 +132,12 @@ open class FAInterpolator {
     internal func adjustedVelocity(at deltaTime : CGFloat?) -> Any {
         
         guard let deltaTime = deltaTime else {
-            return zeroVelocityValue()
+            
+            if let zeroValue = zeroVelocityValue() {
+                return zeroValue
+            }
+            
+            fatalError("Unable to Determine Zero Value Type")
         }
         
         var progressComponents = [CGFloat]()
@@ -141,7 +146,11 @@ open class FAInterpolator {
             progressComponents.append(springs![index].velocity(deltaTime))
         }
         
-        return FAVector(comps : progressComponents).typeRepresentation(toValue)
+        if let vertor = FAVector(comps : progressComponents).typeRepresentation(toValue) {
+            return vertor
+        }
+        
+        fatalError("Unable to Create Vector for Adjusted Velocity Zero Value Type")
     }
 }
 
@@ -225,12 +234,16 @@ extension FAInterpolator {
                                             angularFrequency: CGFloat,
                                             dampingRatio: CGFloat) {
         
-        var vectorVelocity = FAVector(value :zeroVelocityValue())
+        guard let zeroValue = zeroVelocityValue() else {
+            fatalError("Unable to Determine Zero Value Type")
+        }
+        
+        var vectorVelocity = FAVector(value : zeroValue)
         
         if let velocity = initialVelocity {
             vectorVelocity = FAVector(value :velocity)
         }
-        
+
         springs = [FASpring]()
         
         for index in 0..<toVectoCount {

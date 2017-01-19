@@ -26,7 +26,8 @@ public class FAAnimationDelegate : NSObject, CAAnimationDelegate {
     
     public func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
         if let stopCallback = animationDidStop {
-            stopCallback(anim, flag)
+            
+            if flag { stopCallback(anim, flag) }
         }
     }
     
