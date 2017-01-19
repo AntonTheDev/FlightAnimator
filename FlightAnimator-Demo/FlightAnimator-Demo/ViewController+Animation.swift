@@ -134,8 +134,12 @@ extension ViewController {
                 print("DID START")
             })
             
-            a.setDidStopCallback({ (anim, complete) in
+            a.setDidStopCallback({ (anim) in
                 print("DID STOP")
+            })
+            
+            a.setDidCancelCallback({ (anim) in
+                print("DID Cancel")
             })
             
             a.bounds(toBounds).duration(duration).easing(config.sizeFunction).primary(config.sizePrimary)
@@ -157,7 +161,7 @@ extension ViewController {
                                         onView: self.dragView2,
                                         animator: { (a) in
                                             
-                                            a.setDidStopCallback({ (anim, complete) in
+                                            a.setDidStopCallback({ (anim) in
                                                 print("DID STOP")
                                             })
                                             a.bounds(currentBounds).duration(duration).easing(config.sizeFunction).primary(config.sizePrimary)

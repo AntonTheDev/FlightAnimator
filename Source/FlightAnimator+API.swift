@@ -151,13 +151,20 @@ extension FlightAnimator {
 
 extension FlightAnimator {
     
-    public func setDidStopCallback(_ stopCallback : @escaping FAAnimationDidStop) {
+    
+    public func setDidCancelCallback(_ cancelCallback : @escaping FAAnimationDelegateCallBack) {
+        if ((associatedView?.cachedAnimations?.keys.contains(NSString(string: animationKey!))) != nil) {
+            associatedView!.cachedAnimations![NSString(string: animationKey!)]!.setDidCancelCallback(cancelCallback)
+        }
+    }
+    
+    public func setDidStopCallback(_ stopCallback : @escaping FAAnimationDelegateCallBack) {
         if ((associatedView?.cachedAnimations?.keys.contains(NSString(string: animationKey!))) != nil) {
             associatedView!.cachedAnimations![NSString(string: animationKey!)]!.setDidStopCallback(stopCallback)
         }
     }
     
-    public func setDidStartCallback(_ startCallback : @escaping FAAnimationDidStart) {
+    public func setDidStartCallback(_ startCallback : @escaping FAAnimationDelegateCallBack) {
         if ((associatedView?.cachedAnimations?.keys.contains(NSString(string: animationKey!))) != nil) {
             associatedView!.cachedAnimations![NSString(string: animationKey!)]!.setDidStartCallback(startCallback)
         }

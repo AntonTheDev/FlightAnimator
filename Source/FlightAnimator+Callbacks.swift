@@ -10,13 +10,13 @@ import Foundation
 import UIKit
 import QuartzCore
 
-public typealias FAAnimationDidStart = ((_ anim: CAAnimation) -> Void)
-public typealias FAAnimationDidStop  = ((_ anim: CAAnimation, _ complete: Bool) -> Void)
+public typealias FAAnimationDelegateCallBack = ((_ anim: CAAnimation) -> Void)
 
 public class FAAnimationDelegate : NSObject, CAAnimationDelegate {
     
-    var animationDidStart : FAAnimationDidStart?
-    var animationDidStop : FAAnimationDidStop?
+    var animationDidStart  : FAAnimationDelegateCallBack?
+    var animationDidStop   : FAAnimationDelegateCallBack?
+    var animationDidCancel : FAAnimationDelegateCallBack?
     
     public func animationDidStart(_ anim: CAAnimation) {
         if let startCallback = animationDidStart {
@@ -27,22 +27,26 @@ public class FAAnimationDelegate : NSObject, CAAnimationDelegate {
     public func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
         if let stopCallback = animationDidStop {
             
-            if flag { stopCallback(anim, flag) }
+            if flag { stopCallback(anim) }
         }
     }
     
-    public func setDidStopCallback(stopCallback : @escaping FAAnimationDidStop) {
+    public func setDidStopCallback(stopCallback : @escaping FAAnimationDelegateCallBack) {
         animationDidStop = stopCallback
     }
     
-    public func setDidStartCallback(startCallback : @escaping FAAnimationDidStart) {
+    public func setDidCanceCallback(cancelCallback : @escaping FAAnimationDelegateCallBack) {
+        animationDidCancel = cancelCallback
+    }
+    
+    public func setDidStartCallback(startCallback : @escaping FAAnimationDelegateCallBack) {
         animationDidStart = startCallback
     }
 }
 
 public extension CAAnimation {
     
-    public func setDidStopCallback(_ stopCallback : @escaping FAAnimationDidStop) {
+    public func setDidStopCallback(_ stopCallback : @escaping FAAnimationDelegateCallBack) {
         
         if callbacksSupported() == false {
             print("DidStopCallbacks are not supported for \(self)")
@@ -56,16 +60,39 @@ public extension CAAnimation {
             activeDelegate = FAAnimationDelegate()
         }
         
-        activeDelegate!.setDidStopCallback { (anim, complete) in
+        activeDelegate!.setDidStopCallback { (anim) in
             if let _ = self.delegate as? FAAnimationDelegate {
-                stopCallback(anim, complete)
+                stopCallback(anim)
             }
         }
         
         delegate = activeDelegate
     }
     
-    public func setDidStartCallback(_ startCallback : @escaping FAAnimationDidStart) {
+    public func setDidCancelCallback(_ stopCallback : @escaping FAAnimationDelegateCallBack) {
+        
+        if callbacksSupported() == false {
+            print("DidStopCallbacks are not supported for \(self)")
+        }
+        
+        var activeDelegate : FAAnimationDelegate?
+        
+        if let currentDelegate = delegate as? FAAnimationDelegate {
+            activeDelegate = currentDelegate
+        } else {
+            activeDelegate = FAAnimationDelegate()
+        }
+        
+        activeDelegate!.setDidCanceCallback { (anim) in
+            if let _ = self.delegate as? FAAnimationDelegate {
+                stopCallback(anim)
+            }
+        }
+        
+        delegate = activeDelegate
+    }
+    
+    public func setDidStartCallback(_ startCallback : @escaping FAAnimationDelegateCallBack) {
         
         if callbacksSupported() == false {
             print("DidStartCallback are not supported for \(self)")
