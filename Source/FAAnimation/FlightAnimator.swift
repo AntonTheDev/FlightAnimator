@@ -11,7 +11,7 @@ import UIKit
 
 internal let DebugTriggerLogEnabled = false
 
-open class FlightAnimator {
+public class FlightAnimator {
     
     internal weak var associatedView : UIView?
     internal var animationKey : String?
