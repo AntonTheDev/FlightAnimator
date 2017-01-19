@@ -24,9 +24,22 @@ public extension UIView {
     }
 }
 
+
+public func typeCast<U>(object: Any?) -> U? {
+    if let typed = object as? U {
+        return typed
+    }
+    return nil
+}
+
+
 extension FlightAnimator  {
     
     @discardableResult open func value(_ value : Any, forKeyPath key : String) -> FAPropertyAnimator {
+        
+        
+        var layerValue = associatedView?.layer.value(forKey: key)
+        layerValue = typeCast(object: value)
         
         if let value = value as? UIColor {
             animationConfigurations[key] = FAPropertyAnimator(value: value.cgColor,
@@ -34,10 +47,13 @@ extension FlightAnimator  {
                                                                    view : associatedView!,
                                                                    animationKey: animationKey!)
         } else {
-            animationConfigurations[key] = FAPropertyAnimator(value: value,
-                                                                   forKeyPath: key,
-                                                                   view : associatedView!,
-                                                                   animationKey: animationKey!)
+            
+            if let layerValue = layerValue {
+                animationConfigurations[key] = FAPropertyAnimator(value: layerValue,
+                                                                  forKeyPath: key,
+                                                                  view : associatedView!,
+                                                                  animationKey: animationKey!)
+            }
         }
     
         return animationConfigurations[key]!

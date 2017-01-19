@@ -60,8 +60,8 @@ public extension CAAnimation {
             activeDelegate = FAAnimationDelegate()
         }
         
-        activeDelegate!.setDidStopCallback { (anim) in
-            if let _ = self.delegate as? FAAnimationDelegate {
+        activeDelegate?.setDidStopCallback { [weak self] (anim) in
+            if let _ = self?.delegate as? FAAnimationDelegate {
                 stopCallback(anim)
             }
         }
@@ -83,8 +83,8 @@ public extension CAAnimation {
             activeDelegate = FAAnimationDelegate()
         }
         
-        activeDelegate!.setDidCanceCallback { (anim) in
-            if let _ = self.delegate as? FAAnimationDelegate {
+        activeDelegate?.setDidCanceCallback { [weak self] (anim) in
+            if let _ = self?.delegate as? FAAnimationDelegate {
                 stopCallback(anim)
             }
         }
@@ -106,8 +106,8 @@ public extension CAAnimation {
             activeDelegate = FAAnimationDelegate()
         }
         
-        activeDelegate!.setDidStartCallback { (anim) in
-            if let _ = self.delegate as? FAAnimationDelegate {
+        activeDelegate?.setDidStartCallback { [weak self] (anim) in
+            if let _ = self?.delegate as? FAAnimationDelegate {
                 startCallback(anim)
             }
         }
