@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-let CGFLT_EPSILON = CGFloat(FLT_EPSILON)
+let CGFLT_EPSILON = CGFloat(Float.ulpOfOne)
 
 public struct FASpring {
 

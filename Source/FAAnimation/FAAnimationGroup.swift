@@ -621,7 +621,7 @@ public extension FASynchronizedGroup {
         segmentArray = _segmentArray
         
         self.displayLink = CADisplayLink(target: self, selector: #selector(FASynchronizedGroup.updateTrigger))
-        if DebugTriggerLogEnabled {  print("START ++++++++ KEY \(animationKey)  -  CALINK  \(displayLink)\n") }
+        if DebugTriggerLogEnabled {  print("START ++++++++ KEY \(String(describing: animationKey))  -  CALINK  \(String(describing: displayLink))\n") }
         
         self.displayLink?.add(to: RunLoop.main, forMode: RunLoopMode.defaultRunLoopMode)
         updateTrigger()
@@ -639,7 +639,7 @@ public extension FASynchronizedGroup {
 
         segmentArray = [AnimationTrigger]()
         displayLink.invalidate()
-        if DebugTriggerLogEnabled { print("STOP ++++++++ KEY \(animationKey)  -  CALINK  \(displayLink)\n") }
+        if DebugTriggerLogEnabled { print("STOP ++++++++ KEY \(String(describing: animationKey))  -  CALINK  \(displayLink)\n") }
 
         self.displayLink = nil
     }
@@ -653,7 +653,7 @@ public extension FASynchronizedGroup {
         for segment in segmentArray {
             if let triggerSegment = self.activeTriggerSegment(segment)  {
                 
-                if DebugTriggerLogEnabled {  print("TRIGGER ++++++++ KEY \(segment.animationKey!)  -  CALINK  \(displayLink)\n") }
+                if DebugTriggerLogEnabled {  print("TRIGGER ++++++++ KEY \(segment.animationKey!)  -  CALINK  \(String(describing: displayLink))\n") }
             
                 triggerSegment.animatedView?.applyAnimation(forKey: triggerSegment.animationKey! as String)
                 segmentArray.fa_removeObject(triggerSegment)

@@ -10,8 +10,8 @@ import Foundation
 import UIKit
 
 let overshoot : CGFloat = 1.70158
-let CGM_PI_2 = CGFloat(M_PI_2)
-let CGM_PI = CGFloat(M_PI)
+let CGM_PI_2 = CGFloat(Double.pi / 2)
+let CGM_PI = CGFloat(Double.pi)
 
 public enum FAEasing : Equatable {
     case linear

@@ -3,7 +3,7 @@
 
 [![Cocoapods Compatible](https://img.shields.io/badge/pod-v0.9.4-blue.svg)]()
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)]()
-[![Platform](https://img.shields.io/badge/platform-ios | tvos-lightgrey.svg)]()
+[![Platform](https://img.shields.io/badge/platform-iOS | tvOS-lightgrey.svg)]()
 [![License](https://img.shields.io/badge/license-MIT-343434.svg)](/LICENSE.md)
 
 ![alt tag](/Documentation/FlightBanner.jpg?raw=true)
