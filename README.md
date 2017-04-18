@@ -8,10 +8,9 @@
 
 ![alt tag](/Documentation/FlightBanner.jpg?raw=true)
 
-**Swift 3.0 Support added:**
+**Moved to Swift 3.1 Support:**
 
-* For Swift 3.0 - Use **tag** Version 0.9.4-3.x 
-* For Swift 2.x - Use **tag** Version 0.9.4-2.x 
+* For Swift 3.1 - Use **tag** Version 0.9.5
 * See [Installation Instructions](/Documentation/installation.md) for clarification
 
 **NOTE: Migrating from versions lower than 0.9.1? See the [Release Notes](/Documentation/release_notes.md) about API Updates**
