@@ -1,4 +1,4 @@
-#FlightAnimator
+# FlightAnimator
 
 
 [![Cocoapods Compatible](https://img.shields.io/badge/pod-v0.9.4-blue.svg)]()
@@ -16,13 +16,13 @@
 **NOTE: Migrating from versions lower than 0.9.1? See the [Release Notes](/Documentation/release_notes.md) about API Updates**
 
 
-##Introduction
+## Introduction
 
 FlightAnimator provides a very simple blocks based animation definition language that allows you to dynamically create, configure, group, sequence, cache, and reuse property animations.
 
 Unlike `CAAnimationGroups`, and `UIViewAnimations`, which animate multiple properties using a single easing curve, **FlightAnimator** allows configuration, and synchronization, of unique easing curves per individual property animation.
 
-##Features
+## Features
 
 - [x] [46+ Parametric Curves, Decay, and Springs](/Documentation/parametric_easings.md) 
 - [x] Blocks Syntax for Building Complex Animations
@@ -41,25 +41,25 @@ alt="FlightAnimator Demo" border="0" /> </a>
 </p>
 
 
-##Installation
+## Installation
 
 * **Requirements** : XCode 7.3+, iOS 8.0+, tvOS 9.0+
 * [Installation Instructions](/Documentation/installation.md)
 * [Release Notes](/Documentation/release_notes.md)
 
-##Communication
+## Communication
 
 - If you **found a bug**, or **have a feature request**, open an issue.
 - If you **need help** or a **general question**, use [Stack Overflow](http://stackoverflow.com/questions/tagged/flight-animator). (tag 'flight-animator')
 - If you **want to contribute**, review the [Contribution Guidelines](/Documentation/CONTRIBUTING.md), and submit a pull request. 
 
-##Basic Use 
+## Basic Use 
 
 **FlightAnimator** provides a very flexible syntax for defining animations ranging in complexity with ease. Following a blocks based builder approach you can easily define an animation group, and it's property animations in no time. 
 
 Under the hood animations built are `CAAnimationGroup`(s) with multiple custom `CAKeyframeAnimation`(s) defined uniquely per property. Once it's time to animate, **FlightAnimator** will dynamically synchronize the remaining progress for all the animations relative to the current presentationLayer's values, then continue to animate to it's final state.
 
-###Simple Animation
+### Simple Animation
 
 To really see the power of **FlightAnimator**, let's first start by defining an animation using `CoreAnimation`, then re-define it using the framework's blocks based syntax. The animation below uses a `CAAnimationGroup` to group 3 individual `CABasicAnimations` for alpha, bounds, and position. 
 
@@ -125,7 +125,7 @@ Once the function call exits the closure, **FlightAnimator** performs the follow
 2. Synchronizes the grouped `FABasicAnimations` relative to the calling **view**'s presentation layer values
 3. Triggers the animation by applying the **toValue** from the grouped animations to to the calling **view**'s layer. 
 
-##Chaining Animations
+## Chaining Animations
 
 Chaining animations together in FlightAnimator is simple. 
 
@@ -236,13 +236,13 @@ view.animate { (animator) in
 
 These can be nested just as the animation triggers, and be applied animator on the group in scope of the animation creation closure by the animator.
 
-##Cache & Reuse Animations
+## Cache & Reuse Animations
 
 FlightAnimator allows for registering animations (aka states) up front with a unique animation key. Once defined it can be manually triggered at any time in the application flow using the animation key used registration. 
 
 When the animation is applied, if the view is in mid flight, it will synchronize itself with the current presentation layer values, and animate to its final destination. 
 
-####Register/Cache Animation
+#### Register/Cache Animation
 
 To register an animation, call a globally defined method, and create an animations just as defined earlier examples within the maker block. The following example shows how to register, and cache an animation for a key on a specified view. 
 
@@ -260,7 +260,7 @@ registerAnimation(onView : view, forKey : AnimationKeys.CenterStateFrameAnimatio
 
 This animation is only cached, and is not performed until it is manually triggered.
 
-####Apply Registered Animation
+#### Apply Registered Animation
 
 
 To trigger the animation call the following 
@@ -277,9 +277,9 @@ view.applyAnimation(forKey: AnimationKeys.CenterStateFrameAnimation, animated : 
 ```
 
 
-##Advanced Use
+## Advanced Use
 
-###Timing Adjustments
+### Timing Adjustments
 
 Due to the dynamic nature of the framework, it may take a few tweaks to get the animation just right. 
 
@@ -322,7 +322,7 @@ The more property animations within a group, the more likely the need to adjust 
 * .Average
 
 
-####Primary Flag
+#### Primary Flag
 
 As in the example prior, there is a mention that animations can get quite complex, and the more property animations within a group, the more likely the animation will have a hick-up in the timing, especially when synchronizing 4+ animations with different curves and durations.
 
@@ -344,7 +344,7 @@ view.animate(.MaxTime) { (animator) in
 Simple as that, now when the view is redirected during an animation in mid flight, only the bounds and position animations will be considered as part of the timing synchronization.
 
 
-###.SpringDecay w/ Initial Velocity
+### .SpringDecay w/ Initial Velocity
 
 When using a UIPanGestureRecognizer to move a view around on the screen by adjusting its position, and say there is a need to smoothly animate the view to the final destination right as the user lets go of the gesture. This is where the .SpringDecay easing comes into play. The .SpringDecay easing will slow the view down easily into place, all that need to be configured is the initial velocity, and it will calculate its own time relative to the velocity en route to its destination.
 
@@ -368,7 +368,7 @@ func respondToPanRecognizer(recognizer : UIPanGestureRecognizer) {
 }
 ```
 
-##Reference
+## Reference
 
 [Supported Parametric Curves](/Documentation/parametric_easings.md)
 
@@ -379,7 +379,7 @@ func respondToPanRecognizer(recognizer : UIPanGestureRecognizer) {
 [Contribution Guidelines](/Documentation/CONTRIBUTING.md)
 
 
-###<a name="demoApp"></a>Framework Demo App
+### <a name="demoApp"></a>Framework Demo App
 
 The project includes a highly configurable demo app that allows for experimentation to explore resulting effects of the unlimited configurations FlightAnimator supports.
 
