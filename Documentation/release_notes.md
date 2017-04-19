@@ -1,5 +1,21 @@
 # Release Notes
 
+#### Version 0.9.6
+* Updated caching API as follows & fixed documentation accordingly
+	```
+	// Deleted
+	func cacheAnimation(animation: Any,
+                            forKey key: String,
+                            timingPriority : FAPrimaryTimingPriority = .maxTime)
+ 
+ 	// Added
+	func registerAnimation(animation: Any,
+                               forKey key: String,
+                               timingPriority : FAPrimaryTimingPriority = .maxTime)
+	```
+
+
+
 #### Version 0.9.5
 * Swift 3.0 / 3.1 Support
 * Removed support for Swift 2.2 / 2.3
