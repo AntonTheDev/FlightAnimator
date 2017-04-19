@@ -1,4 +1,4 @@
-###Supported Animatable Properties
+### Supported Animatable Properties
 
 FlightAnimator supports any user defined animatable properties of the following types:
 
