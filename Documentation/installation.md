@@ -1,13 +1,13 @@
-#Installation
+# Installation
 
-###Manual Install
+### Manual Install
 
 1. Clone [FlightAnimator](https://github.com/AntonTheDev/FlightAnimator.git) repositories 
 2. Add the contents of ***/FlightAnimator/Source***
 
 
 ****
-###CocoaPods
+### CocoaPods
 
 1. Edit the project's podfile, and save
 
@@ -22,11 +22,11 @@
     pod install
     ```
 **** 
-###Carthage
+### Carthage
 
 The installation instruction below for iOS and AppleTV
 
-####Installation
+#### Installation
 
 1. Create/Update the Cartfile with with the following
 	
