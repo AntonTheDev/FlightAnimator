@@ -11,14 +11,31 @@ import UIKit
 
 public extension UIView {
     
-    func animate(_ timingPriority : FAPrimaryTimingPriority = .maxTime,
-                 animator : @escaping (_ animator : FlightAnimator) -> Void ) {
+    public func animate(_ timingPriority : FAPrimaryTimingPriority = .maxTime,
+                        animator : @escaping (_ animator : FlightAnimator) -> Void ) {
         
         let animationKey = UUID().uuidString
         
         let newAnimator = FlightAnimator(withView: self, forKey : animationKey,  priority : timingPriority)
         animator(newAnimator)
         applyAnimation(forKey: animationKey)
+    }
+    
+    public func registerAnimation(forKey key: String,
+                                  timingPriority : FAPrimaryTimingPriority = .maxTime,
+                                  animator : (_ animator : FlightAnimator) -> Void ) {
+        
+        let newAnimator = FlightAnimator(withView: self, forKey : key, priority : timingPriority)
+        animator(newAnimator)
+    }
+    
+    public func applyAnimation(forKey key: String,
+                               animated : Bool = true) {
+        
+        if let cachedAnimationsArray = cachedAnimations,
+            let animation = cachedAnimationsArray[key as NSString] {
+            animation.applyFinalState(animated)
+        }
     }
 }
 

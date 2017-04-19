@@ -1,7 +1,7 @@
 # FlightAnimator
 
 
-[![Cocoapods Compatible](https://img.shields.io/badge/pod-v0.9.4-blue.svg)]()
+[![Cocoapods Compatible](https://img.shields.io/badge/pod-v0.9.6-blue.svg)]()
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)]()
 [![Platform](https://img.shields.io/badge/platform-iOS%20|%20tvOS-lightgrey.svg)]()
 [![License](https://img.shields.io/badge/license-MIT-343434.svg)](/LICENSE.md)
@@ -10,7 +10,7 @@
 
 **Moved to Swift 3.1 Support:**
 
-* For Swift 3.1 - Use **tag** Version 0.9.5
+* For Swift 3.1 - Use **tag** Version 0.9.6
 * See [Installation Instructions](/Documentation/installation.md) for clarification
 
 **NOTE: Migrating from versions lower than 0.9.1? See the [Release Notes](/Documentation/release_notes.md) about API Updates**
@@ -252,7 +252,7 @@ struct AnimationKeys {
 }
 ...
 
-registerAnimation(onView : view, forKey : AnimationKeys.CenterStateFrameAnimation) { (animator) in
+view.registerAnimation(forKey : AnimationKeys.CenterStateFrameAnimation) { (animator) in
       animator.bounds(newBounds).duration(0.5).easing(.OutCubic)
       animator.position(newPositon).duration(0.5).easing(.OutCubic)
 })

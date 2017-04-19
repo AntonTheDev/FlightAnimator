@@ -74,7 +74,7 @@ extension ViewController {
      */
     func registerConfigViewAnimations() {
         
-        configView.cacheAnimation(forKey : AnimationKeys.ShowConfigAnimation, timingPriority: self.animConfig.primaryTimingPriority) {[unowned self] (animator) in
+        configView.registerAnimation(forKey : AnimationKeys.ShowConfigAnimation, timingPriority: self.animConfig.primaryTimingPriority) {[unowned self] (animator) in
             
             let toBounds = CGRect(x: 0,y: 0, width: openConfigFrame.width, height: openConfigFrame.height)
             let toPosition = CGPoint(x: openConfigFrame.midX, y: openConfigFrame.midY)
@@ -88,7 +88,7 @@ extension ViewController {
             })
         }
         
-        configView.cacheAnimation(forKey : AnimationKeys.HideConfigAnimation, timingPriority: self.animConfig.primaryTimingPriority) {[unowned self] (animator) in
+        configView.registerAnimation(forKey : AnimationKeys.HideConfigAnimation, timingPriority: self.animConfig.primaryTimingPriority) {[unowned self] (animator) in
             
             let toBounds = CGRect(x: 0,y: 0, width: closedConfigFrame.width, height: closedConfigFrame.height)
             let toPosition = CGPoint(x: closedConfigFrame.midX, y: closedConfigFrame.midY)

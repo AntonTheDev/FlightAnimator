@@ -33,8 +33,6 @@
 		3ADBC7631DC124E2002E74FE /* FAVector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ADBC74C1DC124E2002E74FE /* FAVector.swift */; };
 		3ADBC7641DC124E2002E74FE /* FlightAnimator+API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ADBC74D1DC124E2002E74FE /* FlightAnimator+API.swift */; };
 		3ADBC7651DC124E2002E74FE /* FlightAnimator+API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ADBC74D1DC124E2002E74FE /* FlightAnimator+API.swift */; };
-		3ADBC7661DC124E2002E74FE /* FlightAnimator+Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ADBC74E1DC124E2002E74FE /* FlightAnimator+Cache.swift */; };
-		3ADBC7671DC124E2002E74FE /* FlightAnimator+Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ADBC74E1DC124E2002E74FE /* FlightAnimator+Cache.swift */; };
 		3ADBC7681DC124E2002E74FE /* FlightAnimator+Callbacks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ADBC74F1DC124E2002E74FE /* FlightAnimator+Callbacks.swift */; };
 		3ADBC7691DC124E2002E74FE /* FlightAnimator+Callbacks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ADBC74F1DC124E2002E74FE /* FlightAnimator+Callbacks.swift */; };
 /* End PBXBuildFile section */
@@ -55,7 +53,6 @@
 		3ADBC74B1DC124E2002E74FE /* FASpring.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FASpring.swift; sourceTree = "<group>"; };
 		3ADBC74C1DC124E2002E74FE /* FAVector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FAVector.swift; sourceTree = "<group>"; };
 		3ADBC74D1DC124E2002E74FE /* FlightAnimator+API.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "FlightAnimator+API.swift"; sourceTree = "<group>"; };
-		3ADBC74E1DC124E2002E74FE /* FlightAnimator+Cache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "FlightAnimator+Cache.swift"; sourceTree = "<group>"; };
 		3ADBC74F1DC124E2002E74FE /* FlightAnimator+Callbacks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "FlightAnimator+Callbacks.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -110,7 +107,6 @@
 				3ADBC7441DC124E2002E74FE /* FAAnimation */,
 				3ADBC7481DC124E2002E74FE /* FAInterpolation */,
 				3ADBC74D1DC124E2002E74FE /* FlightAnimator+API.swift */,
-				3ADBC74E1DC124E2002E74FE /* FlightAnimator+Cache.swift */,
 				3ADBC74F1DC124E2002E74FE /* FlightAnimator+Callbacks.swift */,
 			);
 			name = Source;
@@ -278,7 +274,6 @@
 				3ADBC7581DC124E2002E74FE /* FABasicAnimation.swift in Sources */,
 				3ADBC7541DC124E2002E74FE /* UIView+FAAnimation.swift in Sources */,
 				3A5C3DC51DC39712001E9E74 /* FAPropertyAnimator.swift in Sources */,
-				3ADBC7661DC124E2002E74FE /* FlightAnimator+Cache.swift in Sources */,
 				3ADBC7621DC124E2002E74FE /* FAVector.swift in Sources */,
 				3ADBC7641DC124E2002E74FE /* FlightAnimator+API.swift in Sources */,
 			);
@@ -299,7 +294,6 @@
 				3ADBC7591DC124E2002E74FE /* FABasicAnimation.swift in Sources */,
 				3ADBC7551DC124E2002E74FE /* UIView+FAAnimation.swift in Sources */,
 				3A5C3DC61DC39712001E9E74 /* FAPropertyAnimator.swift in Sources */,
-				3ADBC7671DC124E2002E74FE /* FlightAnimator+Cache.swift in Sources */,
 				3ADBC7631DC124E2002E74FE /* FAVector.swift in Sources */,
 				3ADBC7651DC124E2002E74FE /* FlightAnimator+API.swift in Sources */,
 			);

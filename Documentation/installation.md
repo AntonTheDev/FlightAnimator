@@ -13,7 +13,7 @@
 
 	```
 	Swift 3.1: 
-    pod 'FlightAnimator', :git => 'https://github.com/AntonTheDev/FlightAnimator.git', :tag => '0.9.5'
+    pod 'FlightAnimator', :git => 'https://github.com/AntonTheDev/FlightAnimator.git', :tag => '0.9.6'
 
 	```
 2. Install FlightAnimator by running
@@ -34,7 +34,7 @@ The installation instruction below for iOS and AppleTV
 	Swift 3.1:
 	
 	#FlightAnimator
-	git "https://github.com/AntonTheDev/FlightAnimator.git" >= 0.9.5
+	git "https://github.com/AntonTheDev/FlightAnimator.git" >= 0.9.6
 
 	```
 2. Run `carthage update`. This will fetch dependencies into a [Carthage/Checkouts][] folder, then build each one.
