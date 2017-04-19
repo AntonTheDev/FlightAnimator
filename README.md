@@ -64,49 +64,49 @@ Under the hood animations built are `CAAnimationGroup`(s) with multiple custom `
 To really see the power of **FlightAnimator**, let's first start by defining an animation using `CoreAnimation`, then re-define it using the framework's blocks based syntax. The animation below uses a `CAAnimationGroup` to group 3 individual `CABasicAnimations` for alpha, bounds, and position. 
 
 ```swift
-	let alphaAnimation 						= CABasicAnimation(keyPath: "position")
-	alphaAnimation.toValue 					= 0.0
-	alphaAnimation.fromValue 				= 1.0
-	alphaAnimation.fillMode              	= kCAFillModeForwards
-	alphaAnimation.timingFunction        	= CAMediaTimingFunction(name:kCAMediaTimingFunctionEaseOut)
+let alphaAnimation 			= CABasicAnimation(keyPath: "position")
+alphaAnimation.toValue 			= 0.0
+alphaAnimation.fromValue 		= 1.0
+alphaAnimation.fillMode              	= kCAFillModeForwards
+alphaAnimation.timingFunction        	= CAMediaTimingFunction(name:kCAMediaTimingFunctionEaseOut)
 
-	let boundsAnimation 					= CABasicAnimation(keyPath: "bounds")
-	boundsAnimation.toValue 				= NSValue(CGRect : toBounds)
-	boundsAnimation.fromValue 				= NSValue(CGRect : view.layer.bounds)
-	boundsAnimation.fillMode              	= kCAFillModeForwards
-	boundsAnimation.timingFunction        	= CAMediaTimingFunction(name:kCAMediaTimingFunctionEaseOut)
+let boundsAnimation 			= CABasicAnimation(keyPath: "bounds")
+boundsAnimation.toValue 		= NSValue(CGRect : toBounds)
+boundsAnimation.fromValue 		= NSValue(CGRect : view.layer.bounds)
+boundsAnimation.fillMode              	= kCAFillModeForwards
+boundsAnimation.timingFunction        	= CAMediaTimingFunction(name:kCAMediaTimingFunctionEaseOut)
 
-	let positionAnimation 					= CABasicAnimation(keyPath: "position")
-	positionAnimation.toValue 				= NSValue(CGPoint : toPosition)
-	positionAnimation.fromValue 			= NSValue(CGPoint : view.layer.position)
-	positionAnimation.fillMode              = kCAFillModeForwards
-	positionAnimation.timingFunction        = CAMediaTimingFunction(name:kCAMediaTimingFunctionEaseOut)
+let positionAnimation 			= CABasicAnimation(keyPath: "position")
+positionAnimation.toValue 		= NSValue(CGPoint : toPosition)
+positionAnimation.fromValue 		= NSValue(CGPoint : view.layer.position)
+positionAnimation.fillMode              = kCAFillModeForwards
+positionAnimation.timingFunction        = CAMediaTimingFunction(name:kCAMediaTimingFunctionEaseOut)
 	
-	let progressAnimation 					= CABasicAnimation(keyPath: "animatableProgress")
-	progressAnimation.toValue 				= 1.0
-	progressAnimation.fromValue 			= 0
-	progressAnimation.fillMode              = kCAFillModeForwards
-	progressAnimation.timingFunction        = CAMediaTimingFunction(name:kCAMediaTimingFunctionEaseOut)
+let progressAnimation 			= CABasicAnimation(keyPath: "animatableProgress")
+progressAnimation.toValue 		= 1.0
+progressAnimation.fromValue 		= 0
+progressAnimation.fillMode              = kCAFillModeForwards
+progressAnimation.timingFunction        = CAMediaTimingFunction(name:kCAMediaTimingFunctionEaseOut)
 
-	let animationGroup 						= CAAnimationGroup()
-	animationGroup.duration 				= 0.5
-	animationGroup.removedOnCompletion   	= true
-	animationGroup.animations 				= [alphaAnimation,  boundsAnimation, positionAnimation, progressAnimation]
+let animationGroup 			= CAAnimationGroup()
+animationGroup.duration 		= 0.5
+animationGroup.removedOnCompletion   	= true
+animationGroup.animations 		= [alphaAnimation,  boundsAnimation, positionAnimation, progressAnimation]
 
-	view.layer.addAnimation(animationGroup, forKey: "PositionAnimationKey")
-	view.frame = toFrame
+view.layer.addAnimation(animationGroup, forKey: "PositionAnimationKey")
+view.frame = toFrame
 ```
 
 Now that we saw the example above. Let's re-define **FlightAnimator**'s blocks based syntax
 
 
 ```swift
-	view.animate {  [unowned self] (animator) in
-	    animator.alpha(toAlpha).duration(0.5).easing(.OutCubic)
-		animator.bounds(toBounds).duration(0.5).easing(.OutCubic)
+view.animate {  [unowned self] (animator) in
+	animator.alpha(toAlpha).duration(0.5).easing(.OutCubic)
+	animator.bounds(toBounds).duration(0.5).easing(.OutCubic)
       	animator.position(toPosition).duration(0.5).easing(.OutCubic)
       	animator.value(toProgress, forKeyPath : "animatableProgress").duration(0.5).easing(.OutCubic)
-	}
+}
 ```
 
 Calling `animate(:)` on the **view** begins the `FAAnimationGroup` creation process. Inside the closure the **animator** creates, configures, then appends custom animations to the newly created parent group. Define each individual property animation by calling one of the  [pre-defined property setters](/Documentation/predefined_setters.md), and/or the `func value(:, forKeyPath:) -> PropertyAnimator` method for **any** other animatable property.
@@ -114,9 +114,9 @@ Calling `animate(:)` on the **view** begins the `FAAnimationGroup` creation proc
 Once the property animation is initiated, recursively configure the `PropertyAnimator` by chaining duration, easing, and/or primary designation, to create the final `FABasicAnimation`, and add it to the parent group.
 
 ```swift
-	func duration(duration : CGFloat) -> PropertyAnimator
-	func easing(easing : FAEasing) -> PropertyAnimator
-	func primary(primary : Bool) -> PropertyAnimator
+func duration(duration : CGFloat) -> PropertyAnimator
+func easing(easing : FAEasing) -> PropertyAnimator
+func primary(primary : Bool) -> PropertyAnimator
 ```
 
 Once the function call exits the closure, **FlightAnimator** performs the following:
@@ -134,13 +134,13 @@ Chaining animations together in FlightAnimator is simple.
 The animation created on the secondaryView is triggered once the the primaryView's animation begins.    	
          	
 ```swift
-	primaryView.animate { [unowned self] (animator) in
-		....
+primaryView.animate { [unowned self] (animator) in
+	....
 		
-    	animator.triggerOnStart(onView: self.secondaryView, animator: { (animator) in
-         	....
-    	})
-    }
+    animator.triggerOnStart(onView: self.secondaryView, animator: { (animator) in
+         ....
+    })
+}
 ```
 
 ### Trigger on Completion 
@@ -148,13 +148,13 @@ The animation created on the secondaryView is triggered once the the primaryView
 The animation created on the secondaryView is triggered once the the primaryView's animation completes.
 
 ```swift
-	primaryView.animate { [unowned self] (animator) in
-		....
+primaryView.animate { [unowned self] (animator) in
+	....
 		
-    	animator.triggerOnCompletion(onView: self.secondaryView, animator: { (animator) in
-         	....
-    	})
-    }
+    animator.triggerOnCompletion(onView: self.secondaryView, animator: { (animator) in
+         ....
+    })
+}
 ```
 
 ### Time Progress Trigger
@@ -162,13 +162,13 @@ The animation created on the secondaryView is triggered once the the primaryView
 The animation created on the secondaryView is triggered when the driving animation reaches the relative half way point in duration on the primaryView's animation.
 
 ```swift
-	primaryView.animate { [unowned self] (animator) in
-		....
+primaryView.animate { [unowned self] (animator) in
+	....
 				
-    	animator.triggerOnProgress(0.5, onView: self.secondaryView, animator: { (animator) in
-         	....
-    	})
-    }
+    animator.triggerOnProgress(0.5, onView: self.secondaryView, animator: { (animator) in
+         ....
+    })
+}
 ```
 
 ### Value Progress Trigger
@@ -176,13 +176,13 @@ The animation created on the secondaryView is triggered when the driving animati
 The animation created on the secondaryView is triggered when the driving animation reaches the relative half way point between the fromValue and toValue of the primaryView's animation. This is driven 
 
 ```swift
-	primaryView.animate { [unowned self] (animator) in
-		....
+primaryView.animate { [unowned self] (animator) in
+	....
 		
-    	animator.triggerOnValueProgress(0.5, onView: self.secondaryView, animator: { (animator) in
-         	....
-    	})
-    }
+    animator.triggerOnValueProgress(0.5, onView: self.secondaryView, animator: { (animator) in
+         ....
+    })
+}
 ```
 
 ### Nesting Animation Triggers
@@ -191,29 +191,29 @@ There is built in support for nesting triggers within triggers to sequence anima
 
 
 ```swift
-	primaryView.animate { [unowned self] (animator) in
-		....
+primaryView.animate { [unowned self] (animator) in
+	....
 		
-    	animator.triggerOnStart(onView: self.secondaryView, animator: { (animator) in
-         	-> Relative to primaryView animation
+    animator.triggerOnStart(onView: self.secondaryView, animator: { (animator) in
+         -> Relative to primaryView animation
          	 
-         	animator.triggerOnCompletion(onView: self.tertiaryView, animator: { (animator) in
-				-> Relative to secondaryView animation
+	animator.triggerOnCompletion(onView: self.tertiaryView, animator: { (animator) in
+		-> Relative to secondaryView animation
             
-            	animator.triggerOnProgress(0.5, onView: self.quaternaryView, animator: { (animator) in
-					-> Relative to tertiaryView animation
-    			})
-        	})
-        	
-        	animator.triggerOnValueProgress(0.5, onView: self.quinaryView, animator: { (animator) in
-         		-> Relative to secondaryView animation
+        	animator.triggerOnProgress(0.5, onView: self.quaternaryView, animator: { (animator) in
+			-> Relative to tertiaryView animation
     		})
+     	})
+        	
+        animator.triggerOnValueProgress(0.5, onView: self.quinaryView, animator: { (animator) in
+         		-> Relative to secondaryView animation
     	})
+    })
     	
-    	animator.triggerOnStart(onView: self.senaryView, animator: { (animator) in
+    animator.triggerOnStart(onView: self.senaryView, animator: { (animator) in
          	-> Relative to primaryView animation 
-    	})
-	}
+    })
+}
 ```
 
 ### CAAnimationDelegate Callbacks
@@ -288,7 +288,7 @@ FlightAnimator has a few options for finer control over timing synchronization:
 * **Timing Priority** - Adjust how the time is select during synchronization of the overall animation
 * **Primary Drivers** - Defines animations that affect timing during synchronization of the overall animation
 
-####Timing Priority
+#### Timing Priority
 
 First a little background, the framework basically does some magic so synchronize the time by prioritizing the maximum time remaining based on progress if redirected in mid flight.
 
@@ -301,8 +301,8 @@ func animateView(toFrame : CGRect) {
 	let newPosition = CGPointMake(toFrame.midX, toFrame.midY)
 	
 	view.animate(.MaxTime) { (animator) in
-      	animator.bounds(newBounds).duration(0.5).easing(.OutCubic)
-      	animator.position(newPositon).duration(0.5).easing(.InSine)
+      		animator.bounds(newBounds).duration(0.5).easing(.OutCubic)
+      		animator.position(newPositon).duration(0.5).easing(.InSine)
 	}
 }
 ```
