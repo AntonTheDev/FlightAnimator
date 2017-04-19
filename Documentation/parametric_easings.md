@@ -1,4 +1,4 @@
-###Supported Parametric Curves
+### Supported Parametric Curves
 
 These are the supported parametric curves that you can apply to the property animation. A good reference for some of the supported parametric curves can be found [here](http://easings.net/)
 
@@ -74,7 +74,7 @@ These are the supported parametric curves that you can apply to the property ani
 </table>
 
 
-#####.SpringCustom(velocity, frequency, damping)
+##### .SpringCustom(velocity, frequency, damping)
 
 The **SpringCustom** easing is an option apply a damping system as the easing for an animation. You have the option to provide the frequency (i.e bounciness), the damping ratio, and an initial velocity in the case you are using a pan gesture recognizer,
 
@@ -85,6 +85,6 @@ There are three ranges of values for the configuration of a spring
 *  1.0 +, over damped, the spring will bounce, but not drastically 
 
 
-#####.SpringDecay(velocity)
+##### .SpringDecay(velocity)
 
 The **SpringDecay** option will slow an animation down easily into place with a preconfigured setting slightly overdamped preconfigured values for the spring configuration. Just like the SpringCustom configuration, it allows allows you to set the velocity in the case you are using a pan gesture recognizer.
