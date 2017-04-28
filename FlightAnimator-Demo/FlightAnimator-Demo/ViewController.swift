@@ -1,5 +1,4 @@
 import Foundation
-import FlightAnimator
 import UIKit
 
 class ViewController: UIViewController {
@@ -374,7 +373,7 @@ extension ViewController {
     }
     
     func degree2radian(_ a:CGFloat)->CGFloat {
-        let b = CGFloat(M_PI) * a/180
+        let b = CGFloat(Double.pi) * a/180
         return b
     }
     
