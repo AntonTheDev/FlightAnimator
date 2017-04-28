@@ -12,7 +12,7 @@ import UIKit
 public extension UIView {
     
     public func animate(_ timingPriority : FAPrimaryTimingPriority = .maxTime,
-                        animator : @escaping (_ animator : FlightAnimator) -> Void ) {
+                        animator : (_ animator : FlightAnimator) -> Void ) {
         
         let animationKey = UUID().uuidString
         

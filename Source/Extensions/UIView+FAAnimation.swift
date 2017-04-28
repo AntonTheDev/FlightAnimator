@@ -8,8 +8,6 @@
 
 import Foundation
 import UIKit
-
-
 private struct FAAssociatedKey {
     static var layoutConfigurations = "layoutConfigurations"
 }

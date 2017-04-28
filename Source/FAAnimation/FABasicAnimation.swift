@@ -45,6 +45,7 @@ open class FABasicAnimation : CAKeyframeAnimation {
         
         calculationMode = kCAAnimationLinear
         fillMode = kCAFillModeForwards
+        
         isRemovedOnCompletion = true
         values = [AnyObject]()
     }
@@ -83,24 +84,70 @@ internal extension FABasicAnimation {
         duration = config!.duration
         values = config!.values
     }
-    
 
     internal func synchronizeFromValue() {
-        if let presentationLayer = animatingLayer?.presentation(),
-
+    
+        /**
+         *  When we add a new animation it appears that if there was a prior animation,
+         *  the current layer's presentation value is still the last animation's
+         *  final value. Thus, if we change the model layer's value, prior to kicking off
+         *  the new animation, we need to check if the current toValue is equal to
+         *  the presentation layer;s value, if not we need to use the model layer's
+         *  current value instead of the presentation layer. 
+         *
+         *  Technically if the fromValue (presentation layer's current value) is equal
+         *  to the from value, and the current layer's value do not match, it means that 
+         *  we need not intercept the animation in flight, and there is no need to synchronized.
+         *
+         */
+        
+        if  let animationToValue = toValue,
+            let animationLayer = animatingLayer,
+            let animationLayerValue = animationLayer.anyValueForKeyPath(keyPath!),
+            let presentationLayer = animatingLayer?.presentation(),
             let presentationValue = presentationLayer.anyValueForKeyPath(keyPath!) {
             
-            if let currentValue = presentationValue as? CGPoint {
-                fromValue = NSValue(cgPoint : currentValue)
-            } else if let currentValue = presentationValue as? CGSize {
-                fromValue = NSValue(cgSize : currentValue)
-            } else if let currentValue = presentationValue as? CGRect {
-                fromValue = NSValue(cgRect : currentValue)
-            } else if let currentValue = presentationValue as? CGFloat {
-                fromValue = NSNumber(value: Float(currentValue) as Float)
-            } else if let currentValue = presentationValue as? CATransform3D {
-                fromValue = NSValue(caTransform3D : currentValue)
+            if let relativeToValue = presentationValue as? CGPoint {
+                
+                if animationToValue.cgPointValue.equalTo(relativeToValue) {
+                    fromValue = NSValue(cgPoint : animationLayerValue as! CGPoint)
+                } else {
+                    fromValue = NSValue(cgPoint : relativeToValue)
+                }
+
+            } else if let relativeToValue = presentationValue as? CGSize {
+                
+                if animationToValue.cgSizeValue.equalTo(relativeToValue) {
+                    fromValue = NSValue(cgSize : animationLayerValue as! CGSize)
+                } else {
+                    fromValue = NSValue(cgSize : relativeToValue)
+                }
+
+            } else if let relativeToValue = presentationValue as? CGRect {
+                
+                if animationToValue.cgRectValue.equalTo(relativeToValue) {
+                    fromValue = NSValue(cgRect : animationLayerValue as! CGRect)
+                } else {
+                    fromValue = NSValue(cgRect : relativeToValue)
+                }
+                
+            } else if let relativeToValue = presentationValue as? CGFloat {
+                
+                if animationToValue.floatValue == Float(relativeToValue) {
+                    fromValue = animationToValue
+                } else {
+                    fromValue = NSNumber(value: Float(relativeToValue) as Float)
+                }
+            } else if let relativeToValue = presentationValue as? CATransform3D {
+    
+                if CATransform3DEqualToTransform(animationToValue.caTransform3DValue, relativeToValue) {
+                    fromValue = NSValue(caTransform3D : animationLayerValue as! CATransform3D)
+                } else {
+                    fromValue = NSValue(caTransform3D : relativeToValue)
+                }
+                
             } else if CFGetTypeID(presentationValue as AnyObject) == CGColor.typeID {
+            //    fromValue = animationLayerValue as! CGColor
                 fromValue = presentationValue as! CGColor
             }
         }
