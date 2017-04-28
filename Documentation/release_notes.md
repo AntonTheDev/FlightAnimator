@@ -1,5 +1,10 @@
 # Release Notes
 
+#### Version 0.9.7
+* Fixed an issue that was incorrectly applying the from value. 
+	- The framework assumed that the view's layer properties relative to the presentation layer. 
+* Updated the maker block to nonescaping as it should have been
+
 #### Version 0.9.6
 * Updated caching API as follows & fixed documentation accordingly
 	```
