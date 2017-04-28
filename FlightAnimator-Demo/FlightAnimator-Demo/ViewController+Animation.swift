@@ -8,7 +8,8 @@
 
 import Foundation
 import UIKit
-import FlightAnimator
+
+
 /**
  *  This is used to keep track of the settings in the configuration screen
  */

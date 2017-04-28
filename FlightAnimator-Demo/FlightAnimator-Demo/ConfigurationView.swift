@@ -8,7 +8,7 @@
 
 import Foundation
 import UIKit
-import FlightAnimator
+
 
 enum PropertyConfigType : Int {
     case bounds
