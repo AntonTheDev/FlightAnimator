@@ -145,10 +145,7 @@ extension ViewController {
             
             a.bounds(toBounds).duration(duration).easing(config.sizeFunction).primary(config.sizePrimary)
             a.position(toPosition).duration(duration).easing(config.positionFunction).primary(config.positionPrimary)
-            
-            a.value(2, forKeyPath: "opacity").duration(duration).easing(config.alphaFunction).primary(config.alphaPrimary)
-            
-           // a.alpha(toAlpha).duration(duration).easing(config.alphaFunction).primary(config.alphaPrimary)
+            a.alpha(toAlpha).duration(duration).easing(config.alphaFunction).primary(config.alphaPrimary)
             a.transform(transform).duration(duration).easing(config.transformFunction).primary(config.transformPrimary)
             
             
