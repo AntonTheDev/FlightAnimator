@@ -1,16 +1,16 @@
 # FlightAnimator
 
-
-[![Cocoapods Compatible](https://img.shields.io/badge/pod-v0.9.7-blue.svg)]()
-[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)]()
 [![Platform](https://img.shields.io/badge/platform-iOS%20|%20tvOS-lightgrey.svg)]()
+[![Cocoapods Compatible](https://img.shields.io/badge/pod-v0.9.8-blue.svg)]()
+[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)]()
+[![Build Status](https://travis-ci.org/AntonTheDev/FlightAnimator.svg?branch=master)](https://travis-ci.org/AntonTheDev/FlightAnimator)
 [![License](https://img.shields.io/badge/license-MIT-343434.svg)](/LICENSE.md)
 
 ![alt tag](/Documentation/FlightBanner.jpg?raw=true)
 
 **Moved to Swift 3.1 Support:**
 
-* For Swift 3.1 - Use **tag** Version 0.9.7
+* For Swift 3.1 - Use **tag** Version 0.9.8
 * See [Installation Instructions](/Documentation/installation.md) for clarification
 
 ## Introduction
@@ -21,7 +21,7 @@ Unlike `CAAnimationGroups`, and `UIViewAnimations`, which animate multiple prope
 
 ## Features
 
-- [x] [46+ Parametric Curves, Decay, and Springs](/Documentation/parametric_easings.md) 
+- [x] [46+ Parametric Curves, Decay, and Springs](/Documentation/parametric_easings.md)
 - [x] Blocks Syntax for Building Complex Animations
 - [x] Chain and Sequence Animations:
 - [x] Apply Unique Easing per Property Animation
@@ -33,7 +33,7 @@ Check out the [FlightAnimator Project Demo](#demoApp) in the video below to <br>
 
 <p align=left>
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=8XyH5mpfoC8&vq=hd1080
-" target="_blank"><img src="http://img.youtube.com/vi/8XyH5mpfoC8/0.jpg" 
+" target="_blank"><img src="http://img.youtube.com/vi/8XyH5mpfoC8/0.jpg"
 alt="FlightAnimator Demo" border="0" /> </a>
 </p>
 
@@ -48,17 +48,17 @@ alt="FlightAnimator Demo" border="0" /> </a>
 
 - If you **found a bug**, or **have a feature request**, open an issue.
 - If you **need help** or a **general question**, use [Stack Overflow](http://stackoverflow.com/questions/tagged/flight-animator). (tag 'flight-animator')
-- If you **want to contribute**, review the [Contribution Guidelines](/Documentation/CONTRIBUTING.md), and submit a pull request. 
+- If you **want to contribute**, review the [Contribution Guidelines](/Documentation/CONTRIBUTING.md), and submit a pull request.
 
-## Basic Use 
+## Basic Use
 
-**FlightAnimator** provides a very flexible syntax for defining animations ranging in complexity with ease. Following a blocks based builder approach you can easily define an animation group, and it's property animations in no time. 
+**FlightAnimator** provides a very flexible syntax for defining animations ranging in complexity with ease. Following a blocks based builder approach you can easily define an animation group, and it's property animations in no time.
 
 Under the hood animations built are `CAAnimationGroup`(s) with multiple custom `CAKeyframeAnimation`(s) defined uniquely per property. Once it's time to animate, **FlightAnimator** will dynamically synchronize the remaining progress for all the animations relative to the current presentationLayer's values, then continue to animate to it's final state.
 
 ### Simple Animation
 
-To really see the power of **FlightAnimator**, let's first start by defining an animation using `CoreAnimation`, then re-define it using the framework's blocks based syntax. The animation below uses a `CAAnimationGroup` to group 3 individual `CABasicAnimations` for alpha, bounds, and position. 
+To really see the power of **FlightAnimator**, let's first start by defining an animation using `CoreAnimation`, then re-define it using the framework's blocks based syntax. The animation below uses a `CAAnimationGroup` to group 3 individual `CABasicAnimations` for alpha, bounds, and position.
 
 ```swift
 let alphaAnimation 			= CABasicAnimation(keyPath: "position")
@@ -78,7 +78,7 @@ positionAnimation.toValue 		= NSValue(CGPoint : toPosition)
 positionAnimation.fromValue 		= NSValue(CGPoint : view.layer.position)
 positionAnimation.fillMode              = kCAFillModeForwards
 positionAnimation.timingFunction        = CAMediaTimingFunction(name:kCAMediaTimingFunctionEaseOut)
-	
+
 let progressAnimation 			= CABasicAnimation(keyPath: "animatableProgress")
 progressAnimation.toValue 		= 1.0
 progressAnimation.fromValue 		= 0
@@ -118,36 +118,36 @@ func primary(primary : Bool) -> PropertyAnimator
 
 Once the function call exits the closure, **FlightAnimator** performs the following:
 
-1. Adds the newly created `FAAnimationGroup` to the calling **view**'s layer, 
+1. Adds the newly created `FAAnimationGroup` to the calling **view**'s layer,
 2. Synchronizes the grouped `FABasicAnimations` relative to the calling **view**'s presentation layer values
-3. Triggers the animation by applying the **toValue** from the grouped animations to to the calling **view**'s layer. 
+3. Triggers the animation by applying the **toValue** from the grouped animations to to the calling **view**'s layer.
 
 ## Chaining Animations
 
-Chaining animations together in FlightAnimator is simple. 
+Chaining animations together in FlightAnimator is simple.
 
 ### Trigger on Start
 
 The animation created on the secondaryView is triggered once the the primaryView's animation begins.    	
-         	
+
 ```swift
 primaryView.animate { [unowned self] (animator) in
 	....
-		
+
     animator.triggerOnStart(onView: self.secondaryView, animator: { (animator) in
          ....
     })
 }
 ```
 
-### Trigger on Completion 
+### Trigger on Completion
 
 The animation created on the secondaryView is triggered once the the primaryView's animation completes.
 
 ```swift
 primaryView.animate { [unowned self] (animator) in
 	....
-		
+
     animator.triggerOnCompletion(onView: self.secondaryView, animator: { (animator) in
          ....
     })
@@ -161,7 +161,7 @@ The animation created on the secondaryView is triggered when the driving animati
 ```swift
 primaryView.animate { [unowned self] (animator) in
 	....
-				
+
     animator.triggerOnProgress(0.5, onView: self.secondaryView, animator: { (animator) in
          ....
     })
@@ -170,12 +170,12 @@ primaryView.animate { [unowned self] (animator) in
 
 ### Value Progress Trigger
 
-The animation created on the secondaryView is triggered when the driving animation reaches the relative half way point between the fromValue and toValue of the primaryView's animation. This is driven 
+The animation created on the secondaryView is triggered when the driving animation reaches the relative half way point between the fromValue and toValue of the primaryView's animation. This is driven
 
 ```swift
 primaryView.animate { [unowned self] (animator) in
 	....
-		
+
     animator.triggerOnValueProgress(0.5, onView: self.secondaryView, animator: { (animator) in
          ....
     })
@@ -190,25 +190,25 @@ There is built in support for nesting triggers within triggers to sequence anima
 ```swift
 primaryView.animate { [unowned self] (animator) in
 	....
-		
+
     animator.triggerOnStart(onView: self.secondaryView, animator: { (animator) in
          -> Relative to primaryView animation
-         	 
+
 	animator.triggerOnCompletion(onView: self.tertiaryView, animator: { (animator) in
 		-> Relative to secondaryView animation
-            
+
         	animator.triggerOnProgress(0.5, onView: self.quaternaryView, animator: { (animator) in
 			-> Relative to tertiaryView animation
     		})
      	})
-        	
+
         animator.triggerOnValueProgress(0.5, onView: self.quinaryView, animator: { (animator) in
          		-> Relative to secondaryView animation
     	})
     })
-    	
+
     animator.triggerOnStart(onView: self.senaryView, animator: { (animator) in
-         	-> Relative to primaryView animation 
+         	-> Relative to primaryView animation
     })
 }
 ```
@@ -220,11 +220,11 @@ Sometimes there is a need to perform some logic on the start of an animation, or
 ```swift
 view.animate { (animator) in
     ....
-    
+
     animator.setDidStartCallback({ (animator) in
          // Animation Did Start
     })
-    
+
     animator.setDidStopCallback({ (animator, complete) in
          // Animation Did Stop   
     })
@@ -235,13 +235,13 @@ These can be nested just as the animation triggers, and be applied animator on t
 
 ## Cache & Reuse Animations
 
-FlightAnimator allows for registering animations (aka states) up front with a unique animation key. Once defined it can be manually triggered at any time in the application flow using the animation key used registration. 
+FlightAnimator allows for registering animations (aka states) up front with a unique animation key. Once defined it can be manually triggered at any time in the application flow using the animation key used registration.
 
-When the animation is applied, if the view is in mid flight, it will synchronize itself with the current presentation layer values, and animate to its final destination. 
+When the animation is applied, if the view is in mid flight, it will synchronize itself with the current presentation layer values, and animate to its final destination.
 
 #### Register/Cache Animation
 
-To register an animation, call a globally defined method, and create an animations just as defined earlier examples within the maker block. The following example shows how to register, and cache an animation for a key on a specified view. 
+To register an animation, call a globally defined method, and create an animations just as defined earlier examples within the maker block. The following example shows how to register, and cache an animation for a key on a specified view.
 
 ```swift
 struct AnimationKeys {
@@ -260,7 +260,7 @@ This animation is only cached, and is not performed until it is manually trigger
 #### Apply Registered Animation
 
 
-To trigger the animation call the following 
+To trigger the animation call the following
 
 ```swift
 view.applyAnimation(forKey: AnimationKeys.CenterStateFrameAnimation)
@@ -278,7 +278,7 @@ view.applyAnimation(forKey: AnimationKeys.CenterStateFrameAnimation, animated : 
 
 ### Timing Adjustments
 
-Due to the dynamic nature of the framework, it may take a few tweaks to get the animation just right. 
+Due to the dynamic nature of the framework, it may take a few tweaks to get the animation just right.
 
 FlightAnimator has a few options for finer control over timing synchronization:
 
@@ -293,19 +293,19 @@ Lets look at the following example of setting the timingPriority on a group anim
 
 ```swift
 func animateView(toFrame : CGRect) {
-	
+
 	let newBounds = CGRectMake(0,0, toFrame.width, toFrame.height)
 	let newPosition = CGPointMake(toFrame.midX, toFrame.midY)
-	
+
 	view.animate(.MaxTime) { (animator) in
       		animator.bounds(newBounds).duration(0.5).easing(.OutCubic)
       		animator.position(newPositon).duration(0.5).easing(.InSine)
 	}
 }
 ```
-Just like the demo app, This method gets called by different buttons, and takes on the frame value of button that triggered the method. Let's the animation has been triggered, and is in mid flight. While in mid flight another button is tapped, a new animation is applied, and ehe position changes, but the bounds stay the same. 
+Just like the demo app, This method gets called by different buttons, and takes on the frame value of button that triggered the method. Let's the animation has been triggered, and is in mid flight. While in mid flight another button is tapped, a new animation is applied, and ehe position changes, but the bounds stay the same.
 
-Internally the framework will figure out the current progress in reference to the last animation, and will select the max duration value from the array of durations on the grouped property animations. 
+Internally the framework will figure out the current progress in reference to the last animation, and will select the max duration value from the array of durations on the grouped property animations.
 
 Lets assume the bounds don't change, thus animation's duration is assumed to be 0.0 after synchronization. The new animation will synchronize to the duration of the position animation based on progress, and automatically becomes the max duration based on the **.MaxTime** timing priority.
 
@@ -313,7 +313,7 @@ The timing priority can also be applied on ``triggerAtTimeProgress()``  or ``tri
 
 The more property animations within a group, the more likely the need to adjust how the timing is applied. For this purpose there are 4 timing priorities to choose from:
 
-* .MaxTime 
+* .MaxTime
 * .MinTime
 * .Median
 * .Average
@@ -351,10 +351,10 @@ Below is an example of how to handle the handoff and use ``.SpringDecay(velocity
 func respondToPanRecognizer(recognizer : UIPanGestureRecognizer) {
     switch recognizer.state {
     ........
-    
+
     case .Ended:
     	let currentVelocity = recognizer.velocityInView(view)
-        
+
       	view.animate { (animator) in
          	animator.bounds(finalBounds).duration(0.5).easing(.OutCubic)
   			animator.position(finalPositon).duration(0.5).easing(.SpringDecay(velocity: velocity))
@@ -388,7 +388,7 @@ Demo Features Included:
 * Enable a secondary view, which follows the main view to it's last location
 * Adjust group timing priority to test synchronization
 * Adjust progress for time based/value based triggers on the secondary view
- 
+
 
 ## License
 
