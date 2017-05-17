@@ -71,18 +71,28 @@ open class FAVector : Equatable {
         }
         else if CFGetTypeID(value as AnyObject) == CGColor.typeID {
             let color = UIColor(cgColor : value as! CGColor)
-            var red: CGFloat = 0, green: CGFloat = 0, blue: CGFloat = 0, alpha: CGFloat = 0
-            
-            if color.getRed(&red, green: &green, blue: &blue, alpha: &alpha) {
-                components = [red, green, blue, alpha]
-                return
-            }
-            
-            var hue: CGFloat = 0, saturation: CGFloat = 0, brightness: CGFloat = 0, HSBAlpha: CGFloat = 0
-            
-            if color.getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &HSBAlpha) {
-                components = [hue, saturation, brightness, HSBAlpha]
-                return
+          
+            if let colorspace = color.cgColor.colorSpace?.model, colorspace == .monochrome {
+                var white: CGFloat = 0, alpha: CGFloat = 0
+                
+                if color.getWhite(&white, alpha: &alpha) {
+                    components = [white, alpha]
+                    return
+                }
+            } else if let colorspace = color.cgColor.colorSpace?.model, colorspace == .rgb {
+                var red: CGFloat = 0, green: CGFloat = 0, blue: CGFloat = 0, alpha: CGFloat = 0
+               
+                if color.getRed(&red, green: &green, blue: &blue, alpha: &alpha) {
+                    components = [red, green, blue, alpha]
+                    return
+                }
+            } else {
+                var hue: CGFloat = 0, saturation: CGFloat = 0, brightness: CGFloat = 0, HSBAlpha: CGFloat = 0
+                
+                if color.getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &HSBAlpha) {
+                    components = [hue, saturation, brightness, HSBAlpha]
+                    return
+                }
             }
         }
     
@@ -127,10 +137,12 @@ open class FAVector : Equatable {
         }
         else if CFGetTypeID(value as AnyObject) == CGColor.typeID {
             let color = UIColor(cgColor : value as! CGColor)
+         
+            if let colorspace = color.cgColor.colorSpace?.model, colorspace == .monochrome {
+                 return UIColor(white: components[0], alpha: components[1]).cgColor
+            }
             
-            var red: CGFloat = 0, green: CGFloat = 0, blue: CGFloat = 0, alpha: CGFloat = 0
-            
-            if color.getRed(&red, green: &green, blue: &blue, alpha: &alpha) {
+            if let colorspace = color.cgColor.colorSpace?.model, colorspace == .rgb {
                 return UIColor(red: components[0],  green: components[1],  blue: components[2],  alpha: components[3]).cgColor
             }
             
@@ -165,11 +177,13 @@ open class FAVector : Equatable {
                                  m41: components[12], m42: components[13], m43: components[14], m44: components[15])
         }
         else if CFGetTypeID(value as AnyObject) == CGColor.typeID {
-            let color = UIColor(cgColor :  value as! CGColor)
+            let color = UIColor(cgColor : value as! CGColor)
             
-            var red: CGFloat = 0, green: CGFloat = 0, blue: CGFloat = 0, alpha: CGFloat = 0
+            if let colorspace = color.cgColor.colorSpace?.model, colorspace == .monochrome {
+                return UIColor(white: components[0], alpha: components[1]).cgColor
+            }
             
-            if color.getRed(&red, green: &green, blue: &blue, alpha: &alpha) {
+            if let colorspace = color.cgColor.colorSpace?.model, colorspace == .rgb {
                 return UIColor(red: components[0],  green: components[1],  blue: components[2],  alpha: components[3]).cgColor
             }
             
