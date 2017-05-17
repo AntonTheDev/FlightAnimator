@@ -29,10 +29,10 @@ The installation instruction below for iOS and AppleTV
 1. Create/Update the Cartfile with with the following
 
 ```
-	Swift 3.1:
+Swift 3.1:
 
-	#FlightAnimator
-	git "https://github.com/AntonTheDev/FlightAnimator.git" >= 0.9.8
+#FlightAnimator
+git "https://github.com/AntonTheDev/FlightAnimator.git" >= 0.9.8
 ```
 2. Run `carthage update`. This will fetch dependencies into a [Carthage/Checkouts][] folder, then build each one.
 3. In the application targets’ “General” settings tab, in the “Embedded Binaries” section, drag and drop each framework for use from the Carthage/Build folder on disk.

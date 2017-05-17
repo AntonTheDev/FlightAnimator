@@ -1,8 +1,12 @@
 # Release Notes
 
+#### Version 0.9.8
+* Added support for monochromatic color
+* Added Travis CI Configuration
+
 #### Version 0.9.7
-* Fixed an issue that was incorrectly applying the from value. 
-	- The framework assumed that the view's layer properties relative to the presentation layer. 
+* Fixed an issue that was incorrectly applying the from value.
+	- The framework assumed that the view's layer properties relative to the presentation layer.
 * Updated the maker block to nonescaping as it should have been
 
 #### Version 0.9.6
@@ -12,7 +16,7 @@
 	func cacheAnimation(animation: Any,
                             forKey key: String,
                             timingPriority : FAPrimaryTimingPriority = .maxTime)
- 
+
  	// Added
 	func registerAnimation(animation: Any,
                                forKey key: String,
@@ -60,28 +64,28 @@
 	public func triggerOnStart(onView:, timingPriority: ,animator:)
 	public func triggerOnProgress(progress:, onView :, timingPriority :, animator:)
 	public func triggerOnValueProgress(progress:, onView:, timingPriority:, animator:)
-    
+
     // New
 	public func triggerOnCompletion(onView:, timingPriority:, animator:)  
 
 
-	UIView+FAAnimation 
+	UIView+FAAnimation
 
 	// Added
 	func cacheAnimation(forKey: String, timingPriority:, animator:)
 	func cacheAnimation(animation: , forKey:, timingPriority :)   
 
     func applyAnimation(forKey key: String, animated : Bool = true)
-	  
+
 	Global Definitions
 
 	// Removed
-	registerAnimation(onView : UIView, forKey: String, timingPriority :, animator :) 
-                            
+	registerAnimation(onView : UIView, forKey: String, timingPriority :, animator :)
+
 	```
 
 * Bug fixes:
- 	- Sequencing Animations:  You can not trigger an animation by an animation on the triggering view 
+ 	- Sequencing Animations:  You can not trigger an animation by an animation on the triggering view
 
 
 
@@ -100,7 +104,7 @@
 
 #### Version 0.8.0
 * Added tvOS Support for both Carthage and Cocoapods
-* Added the ability to listen to CAAnimationDelegate by setting a closure on the animator instance within the build closure 
+* Added the ability to listen to CAAnimationDelegate by setting a closure on the animator instance within the build closure
 * Added the ability to interpolate CGColor, RGBA, HSBA, and Monochromatic
 * Added property accessors for backgroundColor, borderColor, shadowColor
 * Fix for synchronizing, it was running the sychronization logic twice, 30%+ performance improvement
@@ -136,12 +140,12 @@
 	* Added option to enable and disable a secondary view
 	* Added ability to test out time based / value based triggers with secondary view
 	* Moved the picker into individual cells for each property 	
-	
+
 #### Version 0.6.1
 
 * Refactored some of the code:
 	* Created an FAInterpolator for all the interpolation logic
-* Accidentally removed OutIn easings in version 0.6.0, fixed 
+* Accidentally removed OutIn easings in version 0.6.0, fixed
 
 
 #### Version 0.6.0
@@ -150,15 +154,15 @@
 	* Separate file for FAEasing and FASpring
 	* Simplified the synchronization logic inside of FAAnimation
 	* Removed some of the loose extensions
-* You can also set the timing priority on ``triggerAtTimeProgress()`` or ``triggerAtValueProgress()``. 
+* You can also set the timing priority on ``triggerAtTimeProgress()`` or ``triggerAtValueProgress()``.
 
 
 #### Version 0.5.0
 
 * Updated the naming convention of the easing curves by removing the 'Ease' prefix on the enumerator to make swift-like syntax, now you can easily access animations without being presented too many types.
-	* i.e .EaseInSine -> .InSine , 
+	* i.e .EaseInSine -> .InSine ,
 	* i.e .EaseInOutSine -> .InOutSine
-* Added the ability to set the timing priority on the ``registerAimation()`` and ``animate()`` method 
+* Added the ability to set the timing priority on the ``registerAimation()`` and ``animate()`` method
 	* The default is **.MaxTime**
 * Refactored some code and ensured that it is in the right places
 * Separated the readme into multiple pages, with a reference for easing curves, supported animatable properties, and alas these release notes
