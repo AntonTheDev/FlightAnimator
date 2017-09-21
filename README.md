@@ -1,5 +1,5 @@
 # FlightAnimator
-[![Cocoapods Compatible](https://img.shields.io/badge/pod-v0.9.8-blue.svg)]()
+[![Cocoapods Compatible](https://img.shields.io/badge/pod-v0.9.9-blue.svg)]()
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)]()
 [![Build Status](https://travis-ci.org/AntonTheDev/FlightAnimator.svg?branch=master)](https://travis-ci.org/AntonTheDev/FlightAnimator)
 [![Platform](https://img.shields.io/badge/platform-iOS%20|%20tvOS-lightgrey.svg)]()
@@ -10,7 +10,7 @@
 
 **Moved to Swift 3.1 Support:**
 
-* For Swift 3.1 - Use **tag** Version 0.9.8
+* For Swift 3.1 - Use **tag** Version 0.9.9
 * See [Installation Instructions](/Documentation/installation.md) for clarification
 
 ## Introduction
