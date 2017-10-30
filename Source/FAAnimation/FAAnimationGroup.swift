@@ -470,9 +470,9 @@ internal extension FASynchronizedGroup {
         var primaryAnimations = newAnimations.filter({ $0.1.isPrimary == true })
         let hasPrimaryAnimations : Bool = (primaryAnimations.count > 0)
         
-        if hasPrimaryAnimations == false {
-            primaryAnimations = Array(newAnimations.map {$0})  //newAnimations.filter({ $0.1 != nil })
-        }
+       // if hasPrimaryAnimations == false {
+       //      primaryAnimations = Array(newAnimations.map {$0})  //newAnimations.filter({ $0.1 != nil })
+       // }
         
         let durationsArray = primaryAnimations.map({ $0.1.duration})
         
