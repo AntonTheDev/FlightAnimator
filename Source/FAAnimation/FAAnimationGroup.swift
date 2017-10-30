@@ -648,7 +648,7 @@ public extension FASynchronizedGroup {
     /**
      Triggers an animation if the value or time progress is met
      */
-    func updateTrigger() {
+    @objc func updateTrigger() {
         
         for segment in segmentArray {
             if let triggerSegment = self.activeTriggerSegment(segment)  {

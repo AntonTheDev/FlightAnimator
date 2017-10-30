@@ -215,7 +215,7 @@
 				TargetAttributes = {
 					13009CE81D0B90C3008419C8 = {
 						CreatedOnToolsVersion = 7.3;
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 0900;
 					};
 					3A742D7C1D2F3B94008E555E = {
 						CreatedOnToolsVersion = 7.3.1;
@@ -432,7 +432,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.iagd.flightanimator.FlightAnimator-iOS";
 				PRODUCT_NAME = FlightAnimator;
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -452,7 +453,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.iagd.flightanimator.FlightAnimator-iOS";
 				PRODUCT_NAME = FlightAnimator;
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
 		};

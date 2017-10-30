@@ -15,12 +15,12 @@ internal func swizzleSelector(_ cls: AnyClass!, originalSelector : Selector, swi
     let originalMethod = class_getInstanceMethod(cls, originalSelector)
     let swizzledMethod = class_getInstanceMethod(cls, swizzledSelector)
     
-    let didAddMethod = class_addMethod(cls, originalSelector, method_getImplementation(swizzledMethod), method_getTypeEncoding(swizzledMethod))
+    let didAddMethod = class_addMethod(cls, originalSelector, method_getImplementation(swizzledMethod!), method_getTypeEncoding(swizzledMethod!))
     
     if didAddMethod {
-        class_replaceMethod(cls, swizzledSelector, method_getImplementation(originalMethod), method_getTypeEncoding(originalMethod))
+        class_replaceMethod(cls, swizzledSelector, method_getImplementation(originalMethod!), method_getTypeEncoding(originalMethod!))
     } else {
-        method_exchangeImplementations(originalMethod, swizzledMethod);
+        method_exchangeImplementations(originalMethod!, swizzledMethod!);
     }
 }
 
@@ -58,7 +58,7 @@ extension CALayer {
         }
     }
     
-    internal func FA_addAnimation(_ anim: CAAnimation, forKey key: String?) {
+    @objc internal func FA_addAnimation(_ anim: CAAnimation, forKey key: String?) {
         
         guard let animation = anim as? FAAnimationGroup else {
             FA_addAnimation(anim, forKey: key)
@@ -71,7 +71,7 @@ extension CALayer {
         FA_addAnimation(animation, forKey: key)
       
     }
-    internal func FA_removeAnimationForKey(_ key: String) {
+    @objc internal func FA_removeAnimationForKey(_ key: String) {
 
         if let animation = self.animation(forKey: key) as? FAAnimationGroup  {
             // if DebugTriggerLogEnabled { print("STOPPED FORKEY ", animation.animationKey) }
@@ -81,7 +81,7 @@ extension CALayer {
         FA_removeAnimationForKey(key)
     }
     
-    internal func FA_removeAllAnimations() {
+    @objc internal func FA_removeAllAnimations() {
         guard let keys = self.animationKeys() else {
             FA_removeAllAnimations()
             return
@@ -155,7 +155,7 @@ extension UIColor {
         }
     }
     
-    internal func FA_getRed(_ red: UnsafeMutablePointer<CGFloat>,
+    @objc internal func FA_getRed(_ red: UnsafeMutablePointer<CGFloat>,
                             green: UnsafeMutablePointer<CGFloat>,
                             blue: UnsafeMutablePointer<CGFloat>,
                             alpha: UnsafeMutablePointer<CGFloat>) -> Bool {
