@@ -11,28 +11,33 @@ import UIKit
 
 internal let DebugTriggerLogEnabled = false
 
-open class FlightAnimator {
-    
+open class FlightAnimator
+{
     internal weak var associatedView : UIView?
     internal var animationKey : String?
     
     var animationConfigurations = [String : FAPropertyAnimator]()
     var primaryTimingPriority : FAPrimaryTimingPriority = .maxTime
     
-    init(withView view : UIView, forKey key: String, priority : FAPrimaryTimingPriority = .maxTime) {
+    init(withView view : UIView,
+         forKey key: String,
+         priority : FAPrimaryTimingPriority = .maxTime)
+    {
         animationKey = key
         associatedView = view
         primaryTimingPriority = priority
         configureNewGroup()
     }
     
-    fileprivate func configureNewGroup() {
-        
-        if associatedView!.cachedAnimations == nil {
+    fileprivate func configureNewGroup()
+    {
+        if associatedView!.cachedAnimations == nil
+        {
             associatedView!.cachedAnimations = [NSString : FAAnimationGroup]()
         }
        
-        if associatedView!.cachedAnimations!.keys.contains(NSString(string: animationKey!)) {
+        if associatedView!.cachedAnimations!.keys.contains(NSString(string: animationKey!))
+        {
             associatedView!.cachedAnimations![NSString(string: animationKey!)]?.stopTriggerTimer()
             associatedView!.cachedAnimations![NSString(string: animationKey!)] = nil
         }
@@ -48,8 +53,8 @@ open class FlightAnimator {
                                    timeBased : Bool,
                                    view: UIView,
                                    progress: CGFloat = 0.0,
-                                   animator: (_ animator : FlightAnimator) -> Void) {
-
+                                   animator: (_ animator : FlightAnimator) -> Void)
+    {
         let triggerKey = UUID().uuidString
         
         if let animationGroup = associatedView!.cachedAnimations![NSString(string: animationKey!)] {

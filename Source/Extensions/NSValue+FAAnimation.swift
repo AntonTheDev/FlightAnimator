@@ -9,24 +9,39 @@
 import Foundation
 import UIKit
 
-extension NSValue {    
-   final public func typeValue() -> Any? {
+extension NSValue
+{
+   final public func typedValue() -> Any?
+   {
         let type = String(cString: self.objCType)
     
-        if type.hasPrefix("{CGPoint") {
+        if type.hasPrefix("{CGPoint")
+        {
             return self.cgPointValue
-        } else if type.hasPrefix("{CGSize") {
+        }
+        else if type.hasPrefix("{CGSize")
+        {
             return self.cgSizeValue
-        } else if type.hasPrefix("{CGRect") {
+        }
+        else if type.hasPrefix("{CGRect")
+        {
             return self.cgRectValue
-        } else if type.hasPrefix("{CATransform3D") {
+        }
+        else if type.hasPrefix("{CATransform3D")
+        {
             return self.caTransform3DValue
-        } else {
+        }
+        else if type.hasPrefix("{CGAffineTransform")
+        {
+            return self.cgAffineTransformValue
+        }
+        else if let numberSelf = self as? NSNumber
+        {
+            return CGFloat(numberSelf.floatValue)
+        }
+        else
+        {
             return self
         }
     }
 }
-
-
-
-

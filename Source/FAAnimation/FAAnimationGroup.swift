@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+
 fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
   switch (lhs, rhs) {
   case let (l?, r?):
@@ -424,7 +425,7 @@ internal extension FASynchronizedGroup {
                 if let customAnimation = animation as? FABasicAnimation {
                     
                     let newAnimation = FABasicAnimation(keyPath: customAnimation.keyPath)
-                    newAnimation.easingFunction = _reverseEasingCurve ? customAnimation.easingFunction.reverseEasingCurve() : customAnimation.easingFunction
+                    newAnimation.easingFunction = _reverseEasingCurve ? customAnimation.easingFunction.reverseEasing() : customAnimation.easingFunction
                     
                     newAnimation.isPrimary = customAnimation.isPrimary
                     newAnimation.values = customAnimation.values!.reversed()
@@ -451,7 +452,7 @@ internal extension FASynchronizedGroup {
      - parameter oldAnimationGroup: old animation in flight
      */
 
-    internal func synchronizeAnimations(_ oldAnimationGroup : FAAnimationGroup?) {
+    internal func synchronizeAnimations(_ oldAnimationGroup : FAAnimationGroup? = nil) {
         
         var oldAnimations = animationDictionaryForGroup(oldAnimationGroup)
         var newAnimations = animationDictionaryForGroup(self)
@@ -470,9 +471,9 @@ internal extension FASynchronizedGroup {
         var primaryAnimations = newAnimations.filter({ $0.1.isPrimary == true })
         let hasPrimaryAnimations : Bool = (primaryAnimations.count > 0)
         
-       // if hasPrimaryAnimations == false {
-       //      primaryAnimations = Array(newAnimations.map {$0})  //newAnimations.filter({ $0.1 != nil })
-       // }
+        if primaryAnimations.count == 0 {
+             primaryAnimations = newAnimations //newAnimations.filter({ $0.1 != nil })
+        }
         
         let durationsArray = primaryAnimations.map({ $0.1.duration})
         
@@ -573,7 +574,8 @@ public extension FASynchronizedGroup {
     internal func configureAnimationTrigger(_ animation : AnyObject,
                                             onView view : UIView,
                                             atTimeProgress timeProgress: CGFloat? = 0.0,
-                                            atValueProgress valueProgress: CGFloat? = nil) {
+                                            atValueProgress valueProgress: CGFloat? = nil)
+    {
         var progress : CGFloat = timeProgress ?? 0.0
         var timeBased : Bool = true
         
@@ -650,9 +652,10 @@ public extension FASynchronizedGroup {
      */
     @objc func updateTrigger() {
         
-        for segment in segmentArray {
-            if let triggerSegment = self.activeTriggerSegment(segment)  {
-                
+        for segment in segmentArray
+        {
+            if let triggerSegment = self.activeTriggerSegment(segment)
+            {
                 if DebugTriggerLogEnabled {  print("TRIGGER ++++++++ KEY \(segment.animationKey!)  -  CALINK  \(String(describing: displayLink))\n") }
             
                 triggerSegment.animatedView?.applyAnimation(forKey: triggerSegment.animationKey! as String)

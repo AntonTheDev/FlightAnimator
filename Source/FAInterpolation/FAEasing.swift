@@ -283,7 +283,7 @@ public enum FAEasing : Equatable {
     }
     
     
-    public func reverseEasingCurve() -> FAEasing {
+    public func reverseEasing() -> FAEasing {
         switch self {
         case .linear:
             return .linear
@@ -486,4 +486,3 @@ public func ==(lhs : FAEasing, rhs : FAEasing) -> Bool {
         switch rhs { case .springDecay(_): return true default: return false }
     }
 }
-

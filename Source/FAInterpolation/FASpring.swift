@@ -94,25 +94,28 @@ public struct FASpring {
      
      - returns: The current value in time, based on the velocity, angular frequency and damping
      */
-    func updatedValue(_ deltaTime: CGFloat) -> CGFloat {
-        
+    func updatedValue(_ deltaTime: CGFloat) -> CGFloat
+    {
         // Over Damped
-        if dampingRatio > 1.0 + CGFLT_EPSILON {
+        if dampingRatio > 1.0 + CGFLT_EPSILON
+        {
             let expTerm1 = exp(z1 * deltaTime)
             let expTerm2 = exp(z2 * deltaTime)
             let position = equilibriumPosition + c1 * expTerm1 + c2 * expTerm2
             
             return position
         }
-            // Critically Damped
-        else if (dampingRatio > 1.0 - CGFLT_EPSILON) {
+        // Critically Damped
+        else if (dampingRatio > 1.0 - CGFLT_EPSILON)
+        {
             let expTerm = exp( -angularFrequency * deltaTime )
             let c3 = (c1 * deltaTime + c2) * expTerm
             let p = equilibriumPosition + c3
             return ceil(p)
         }
-            // Under Damped
-        else {
+       // Under Damped
+        else
+        {
             let change  = alpha * deltaTime
             let expTerm  = exp( -omegaZeta * deltaTime)
             let cosTerm  = cos(change)
@@ -133,20 +136,22 @@ public struct FASpring {
      
      - returns: The current velocity of the single CGFoloat value animating
      */
-    func velocity(_ deltaTime : CGFloat) -> CGFloat {
+    
+    func velocity(_ deltaTime : CGFloat) -> CGFloat
+    {
         // Over Damped
         if dampingRatio > 1.0 + CGFLT_EPSILON {
             let expTerm1 = exp(z1 * deltaTime)
             let expTerm2 = exp(z2 * deltaTime)
             return c1 * z1 *  expTerm1 + c2 * z2 * expTerm2
         }
-            // Critically Damped
+        // Critically Damped
         else if (dampingRatio > 1.0 - CGFLT_EPSILON) {
             let expTerm = exp( -angularFrequency * deltaTime )
             let c3 = (c1 * deltaTime + c2) * expTerm
             return (c1 * expTerm) - (c3 * self.angularFrequency)
         }
-            // Under Damped
+        // Under Damped
         else {
             let change  = alpha * deltaTime
             let expTerm  = exp( -omegaZeta * deltaTime)

@@ -30,12 +30,28 @@ class CurveSelectionCollectionViewCell : UICollectionViewCell {
             switch propertyConfigType {
             case .bounds:
                 titleLabel.text = "Bounds"
+
+                primarySwitch.accessibilityLabel = "BoundsSwitch"
+                                      accessibilityLabel = "BoundsCell"
+                pickerView.accessibilityLabel = "BoundsPicker"
             case .position:
                 titleLabel.text = "Position"
+
+                primarySwitch.accessibilityLabel = "PositionSwitch"
+                         accessibilityLabel = "PositionCell"
+                pickerView.accessibilityLabel = "PositionPicker"
             case .alpha:
                 titleLabel.text = "Alpha"
+
+                primarySwitch.accessibilityLabel = "AlphaSwitch"
+                    accessibilityLabel = "AlphaCell"
+                pickerView.accessibilityLabel = "AlphaPicker"
             case .transform:
                 titleLabel.text = "Transform"
+
+                primarySwitch.accessibilityLabel = "TransformSwitch"
+                accessibilityLabel = "TransformCell"
+                pickerView.accessibilityLabel = "TransformPicker"
             }
         }
     }
@@ -61,6 +77,7 @@ class CurveSelectionCollectionViewCell : UICollectionViewCell {
     }
     
     func layoutInterface() {
+        super.layoutSubviews()
         gradient.colors = [ UIColor(rgba: "#444444").cgColor, UIColor(rgba: "#4B4C51").cgColor]
         gradient.frame = contentView.bounds
         curveSelectionLabel.frame = self.contentView.bounds
@@ -69,7 +86,7 @@ class CurveSelectionCollectionViewCell : UICollectionViewCell {
                                  toFrame: contentView.bounds,
                                  horizontal: HGHorizontalAlign.leftEdge,
                                  vertical: HGVerticalAlign.center,
-                                 horizontalOffset:  16,
+                                 horizontalOffset:  24,
                                  verticalOffset: 0)
         
         curveSelectionLabel.alignWithSize(CGSize(width: contentView.bounds.width, height: 24),
@@ -90,7 +107,7 @@ class CurveSelectionCollectionViewCell : UICollectionViewCell {
                                  toFrame: contentView.bounds,
                                  horizontal: HGHorizontalAlign.leftEdge,
                                  vertical: HGVerticalAlign.center,
-                                 horizontalOffset : 90)
+                                 horizontalOffset : 60)
         
         for subview in pickerView.subviews{
             subview.backgroundColor = UIColor.clear
@@ -100,7 +117,9 @@ class CurveSelectionCollectionViewCell : UICollectionViewCell {
     lazy var titleLabel: UILabel = {
         var label = UILabel()
         label.textColor = UIColor.white
+        label.isUserInteractionEnabled = false
         label.backgroundColor = UIColor.clear
+                label.isAccessibilityElement = false
         label.font = UIFont(name: "Helvetica", size: 15)
         label.textAlignment = .left
         return label
@@ -114,6 +133,8 @@ class CurveSelectionCollectionViewCell : UICollectionViewCell {
         var label = UILabel()
         label.textColor = UIColor.white
         label.backgroundColor = UIColor.clear
+        label.isUserInteractionEnabled = false
+        label.isAccessibilityElement = false
         label.font = UIFont(name: "Helvetica", size: 15)
         label.textAlignment = .left
         return label
@@ -121,19 +142,22 @@ class CurveSelectionCollectionViewCell : UICollectionViewCell {
     
     lazy var pickerView : UIPickerView = {
         var picker = UIPickerView()
+        picker.isAccessibilityElement = true
         picker.dataSource = self
         picker.delegate = self
         picker.isOpaque = false
+        picker.tintColor = UIColor.clear
         picker.backgroundColor = UIColor.clear
         return picker
     }()
     
-    func value_changed(_ sender : UISwitch) {
+    @objc func value_changed(_ sender : UISwitch) {
       self.delegate?.cell(self, didSelectPrimary : sender.isOn)
     }
     
     lazy var primarySwitch: UISwitch = {
         var tempSwitch = UISwitch()
+        tempSwitch.isAccessibilityElement = true
         tempSwitch.backgroundColor = UIColor.clear
         tempSwitch.addTarget(self, action: #selector(CurveSelectionCollectionViewCell.value_changed(_:)), for: UIControlEvents.valueChanged)
         return tempSwitch

@@ -38,7 +38,8 @@ extension CALayer {
             return
         }
         
-        if executedLayer == false  {
+        if executedLayer == false
+        {
             swizzleSelector(self,
                             originalSelector: #selector(CALayer.add(_:forKey:)),
                             swizzledSelector: #selector(CALayer.FA_addAnimation(_:forKey:)))
@@ -98,26 +99,17 @@ extension CALayer {
     }
     
     final public func anyValueForKeyPath(_ keyPath: String) -> Any? {
+        
         if let currentFromValue = self.value(forKeyPath: keyPath) {
             
             if CFGetTypeID(currentFromValue as AnyObject) == CGColor.typeID {
                 return currentFromValue
             }
 
-            let type = String(cString: (currentFromValue as AnyObject).objCType)
-            
-            if type.hasPrefix("{CGPoint") {
-                return (currentFromValue as AnyObject).cgPointValue!
-            } else if type.hasPrefix("{CGSize") {
-                return (currentFromValue as AnyObject).cgSizeValue!
-            } else if type.hasPrefix("{CGRect") {
-                return (currentFromValue as AnyObject).cgRectValue!
-            } else if type.hasPrefix("{CATransform3D") {
-                return (currentFromValue as AnyObject).caTransform3DValue!
+            if let currentFromValue = currentFromValue as? NSValue {
+                return currentFromValue.typedValue()
             }
-            else {
-                return currentFromValue
-            }
+
         }
         
         return super.value(forKeyPath: keyPath)
@@ -137,16 +129,20 @@ extension UIColor {
     // This is needed to fix the following radar
     // http://openradar.appspot.com/radar?id=3114410
     
-    final internal class func swizzleGetRed() {
+    final internal class func swizzleGetRed()
+    {
+        
         struct Static {
             static var token: Int = 0
         }
         
-        if self !== CALayer.self {
+        if self !== CALayer.self
+        {
             return
         }
         
-        if executedColor == false {
+        if executedColor == false
+        {
             swizzleSelector(self,
                             originalSelector: #selector(UIColor.getRed(_:green:blue:alpha:)),
                             swizzledSelector: #selector(UIColor.FA_getRed(_:green:blue:alpha:)))

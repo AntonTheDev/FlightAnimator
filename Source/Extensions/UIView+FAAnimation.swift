@@ -38,11 +38,17 @@ internal extension UIView {
     }
     
     func fa_getAssociatedObject<T>(_ object: AnyObject, associativeKey: UnsafeRawPointer) -> T? {
-        if let v = objc_getAssociatedObject(object, associativeKey) as? T {
+       
+        if let v = objc_getAssociatedObject(object, associativeKey) as? T
+        {
             return v
-        } else if let v = objc_getAssociatedObject(object, associativeKey) as? ValueWrapper<T> {
+        }
+        else if let v = objc_getAssociatedObject(object, associativeKey) as? ValueWrapper<T>
+        {
             return v.value
-        } else {
+        }
+        else
+        {
             return nil
         }
     }
@@ -89,7 +95,7 @@ internal extension UIView {
         var formalValue : Any = value
         
         if let coreValue = layer.value(forKey: key) as? NSValue,
-            let typedValue = coreValue.typeValue() as? NSNumber {
+            let typedValue = coreValue.typedValue() as? NSNumber {
             
             let numberType = CFNumberGetType(typedValue)
             
@@ -120,8 +126,7 @@ internal extension UIView {
                 print("WARNING Unknown Animatable Value Configured")
             }
         }
-        
-        
+    
         return formalValue
     }
 }

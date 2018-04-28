@@ -5,32 +5,57 @@
       location = "group:Source"
       name = "Source">
       <Group
-         location = "group:Extensions"
-         name = "Extensions">
+         location = "group:FAAnimator"
+         name = "FAAnimator">
          <FileRef
-            location = "group:CALayer+FAAnimation.swift">
+            location = "group:FlightAnimator.swift">
          </FileRef>
          <FileRef
-            location = "group:NSValue+FAAnimation.swift">
+            location = "group:/Users/adoudarev/Developer/personal/FlightAnimator/Source/FAAnimator/FlightAnimator+API.swift">
          </FileRef>
          <FileRef
-            location = "group:UIView+FAAnimation.swift">
+            location = "group:/Users/adoudarev/Developer/personal/FlightAnimator/Source/FAAnimator/FlightAnimator+Callbacks.swift">
+         </FileRef>
+         <FileRef
+            location = "group:FAPropertyAnimator.swift">
          </FileRef>
       </Group>
       <Group
          location = "group:FAAnimation"
          name = "FAAnimation">
          <FileRef
-            location = "group:FAAnimationGroup.swift">
-         </FileRef>
-         <FileRef
             location = "group:FABasicAnimation.swift">
          </FileRef>
          <FileRef
-            location = "group:FlightAnimator.swift">
+            location = "group:FAAnimationGroup.swift">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:FAAnimatable"
+         name = "FAAnimatable">
+         <FileRef
+            location = "group:FAAnimatable.swift">
          </FileRef>
          <FileRef
-            location = "group:FAPropertyAnimator.swift">
+            location = "group:CGPoint+FAAnimatable.swift">
+         </FileRef>
+         <FileRef
+            location = "group:CGPath+FAAnimatable.swift">
+         </FileRef>
+         <FileRef
+            location = "group:CGRect+FAAnimatable.swift">
+         </FileRef>
+         <FileRef
+            location = "group:CGSize+FAAnimatable.swift">
+         </FileRef>
+         <FileRef
+            location = "group:CATransform3D+FAAnimatable.swift">
+         </FileRef>
+         <FileRef
+            location = "group:CGFloat+FAAnimatable.swift">
+         </FileRef>
+         <FileRef
+            location = "group:CGColor+FAAnimatable.swift">
          </FileRef>
       </Group>
       <Group
@@ -40,21 +65,22 @@
             location = "group:FAEasing.swift">
          </FileRef>
          <FileRef
-            location = "group:FAInterpolator.swift">
-         </FileRef>
-         <FileRef
             location = "group:FASpring.swift">
          </FileRef>
+      </Group>
+      <Group
+         location = "group:Extensions"
+         name = "Extensions">
          <FileRef
-            location = "group:FAVector.swift">
+            location = "group:CALayer+FAAnimation.swift">
+         </FileRef>
+         <FileRef
+            location = "group:UIView+FAAnimation.swift">
+         </FileRef>
+         <FileRef
+            location = "group:NSValue+FAAnimation.swift">
          </FileRef>
       </Group>
-      <FileRef
-         location = "group:FlightAnimator+API.swift">
-      </FileRef>
-      <FileRef
-         location = "group:FlightAnimator+Callbacks.swift">
-      </FileRef>
    </Group>
    <FileRef
       location = "group:FlightAnimator/FlightAnimator.xcodeproj">
