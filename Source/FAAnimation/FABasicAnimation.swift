@@ -22,65 +22,6 @@ struct FAAnimationConfig
     static let AnimationTimeAdjustment   : CGFloat = 2.0 * (1.0 / FAAnimationConfig.InterpolationFrameCount)
 }
 
-final class AnimatableProperty<T : FAAnimatable> {
-    
-    let value: T
-    
-    init(_ x: T) {
-        value = x
-    }
-    
-    var valueType: FAValueType {
-        get {
-            return value.valueType
-        }
-    }
-    var vector              : [CGFloat] {
-        get {
-            return value.vector
-        }
-    }
-    var componentCount      : Int       {
-        get {
-            return value.componentCount
-        }
-    }
-    
-    var magnitude           : CGFloat   {
-        get {
-            return value.magnitude
-        }
-    }
-    var valueRepresentation : AnyObject {
-        get {
-            return value.valueRepresentation
-        }
-    }
-    var zeroVelocityValue   : FAAnimatable {
-        get {
-            return value.zeroVelocityValue
-        }
-    }
-    
-    func magnitude(toValue value : T) -> CGFloat {
-        return value.magnitude(toValue: value)
-    }
-    
-    func valueFromComponent(_ vector :  [CGFloat]) -> T {
-        return value.valueFromComponents(vector)
-    }
-    
-    func progressValue(to value : T, atProgress progress : CGFloat) -> T {
-        return value.progressValue(to: value, atProgress: progress)
-    }
-    
-    func valueProgress(fromValue : Any, atValue : Any) -> CGFloat {
-        return value.valueProgress(fromValue: fromValue, atValue: atValue)
-    }
-    
-}
-
-
 //MARK: - FABasicAnimation
 
 open class FABasicAnimation : CAKeyframeAnimation
@@ -203,15 +144,14 @@ internal extension FABasicAnimation {
          *  the current layer's presentation value is still the last animation's
          *  final value. Thus, if we change the model layer's value, prior to kicking off
          *  the new animation, we need to check if the current toValue is equal to
-         *  the presentation layer;s value, if not we need to use the model layer's
+         *  the presentation layer's value, if not we need to use the model layer's
          *  value instead of the presentation layer.
          *
          *  Technically if the fromValue (presentation layer's current value) is equal
-         *  to the from value, and the current layer's value do not match, it means that 
-         *  we need not intercept the animation in flight, and there is no need to synchronized.
+         *  to the from value, and the current layer's value does not match, it means that
+         *  we do not need to intercept the animation in flight, and skip the synchronization.
          *
          */
-        
         guard let valueType = toAnimatableValue?.valueType,
             let animationToValue = toValue,
             let animationLayerValue = animatingLayer?.anyValueForKeyPath(keyPath!),
@@ -531,7 +471,8 @@ internal extension FABasicAnimation
                                                    atProgress: 1.0)
 
         newArray.append(finalValue.valueRepresentation)
-        return newArray
+		
+		return newArray
     }
 }
 
