@@ -4,7 +4,6 @@
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)]()
 [![Cocoapods Compatible](https://img.shields.io/badge/Swift%20-3.0+-orange.svg )]()
 [![Platform](https://img.shields.io/badge/platform-iOS%20|%20tvOS-lightgrey.svg)]()
-
 [![License](https://img.shields.io/badge/license-MIT-343434.svg)](/LICENSE.md)
 [![Twitter](https://img.shields.io/badge/twitter-@AntonTheDev-blue.svg?style=flat)](http://twitter.com/AntonTheDev)
 [![Join the chat at https://gitter.im/AntonTheDev/FlightAnimator](https://badges.gitter.im/AntonTheDev/FlightAnimator.svg)](https://gitter.im/AntonTheDev/FlightAnimator?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
