@@ -9,18 +9,6 @@
 import Foundation
 import UIKit
 
-struct FAAnimationConfig
-{
-    static let InterpolationFrameCount  : CGFloat = 60.0
-    
-    static let SpringDecayFrequency     : CGFloat = 15.0
-    static let SpringDecayDamping       : CGFloat = 0.97
-    static let SpringCustomBounceCount  : Int = 4
-    
-    static let SpringDecayMagnitudeThreshold  : CGFloat = 0.01
-    
-    static let AnimationTimeAdjustment   : CGFloat = 2.0 * (1.0 / FAAnimationConfig.InterpolationFrameCount)
-}
 
 //MARK: - FABasicAnimation
 
@@ -140,8 +128,10 @@ internal extension FABasicAnimation {
     internal func synchronize(relativeTo animation : FABasicAnimation? = nil)
     {
         previousValue = animation?.fromValue
-        configureFromValue()
-        configuredAnimationValues(relativeTo: animation)
+		
+		configureFromValue()
+		
+		configuredAnimationValues(relativeTo: animation)
     }
     
     fileprivate func configureFromValue()
@@ -159,92 +149,20 @@ internal extension FABasicAnimation {
          *  we do not need to intercept the animation in flight, and skip the synchronization.
          *
          */
-        guard let valueType = toAnimatableValue?.valueType,
-            let animationToValue = toValue,
-            let animationLayerValue = animatingLayer?.anyValueForKeyPath(keyPath!),
-            let presentationValue = animatingLayer?.presentation()?.anyValueForKeyPath(keyPath!) else
+        guard let animationLayerValue = animatingLayer?.animatableValueForKeyPath(keyPath!),
+              let presentationValue = animatingLayer?.presentation()?.animatableValueForKeyPath(keyPath!) else
         {
             return
         }
-        
-        switch valueType {
-        case .cgFloat:
-            
-            if let presentationValue = presentationValue as? CGFloat
-            {
-                if (animationToValue as! NSNumber).floatValue == Float(presentationValue)
-                {
-                    fromValue = animationToValue
-                }
-                else
-                {
-                    fromValue = NSNumber(value: Float(presentationValue) as Float)
-                }
-            }
-            
-        case .cgPoint:
-            
-            if let presentationValue = presentationValue as? CGPoint
-            {
-                if animationToValue.cgPointValue.equalTo(presentationValue)
-                {
-                    fromValue = NSValue(cgPoint : animationLayerValue as! CGPoint)
-                }
-                else
-                {
-                    fromValue = NSValue(cgPoint : presentationValue)
-                }
-            }
-            
-        case .cgSize:
-            
-            if let presentationValue = presentationValue as? CGSize
-            {
-                if animationToValue.cgSizeValue.equalTo(presentationValue)
-                {
-                    fromValue = NSValue(cgSize : animationLayerValue as! CGSize)
-                }
-                else
-                {
-                    fromValue = NSValue(cgSize : presentationValue)
-                }
-            }
-            
-        case .cgRect:
-            
-            if let presentationValue = presentationValue as? CGRect
-            {
-                if animationToValue.cgRectValue.equalTo(presentationValue)
-                {
-                    fromValue = NSValue(cgRect : animationLayerValue as! CGRect)
-                }
-                else
-                {
-                    fromValue = NSValue(cgRect : presentationValue)
-                }
-            }
-            
-        case .cgColor:
-            
-            if CFGetTypeID(presentationValue as AnyObject) == CGColor.typeID
-            {
-                fromValue = presentationValue as! CGColor
-            }
-            
-        case .caTransform3d:
-            
-            if presentationValue is CATransform3D
-            {
-                if let presentationValue = presentationValue as? CATransform3D
-                {
-                    fromValue = NSValue(caTransform3D : presentationValue)
-                }
-                else
-                {
-                    fromValue = NSValue(caTransform3D : animationLayerValue as! CATransform3D)
-                }
-            }
-        }
+		
+		if animationLayerValue == presentationValue
+		{
+			fromValue = animationLayerValue.valueRepresentation
+		}
+		else
+		{
+			fromValue = presentationValue.valueRepresentation
+		}
     }
     
     func configuredAnimationValues(relativeTo oldAnimation : FABasicAnimation?)
@@ -257,8 +175,8 @@ internal extension FABasicAnimation {
             if springs == nil
             {
                 springComponents(velocity,
-                                 angularFrequency: FAAnimationConfig.SpringDecayFrequency,
-                                 dampingRatio: FAAnimationConfig.SpringDecayDamping)
+                                 angularFrequency: FAConfig.SpringDecayFrequency,
+                                 dampingRatio: FAConfig.SpringDecayDamping)
             }
             
             easingFunction = adjustedVelocityEasing(easingFunction, relativeTo : oldAnimation)
@@ -299,15 +217,14 @@ internal extension FABasicAnimation {
    
     func valueProgress() -> CGFloat
     {
-        guard let presentationValue = animatingLayer?.presentation()?.anyValueForKeyPath(keyPath!) as? NSValue,
-              let value = presentationValue.typedValue() as? FAAnimatable,
+        guard let presentationValue = animatingLayer?.presentation()?.animatableValueForKeyPath(keyPath!),
               let toValue = toAnimatableValue,
               let fromValue = fromAnimatableValue else
         {
             return 0.0
         }
         
-        return toValue.valueProgress(fromValue: fromValue, atValue: value)
+        return toValue.valueProgress(fromValue: fromValue, atValue: presentationValue)
     }
     
     func timeProgress() -> CGFloat
@@ -357,6 +274,13 @@ internal extension FABasicAnimation {
 //MARK: Parametric Interpolation
 internal extension FABasicAnimation
 {
+    fileprivate func interpolatedParametricValue(fromValue : FAAnimatable,
+                                                 toValue : FAAnimatable,
+                                                 atProgress progress : CGFloat) -> FAAnimatable
+    {
+		return fromValue.progressValue(to: toValue, atProgress: progress)
+    }
+	
     fileprivate func interpolatedParametricValues(_ duration : CGFloat,
                                                   easingFunction : FAEasing) -> [AnyObject]
     {
@@ -369,7 +293,7 @@ internal extension FABasicAnimation
         }
         
         var animationTime : CGFloat = 0.0
-        let frameRateTimeUnit = 1.0 / FAAnimationConfig.InterpolationFrameCount
+        let frameRateTimeUnit = 1.0 / FAConfig.InterpolationFrameCount
     
         let firstValue = fromAnimatableValue.progressValue(to:toAnimatableValue, atProgress: 0.0).valueRepresentation
 
@@ -432,7 +356,8 @@ internal extension FABasicAnimation
         }
     }
 
-    internal func adjustedVelocityEasing(_ easingFunction : FAEasing, relativeTo animation : FABasicAnimation?) -> FAEasing
+    internal func adjustedVelocityEasing(_ easingFunction : FAEasing,
+										 relativeTo animation : FABasicAnimation?) -> FAEasing
     {
         guard let toAnimatableValue = animation?.toAnimatableValue else
         {
@@ -446,9 +371,8 @@ internal extension FABasicAnimation
             let animationStartTime = animation?.startTime
         {
             let currentTime = presentationLayer.convertTime(CACurrentMediaTime(), to: animatingLayer)
-            let deltaTime = CGFloat(currentTime - animationStartTime) - FAAnimationConfig.AnimationTimeAdjustment
-            
-            
+            let deltaTime = CGFloat(currentTime - animationStartTime) - FAConfig.AnimationTimeAdjustment
+			
             var progressComponents = [CGFloat]()
             
             for index in 0..<toAnimatableValue.componentCount
@@ -456,7 +380,7 @@ internal extension FABasicAnimation
                 progressComponents.append(springs![index].velocity(deltaTime))
             }
             
-            adjustedVelocity = toAnimatableValue.valueFromComponents(progressComponents)//  self.adjustedVelocity(at : deltaTime)
+            adjustedVelocity = toAnimatableValue.valueFromComponents(progressComponents)
         }
         
         switch easingFunction
@@ -507,7 +431,7 @@ internal extension FABasicAnimation
         
         var valueArray: Array<AnyObject> = Array<AnyObject>()
         var animationTime : CGFloat = 0.0
-        let frameRateTimeUnit = 1.0 / FAAnimationConfig.InterpolationFrameCount
+        let frameRateTimeUnit = 1.0 / FAConfig.InterpolationFrameCount
         
         var animationComplete = false
         
@@ -517,7 +441,7 @@ internal extension FABasicAnimation
                 let newValue = newObjectValue.typedValue() as? FAAnimatable,
                 let toAnimatableValue = self.toAnimatableValue
             {
-                animationComplete = newValue.magnitude(toValue: toAnimatableValue) < FAAnimationConfig.SpringDecayMagnitudeThreshold
+                animationComplete = newValue.magnitude(toValue: toAnimatableValue) < FAConfig.SpringDecayMagnitudeThreshold
                 valueArray.append(newValue.valueRepresentation)
                 animationTime += frameRateTimeUnit
             }
@@ -537,7 +461,7 @@ internal extension FABasicAnimation
         
         var valueArray: Array<AnyObject> = Array<AnyObject>()
         var animationTime : CGFloat = 0.0
-        let frameRateTimeUnit = 1.0 / FAAnimationConfig.InterpolationFrameCount
+        let frameRateTimeUnit = 1.0 / FAConfig.InterpolationFrameCount
         
         var bounceCount = 0
         
@@ -556,7 +480,7 @@ internal extension FABasicAnimation
             
             animationTime += frameRateTimeUnit
             
-        } while (bounceCount < FAAnimationConfig.SpringCustomBounceCount)
+        } while (bounceCount < FAConfig.SpringCustomBounceCount)
         
         
         valueArray.append(toAnimatableValue.valueRepresentation as AnyObject)

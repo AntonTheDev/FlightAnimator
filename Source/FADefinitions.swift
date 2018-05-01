@@ -9,7 +9,22 @@
 import Foundation
 import UIKit
 
-public enum FAValueType : Int {
+struct FAConfig
+{
+	static let InterpolationFrameCount  : CGFloat = 60.0
+	
+	static let SpringDecayFrequency     : CGFloat = 15.0
+	static let SpringDecayDamping       : CGFloat = 0.97
+	static let SpringCustomBounceCount  : Int = 4
+	
+	static let SpringDecayMagnitudeThreshold  : CGFloat = 0.01
+	
+	static let AnimationTimeAdjustment   : CGFloat = 2.0 * (1.0 / FAConfig.InterpolationFrameCount)
+}
+
+
+public enum FAValueType : Int
+{
 	case cgFloat, cgPoint, cgSize, cgRect, cgColor, caTransform3d
 }
 

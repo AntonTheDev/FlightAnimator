@@ -69,3 +69,5 @@ public func ==(lhs:FAAnimatable, rhs:FAAnimatable) -> Bool
 	
 	return true
 }
+
+

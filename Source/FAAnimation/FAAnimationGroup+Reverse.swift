@@ -43,7 +43,7 @@ internal extension FAAnimationGroup
         
         animationGroup.animationKey            = animationKey! + "REVERSE"
         animationGroup.animatingLayer          = animatingLayer
-        animationGroup.animations              = reverseAnimationArray()
+        animationGroup.animations              = reverseAnimationValues()
         animationGroup.duration                = duration
         animationGroup.primaryTimingPriority   = primaryTimingPriority
         animationGroup.autoreverse             = autoreverse
@@ -67,9 +67,9 @@ internal extension FAAnimationGroup
         stopTriggerTimer()
     }
     
-    func reverseAnimationArray() ->[FABasicAnimation]
+    func reverseAnimationValues() -> [FABasicAnimation]
     {
-        var reverseAnimationArray = [FABasicAnimation]()
+        var reverseAnimationValues = [FABasicAnimation]()
         
         if let animations = self.animations
         {
@@ -78,19 +78,28 @@ internal extension FAAnimationGroup
                 if let customAnimation = animation as? FABasicAnimation
                 {
                     let newAnimation = FABasicAnimation(keyPath: customAnimation.keyPath)
-                    newAnimation.easingFunction = reverseEasingCurve ? customAnimation.easingFunction.reverseEasing() : customAnimation.easingFunction
+	
+					if reverseEasingCurve
+					{
+						newAnimation.easingFunction = customAnimation.easingFunction.reverseEasing()
+					}
+					else
+					{
+						newAnimation.easingFunction = customAnimation.easingFunction
+					}
                     
                     newAnimation.isPrimary = customAnimation.isPrimary
                     newAnimation.values = customAnimation.values!.reversed()
-                    newAnimation.toValue = customAnimation.fromValue
+					
+					newAnimation.toValue = customAnimation.fromValue
                     newAnimation.fromValue = customAnimation.toValue
                     
-                    reverseAnimationArray.append(newAnimation)
+                    reverseAnimationValues.append(newAnimation)
                 }
             }
         }
         
-        return reverseAnimationArray
+        return reverseAnimationValues
     }
 }
 

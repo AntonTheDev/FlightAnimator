@@ -98,21 +98,21 @@ extension CALayer {
         FA_removeAllAnimations()
     }
     
-    final public func anyValueForKeyPath(_ keyPath: String) -> Any? {
+    final public func animatableValueForKeyPath(_ keyPath: String) -> FAAnimatable? {
         
         if let currentFromValue = self.value(forKeyPath: keyPath) {
             
             if CFGetTypeID(currentFromValue as AnyObject) == CGColor.typeID {
-                return currentFromValue
+                return currentFromValue as? FAAnimatable
             }
 
             if let currentFromValue = currentFromValue as? NSValue {
-                return currentFromValue.typedValue()
+                return currentFromValue.typedValue() as? FAAnimatable
             }
 
         }
         
-        return super.value(forKeyPath: keyPath)
+        return super.value(forKeyPath: keyPath) as? FAAnimatable
     }
     
     final public func owningView() -> UIView? {
