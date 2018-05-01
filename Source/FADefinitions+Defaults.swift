@@ -22,7 +22,7 @@ extension FAAnimatable
 		}
 	}
 	
-	public func valueProgress(fromValue : Any, atValue : Any) -> CGFloat
+	public func valueProgress<T>(fromValue : T, atValue : T) -> CGFloat
 	{
 		guard let fromValue = fromValue as? FAAnimatable,
 			let atValue = atValue as? FAAnimatable else

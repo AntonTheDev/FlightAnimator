@@ -27,52 +27,25 @@ struct FAAnimationConfig
 open class FABasicAnimation : CAKeyframeAnimation
 {
     open weak var animatingLayer : CALayer?
-    open var easingFunction : FAEasing = .linear
-    open var isPrimary      : Bool = false
 
-    open var toValue : AnyObject? {
-        didSet {
-            if let toValue = toValue as? NSValue {
-                toAnimatableValue = toValue.typedValue() as? FAAnimatable
-            } else if CFGetTypeID(toValue as AnyObject) == CGColor.typeID {
-                toAnimatableValue = toValue as! CGColor
-            }
-        }
-    }
-    
-    open var fromValue : AnyObject? {
-        didSet {
-            if let fromValue = fromValue as? NSValue {
-                fromAnimatableValue = fromValue.typedValue() as? FAAnimatable
-            } else if CFGetTypeID(fromValue as AnyObject) == CGColor.typeID {
-                fromAnimatableValue = fromValue as! CGColor
-            }
-        }
-    }
-    
-    open var previousValue : AnyObject? {
-        didSet {
-            if let previousValue = previousValue as? NSValue {
-                previousAnimatableValue = previousValue.typedValue() as? FAAnimatable
-            } else if CFGetTypeID(previousValue as AnyObject) == CGColor.typeID {
-                previousAnimatableValue = previousValue as! CGColor
-            }
-        }
-    }
-    
-    open override var timingFunction: CAMediaTimingFunction? {
-        didSet {
-            convertTimingFunction()
-        }
-    }
+    open var toValue        : AnyObject? { didSet { toAnimatableValue = animatableValue(from: toValue) } }
+    open var fromValue      : AnyObject? { didSet { fromAnimatableValue = animatableValue(from: fromValue) } }
+    open var previousValue  : AnyObject? { didSet { previousAnimatableValue = animatableValue(from: previousValue) } }
     
     internal var toAnimatableValue       : FAAnimatable?
     internal var fromAnimatableValue     : FAAnimatable?
     internal var previousAnimatableValue : FAAnimatable?
+
+    open var easingFunction : FAEasing = .linear
+    
+    open override var timingFunction: CAMediaTimingFunction? {
+        didSet { easingFunction = easingFunction(from : timingFunction) }
+    }
     
     internal var springs                 : [FASpring]?
     internal var startTime               : CFTimeInterval?
-    
+    internal var isPrimary      : Bool = false
+
     required public init?(coder aDecoder: NSCoder)
     {
         super.init(coder: aDecoder)
@@ -123,6 +96,40 @@ open class FABasicAnimation : CAKeyframeAnimation
         animation.startTime                 = startTime
         
         return animation
+    }
+    
+    func animatableValue(from anyObject : AnyObject?) -> FAAnimatable?
+    {
+        if let anyObject = anyObject as? NSValue
+        {
+            return anyObject.typedValue() as? FAAnimatable
+        }
+        else if CFGetTypeID(previousValue as AnyObject) == CGColor.typeID
+        {
+            return anyObject as! CGColor
+        }
+        
+        return nil
+    }
+    
+    internal func easingFunction(from mediaTiming : CAMediaTimingFunction?) -> FAEasing
+    {
+        guard let mediaTiming = mediaTiming else {
+            return .linear
+        }
+        
+        print("timingFunction has no effect, converting to 'easingFunction' property\n")
+        
+        switch mediaTiming.value(forKey: "name") as! String {
+        case kCAMediaTimingFunctionEaseIn:
+            return .inCubic
+        case kCAMediaTimingFunctionEaseOut:
+            return .outCubic
+        case kCAMediaTimingFunctionEaseInEaseOut:
+            return .inOutCubic
+        default:
+            return .smoothStep
+        }
     }
 }
 
@@ -283,29 +290,6 @@ internal extension FABasicAnimation {
         duration = CFTimeInterval(CGFloat(duration) * relativeProgress())
         values = newValues
     }
-    
-    internal func convertTimingFunction()
-    {
-        print("timingFunction has no effect, converting to 'easingFunction' property\n")
-        
-        switch timingFunction?.value(forKey: "name") as! String {
-        case kCAMediaTimingFunctionEaseIn:
-            
-            easingFunction = .inCubic
-            
-        case kCAMediaTimingFunctionEaseOut:
-            
-            easingFunction = .outCubic
-            
-        case kCAMediaTimingFunctionEaseInEaseOut:
-            
-            easingFunction = .inOutCubic
-            
-        default:
-            
-            easingFunction = .smoothStep
-        }
-    }
 }
 
 
@@ -316,9 +300,9 @@ internal extension FABasicAnimation {
     func valueProgress() -> CGFloat
     {
         guard let presentationValue = animatingLayer?.presentation()?.anyValueForKeyPath(keyPath!) as? NSValue,
-            let value = presentationValue.typedValue() as? FAAnimatable,
-            let toValue = toAnimatableValue,
-            let fromValue = fromAnimatableValue else
+              let value = presentationValue.typedValue() as? FAAnimatable,
+              let toValue = toAnimatableValue,
+              let fromValue = fromAnimatableValue else
         {
             return 0.0
         }
@@ -373,64 +357,6 @@ internal extension FABasicAnimation {
 //MARK: Parametric Interpolation
 internal extension FABasicAnimation
 {
-    fileprivate func interpolatedParametricValue(fromValue : FAAnimatable,
-                                                 toValue : FAAnimatable,
-                                                 atProgress progress : CGFloat) -> FAAnimatable
-    {
-        switch toValue.valueType {
-        case .cgFloat:
-            
-            if let fromValue = fromValue as? CGFloat,
-                let toValue  = toValue as? CGFloat {
-                return  CGFloat(fromValue).progressValue(to: CGFloat(toValue), atProgress: progress)
-            }
-            
-        case .cgPoint:
-            
-            if let fromValue  = fromValue as? CGPoint,
-                let toValue  = toValue as? CGPoint
-            {
-                return  fromValue.progressValue(to: toValue, atProgress: progress)
-            }
-            
-        case .cgSize:
-            
-            if let fromValue  = fromValue as? CGSize,
-                let toValue  = toValue as? CGSize
-            {
-                return  fromValue.progressValue(to: toValue, atProgress: progress)
-            }
-            
-        case .cgRect:
-            
-            if let fromValue  = fromValue as? CGRect,
-                let toValue  = toValue as? CGRect
-            {
-                return  fromValue.progressValue(to: toValue, atProgress: progress)
-            }
-            
-        case .cgColor:
-            
-            if CFGetTypeID(fromValue as AnyObject) == CGColor.typeID &&
-               CFGetTypeID(toValue as AnyObject) == CGColor.typeID
-            {
-                return  fromValue.progressValue(to: toValue, atProgress: progress)
-            }
-            
-            return  (fromValue as! CGColor).progressValue(to: (toValue as! CGColor), atProgress: progress)
-            
-        case .caTransform3d:
-            
-            if let fromValue  = fromValue as? CATransform3D,
-                let toValue  = toValue as? CATransform3D
-            {
-                return fromValue.progressValue(to: toValue, atProgress: progress)
-            }
-        }
-        
-        return CGFloat(0.0)
-    }
-    
     fileprivate func interpolatedParametricValues(_ duration : CGFloat,
                                                   easingFunction : FAEasing) -> [AnyObject]
     {
@@ -445,32 +371,25 @@ internal extension FABasicAnimation
         var animationTime : CGFloat = 0.0
         let frameRateTimeUnit = 1.0 / FAAnimationConfig.InterpolationFrameCount
     
-        let firstValue = interpolatedParametricValue(fromValue: fromAnimatableValue,
-                                                     toValue: toAnimatableValue,
-                                                     atProgress: 0.0)
-        
-        newArray.append(firstValue.valueRepresentation)
+        let firstValue = fromAnimatableValue.progressValue(to:toAnimatableValue, atProgress: 0.0).valueRepresentation
+
+        newArray.append(firstValue)
         
         repeat
         {
             animationTime += frameRateTimeUnit
             let progress = easingFunction.parametricProgress(CGFloat(animationTime / duration))
            
-            let newValue = interpolatedParametricValue(fromValue: fromAnimatableValue,
-                                                       toValue: toAnimatableValue,
-                                                       atProgress: progress)
-           
-            newArray.append(newValue.valueRepresentation)
-        }
-            while (animationTime <= duration)
-        
-        newArray.removeLast()
-        
-        let finalValue = interpolatedParametricValue(fromValue: fromAnimatableValue,
-                                                   toValue: toAnimatableValue,
-                                                   atProgress: 1.0)
+            let newValue = fromAnimatableValue.progressValue(to:toAnimatableValue, atProgress: progress).valueRepresentation
 
-        newArray.append(finalValue.valueRepresentation)
+            newArray.append(newValue)
+            
+        } while (animationTime <= duration)
+    
+        let finalValue = fromAnimatableValue.progressValue(to:toAnimatableValue, atProgress: 1.0).valueRepresentation
+       
+        newArray.removeLast()
+        newArray.append(finalValue)
 		
 		return newArray
     }

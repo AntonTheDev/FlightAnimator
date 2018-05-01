@@ -11,7 +11,6 @@ import UIKit
 
 extension CGRect : FAAnimatable
 {
-    
     public var valueType : FAValueType {
         get {
             return .cgRect
@@ -22,35 +21,6 @@ extension CGRect : FAAnimatable
         get {
             return CGRect.zero
         }
-    }
-    
-    public func progressValue<T>(to value : FAAnimatable, atProgress progress : CGFloat) -> T {
-        
-        if let value = value as? CGRect {
-            
-            var adjustedRect = CGRect.zero
-            
-            adjustedRect.size = size.progressValue(to: value.size, atProgress: progress)
-            adjustedRect.origin = origin.progressValue(to: value.origin, atProgress: progress)
-            
-            return adjustedRect as! T
-        }
-        
-        return CGRect.zero as! T
-    }
-    
-    public func scaledValue(to scale : CGFloat) -> CGRect {
-        return scaledValue(bounds : scale, origin : scale)
-    }
-    
-    public func scaledValue(bounds sizeScale : CGFloat, origin originScale : CGFloat) -> CGRect {
-        
-        var adjustedRect    = CGRect.zero
-        
-        adjustedRect.size   = size.scaledValue(width : sizeScale, height : sizeScale)
-        adjustedRect.origin = origin.scaledValue(x : originScale, y : originScale)
-        
-        return adjustedRect
     }
     
     public var magnitude : CGFloat {
@@ -72,7 +42,41 @@ extension CGRect : FAAnimatable
         }
     }
     
-    public func valueFromComponents<T>(_ vector :  [CGFloat]) -> T {
+    public func valueFromComponents<T>(_ vector :  [CGFloat]) -> T
+    {
         return CGRect(x : vector[0], y : vector[1], width : vector[2], height : vector[3]) as! T
+    }
+    
+    public func progressValue<T>(to value : T, atProgress progress : CGFloat) -> T {
+        
+        if let value = value as? CGRect {
+            
+            var adjustedRect = CGRect.zero
+            
+            adjustedRect.size = size.progressValue(to: value.size, atProgress: progress)
+            adjustedRect.origin = origin.progressValue(to: value.origin, atProgress: progress)
+            
+            return adjustedRect as! T
+        }
+        
+        return CGRect.zero as! T
+    }
+}
+
+extension CGRect
+{    
+    public func scaledValue(to scale : CGFloat) -> CGRect
+    {
+        return scaledValue(bounds : scale, origin : scale)
+    }
+    
+    public func scaledValue(bounds sizeScale : CGFloat, origin originScale : CGFloat) -> CGRect
+    {
+        var adjustedRect    = CGRect.zero
+        
+        adjustedRect.size   = size.scaledValue(width : sizeScale, height : sizeScale)
+        adjustedRect.origin = origin.scaledValue(x : originScale, y : originScale)
+        
+        return adjustedRect
     }
 }

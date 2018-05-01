@@ -23,25 +23,6 @@ extension CGSize : FAAnimatable
         }
     }
     
-    public func progressValue<T>(to value : FAAnimatable, atProgress progress : CGFloat) -> T {
-        
-        if let value = value as? CGSize {
-            let widthDifference  : CGFloat = width.progressValue(to: value.width, atProgress: progress)
-            let heightDifference : CGFloat = height.progressValue(to: value.height, atProgress: progress)
-            return CGSize(width : widthDifference, height : heightDifference) as! T
-        }
-        
-        return CGSize.zero as! T
-    }
-    
-    public func scaledValue(to scale : CGFloat) -> CGSize {
-        return scaledValue(width : scale, height : scale)
-    }
-    
-    public func scaledValue(width widthScale : CGFloat, height heightScale : CGFloat) -> CGSize {
-        return CGSize(width :  width * widthScale, height :  height * heightScale)
-    }
-    
     public var magnitude : CGFloat {
         get {
             let totalValue = (width * width) + (height * height)
@@ -60,9 +41,34 @@ extension CGSize : FAAnimatable
             return  [width, height]
         }
     }
-
-    public func valueFromComponents<T>(_ vector :  [CGFloat]) -> T {
+    
+    public func valueFromComponents<T>(_ vector :  [CGFloat]) -> T
+    {
         return CGSize(width : vector[0], height : vector[1]) as! T
     }
     
+    public func progressValue<T>(to value : T, atProgress progress : CGFloat) -> T
+    {
+        if let value = value as? CGSize
+        {
+            let widthDifference  : CGFloat = width.progressValue(to: value.width, atProgress: progress)
+            let heightDifference : CGFloat = height.progressValue(to: value.height, atProgress: progress)
+            return CGSize(width : widthDifference, height : heightDifference) as! T
+        }
+        
+        return CGSize.zero as! T
+    }
+}
+
+extension CGSize
+{
+    public func scaledValue(to scale : CGFloat) -> CGSize
+    {
+        return scaledValue(width : scale, height : scale)
+    }
+    
+    public func scaledValue(width widthScale : CGFloat, height heightScale : CGFloat) -> CGSize
+    {
+        return CGSize(width :  width * widthScale, height :  height * heightScale)
+    }
 }

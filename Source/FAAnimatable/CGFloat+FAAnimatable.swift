@@ -52,23 +52,6 @@ extension CGFloat : FAAnimatable
         }
     }
     
-    public func valueFromComponents<T>(_ vector :  [CGFloat]) -> T {
-        return CGFloat(vector[0]) as! T
-    }
-    
-    public func progressValue<T>(to value : FAAnimatable, atProgress progress : CGFloat) -> T {
-        
-        if let value = value as? CGFloat {
-            return self + ((value - self) * progress) as! T
-        }
-        
-        if let valueRepresentation = value as? NSNumber {
-            return self + ((CGFloat(valueRepresentation.floatValue) - self) * progress) as! T
-        }
-        
-        return 0.0 as! T
-    }
-    
     public var magnitude : CGFloat {
         get {
             return self * self
@@ -85,5 +68,25 @@ extension CGFloat : FAAnimatable
         get {
             return  [self]
         }
+    }
+    
+    public func progressValue<T>(to value : T, atProgress progress : CGFloat) -> T
+    {
+        if let value = value as? CGFloat
+        {
+            return self + ((value - self) * progress) as! T
+        }
+        
+        if let valueRepresentation = value as? NSNumber
+        {
+            return self + ((CGFloat(valueRepresentation.floatValue) - self) * progress) as! T
+        }
+        
+        return 0.0 as! T
+    }
+    
+    public func valueFromComponents<T>(_ vector :  [CGFloat]) -> T
+    {
+        return CGFloat(vector[0]) as! T
     }
 }

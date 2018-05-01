@@ -1,5 +1,5 @@
 //
-//  FAPropertyAnimator.swift
+//  FAAnimatableProperty.swift
 //  
 //
 //  Created by Anton on 10/28/16.
@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-open class FAPropertyAnimator
+open class FAAnimatableProperty
 {
     fileprivate weak var associatedView : UIView?
     fileprivate var animationKey : String?
@@ -35,21 +35,21 @@ open class FAPropertyAnimator
         associatedView = nil
     }
     
-    @discardableResult open func duration(_ duration : CGFloat) -> FAPropertyAnimator
+    @discardableResult open func duration(_ duration : CGFloat) -> FAAnimatableProperty
     {
         self.duration = duration
         updateAnimation()
         return self
     }
     
-    @discardableResult open func easing(_ easing : FAEasing) -> FAPropertyAnimator
+    @discardableResult open func easing(_ easing : FAEasing) -> FAAnimatableProperty
     {
         self.easingCurve = easing
         updateAnimation()
         return self
     }
     
-    @discardableResult open func primary(_ primary : Bool) -> FAPropertyAnimator
+    @discardableResult open func primary(_ primary : Bool) -> FAAnimatableProperty
     {
         self.primary = primary
         updateAnimation()
@@ -91,7 +91,8 @@ open class FAPropertyAnimator
         let animation = FABasicAnimation(keyPath: keyPath)
         animation.easingFunction = easingCurve
         
-        if let toValue = toValue as? NSValue {
+        if let toValue = toValue as? NSValue
+        {
             animation.toValue = toValue
         }
 

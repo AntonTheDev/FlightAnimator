@@ -17,8 +17,6 @@ func ==(lhs:FAAnimationGroup, rhs:FAAnimationGroup) -> Bool {
         lhs.animationKey == rhs.animationKey
 }
 
-//MARK: - FASynchronizedGroup
-
 open class FAAnimationGroup : CAAnimationGroup {
     
     internal var animationKey : String?
@@ -40,8 +38,8 @@ open class FAAnimationGroup : CAAnimationGroup {
 	
     internal var displayLink 		   : CADisplayLink?
 	
-	internal var _animationTriggerArray = [AnimationTrigger]()
-    internal var animationTriggerArray  = [AnimationTrigger]()
+	internal var _animationTriggerArray = [FAAnimationTrigger]()
+    internal var animationTriggerArray  = [FAAnimationTrigger]()
 	
 	/**
 	Enable Autoreverse of the animation.
@@ -186,7 +184,7 @@ open class FAAnimationGroup : CAAnimationGroup {
 							   atTimeProgress timeProgress: CGFloat? = nil,
 							   atValueProgress valueProgress: CGFloat? = nil) {
 		
-		configureAnimationTrigger(animation,
+		configureFAAnimationTrigger(animation,
 								  onView : view,
 								  atTimeProgress : timeProgress,
 								  atValueProgress : valueProgress)
@@ -260,7 +258,6 @@ open class FAAnimationGroup : CAAnimationGroup {
 
 internal extension FAAnimationGroup
 {
-	
 	final internal func synchronizeAnimationGroup(withLayer layer: CALayer, animationKey key: String?) {
 		
 		configureAnimationGroup(withLayer: layer, animationKey: key)
@@ -294,23 +291,21 @@ internal extension FAAnimationGroup
      - parameter oldAnimationGroup: old animation in flight
      */
 
-    internal func synchronizeAnimations(_ oldAnimationGroup : FAAnimationGroup? = nil) {
-        
+    final internal func synchronizeAnimations(_ oldAnimationGroup : FAAnimationGroup? = nil)
+    {
         var oldAnimations = animationDictionaryForGroup(oldAnimationGroup)
         var newAnimations = animationDictionaryForGroup(self)
         
-        for key in newAnimations.keys {
-            
-            newAnimations[key]!.animatingLayer = animatingLayer
-            
-            if let oldAnimation = oldAnimations[key]
-			{
-                newAnimations[key]!.synchronize(relativeTo: oldAnimation)
-            }
-			else
-			{
-                newAnimations[key]!.synchronize(relativeTo: nil)
-            }
+        for (key, animation) in newAnimations
+        {
+            animation.animatingLayer = animatingLayer
+            animation.synchronize(relativeTo: oldAnimations[key])
+        }
+        
+        if let animatedView = oldAnimationGroup?.animatingLayer?.owningView(),
+           let oldGroupKey = oldAnimationGroup?.animationKey
+        {
+            animatedView.cachedAnimations![oldGroupKey as NSString] = nil
         }
         
         var primaryAnimations = newAnimations.filter({ $0.1.isPrimary == true })
@@ -336,17 +331,20 @@ internal extension FAAnimationGroup
         
         let nonSynchronizedAnimations = newAnimations.filter({ $0.1.duration != duration })
         
-        if hasPrimaryAnimations {
+        if hasPrimaryAnimations
+        {
             primaryAnimation = (primaryAnimations.filter({ $0.1.duration == duration})).first?.1
-        } else {
+        }
+        else
+        {
             primaryAnimation = (newAnimations.filter({ $0.1.duration == duration})).first?.1
         }
         
-        for animation in nonSynchronizedAnimations {
+        for animation in nonSynchronizedAnimations
+        {
             if animation.1.keyPath != primaryAnimation?.keyPath &&
-                animation.1.duration > primaryAnimation?.duration {
-                
-                
+                animation.1.duration > primaryAnimation?.duration
+            {
                 newAnimations[animation.1.keyPath!]!.duration = duration
                 newAnimations[animation.1.keyPath!]!.synchronize()
             }
@@ -355,13 +353,18 @@ internal extension FAAnimationGroup
         animations = newAnimations.map {$1}
     }
 
-    func animationDictionaryForGroup(_ animationGroup : FAAnimationGroup?) -> [String : FABasicAnimation] {
+    fileprivate func animationDictionaryForGroup(_ animationGroup : FAAnimationGroup?) -> [String : FABasicAnimation]
+    {
         var animationDictionary = [String: FABasicAnimation]()
         
-        if let group = animationGroup {
-            if let currentAnimations = group.animations {
-                for animation in currentAnimations {
-                    if let customAnimation = animation as? FABasicAnimation {
+        if let group = animationGroup
+        {
+            if let currentAnimations = group.animations
+            {
+                for animation in currentAnimations
+                {
+                    if let customAnimation = animation as? FABasicAnimation
+                    {
                         animationDictionary[customAnimation.keyPath!] = customAnimation
                     }
                 }
@@ -369,239 +372,5 @@ internal extension FAAnimationGroup
         }
         
         return animationDictionary
-    }
-}
-
-//MARK: - Auto Reverse Logic
-
-internal extension FAAnimationGroup {
-	
-	func configureAutoreverseIfNeeded() {
-		
-		if autoreverse {
-			
-			if autoreverseConfigured == false {
-				configuredAutoreverseGroup()
-			}
-			
-			if autoreverseCount == 0 {
-				return
-			}
-			
-			if autoreverseActiveCount >= (autoreverseCount * 2) {
-				clearAutoreverseGroup()
-				return
-			}
-			
-			autoreverseActiveCount = autoreverseActiveCount + 1
-		}
-	}
-	
-	func configuredAutoreverseGroup() {
-		
-		let animationGroup = FAAnimationGroup()
-		animationGroup.animationKey             = animationKey! + "REVERSE"
-		animationGroup.animatingLayer                = animatingLayer
-		animationGroup.animations               = reverseAnimationArray()
-		animationGroup.duration                 = duration
-		animationGroup.primaryTimingPriority    = primaryTimingPriority
-		animationGroup.autoreverse             = autoreverse
-		animationGroup.autoreverseCount        = autoreverseCount
-		animationGroup.autoreverseActiveCount  = autoreverseActiveCount
-		animationGroup.reverseEasingCurve      = reverseEasingCurve
-		
-		if let view =  animatingLayer?.owningView() {
-			let progressDelay = max(0.0 , autoreverseDelay/duration)
-			configureAnimationTrigger(animationGroup, onView: view, atTimeProgress : 1.0 + CGFloat(progressDelay))
-		}
-		
-		isRemovedOnCompletion = false
-	}
-	
-	func clearAutoreverseGroup() {
-		_animationTriggerArray = [AnimationTrigger]()
-		isRemovedOnCompletion = true
-		stopTriggerTimer()
-	}
-	
-	func reverseAnimationArray() ->[FABasicAnimation] {
-		
-		var reverseAnimationArray = [FABasicAnimation]()
-		
-		if let animations = self.animations {
-			for animation in animations {
-				if let customAnimation = animation as? FABasicAnimation {
-					
-					let newAnimation = FABasicAnimation(keyPath: customAnimation.keyPath)
-					newAnimation.easingFunction = reverseEasingCurve ? customAnimation.easingFunction.reverseEasing() : customAnimation.easingFunction
-					
-					newAnimation.isPrimary = customAnimation.isPrimary
-					newAnimation.values = customAnimation.values!.reversed()
-					newAnimation.toValue = customAnimation.fromValue
-					newAnimation.fromValue = customAnimation.toValue
-					
-					reverseAnimationArray.append(newAnimation)
-				}
-			}
-		}
-		
-		return reverseAnimationArray
-	}
-}
-
-
-//MARK: - AnimationTrigger
-
-public func ==(lhs:AnimationTrigger, rhs:AnimationTrigger) -> Bool {
-    return lhs.animatedView == rhs.animatedView &&
-        lhs.isTimedBased == rhs.isTimedBased &&
-        lhs.triggerProgessValue == rhs.triggerProgessValue &&
-        lhs.animationKey == rhs.animationKey
-}
-
-
-open class AnimationTrigger : Equatable {
-    open  var isTimedBased = true
-    open var triggerProgessValue : CGFloat?
-    open var animationKey : NSString?
-    open weak var animatedView : UIView?
-    open weak var animation : FAAnimationGroup?
-    
-    required public init() {
-        
-    }
-
-    open func copyWithZone(_ zone: NSZone?) -> AnyObject {
-        let animationGroup = AnimationTrigger()
-        animationGroup.isTimedBased         = isTimedBased
-        animationGroup.triggerProgessValue  = triggerProgessValue
-        animationGroup.animationKey         = animationKey
-        animationGroup.animatedView         = animatedView
-        animationGroup.animation            = animation
-        return animationGroup
-    }
-}
-
-//MARK: - AnimationTrigger Logic
-
-public extension FAAnimationGroup {
-    
-    /**
-     This is the internal definition for creating a trigger
-     
-     - parameter animation:     the animation or animation group to attach
-     - parameter view:          the view to attach it to
-     - parameter timeProgress:  the relative time progress to trigger animation on the view
-     - parameter valueProgress: the relative value progress to trigger animation on the view
-     */
-    internal func configureAnimationTrigger(_ animation : AnyObject,
-                                            onView view : UIView,
-                                            atTimeProgress timeProgress: CGFloat? = 0.0,
-                                            atValueProgress valueProgress: CGFloat? = nil)
-    {
-        var progress : CGFloat = timeProgress ?? 0.0
-        var timeBased : Bool = true
-        
-        if valueProgress != nil {
-            progress = valueProgress!
-            timeBased = false
-        }
-        
-        var animationGroup : FAAnimationGroup?
-        
-        if let group = animation as? FAAnimationGroup {
-            animationGroup = group
-        } else if let animation = animation as? FABasicAnimation {
-            animationGroup = FAAnimationGroup()
-            animationGroup!.animations = [animation]
-        }
-        
-        guard animationGroup != nil else {
-            return
-        }
-        
-        animationGroup?.animationKey = String(UUID().uuidString)
-        animationGroup?.animatingLayer = view.layer
-        
-        let animationTrigger = AnimationTrigger()
-        animationTrigger.isTimedBased = timeBased
-        animationTrigger.triggerProgessValue = progress
-        animationTrigger.animationKey = animationGroup?.animationKey as NSString?
-        animationTrigger.animatedView = view
-        
-        _animationTriggerArray.append(animationTrigger)
-        view.appendAnimation(animationGroup!, forKey: animationGroup!.animationKey!)
-    }
-    
-    
-    /**
-     Starts a timer
-     */
-    func startTriggerTimer() {
-        
-        guard displayLink == nil && _animationTriggerArray.count > 0 else {
-            return
-        }
-        
-        animationTriggerArray = _animationTriggerArray
-        
-        self.displayLink = CADisplayLink(target: self, selector: #selector(FAAnimationGroup.updateTrigger))
-        if DebugTriggerLogEnabled {  print("START ++++++++ KEY \(String(describing: animationKey))  -  CALINK  \(String(describing: displayLink))\n") }
-        
-        self.displayLink?.add(to: RunLoop.main, forMode: RunLoopMode.defaultRunLoopMode)
-        updateTrigger()
-    }
-    
-    
-    /**
-     Stops the timer
-     */
-    func stopTriggerTimer() {
-        
-        guard let displayLink = displayLink else {
-            return
-        }
-
-        animationTriggerArray = [AnimationTrigger]()
-        displayLink.invalidate()
-        if DebugTriggerLogEnabled { print("STOP ++++++++ KEY \(String(describing: animationKey))  -  CALINK  \(displayLink)\n") }
-
-        self.displayLink = nil
-    }
-    
-    
-    /**
-     Triggers an animation if the value or time progress is met
-     */
-    @objc func updateTrigger() {
-        
-        for segment in animationTriggerArray
-        {
-            if let triggerSegment = self.activeTriggerSegment(segment)
-            {
-                if DebugTriggerLogEnabled {  print("TRIGGER ++++++++ KEY \(segment.animationKey!)  -  CALINK  \(String(describing: displayLink))\n") }
-            
-                triggerSegment.animatedView?.applyAnimation(forKey: triggerSegment.animationKey! as String)
-                animationTriggerArray.fa_removeObject(triggerSegment)
-            }
-            
-            if animationTriggerArray.count <= 0 && autoreverse == false {
-                stopTriggerTimer()
-                return
-            }
-        }
-    }
-    
-    func activeTriggerSegment(_ segment : AnimationTrigger) -> AnimationTrigger?
-	{
-        let fireTimeBasedTrigger  = segment.isTimedBased && primaryAnimation?.timeProgress() >= segment.triggerProgessValue!
-		
-		let fireValueBasedTrigger = segment.isTimedBased == false && primaryAnimation?.valueProgress() >= segment.triggerProgessValue!
-        
-        if fireTimeBasedTrigger || fireValueBasedTrigger {
-            return segment
-        }
-        
-        return nil
     }
 }

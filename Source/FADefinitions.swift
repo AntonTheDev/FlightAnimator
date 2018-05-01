@@ -25,9 +25,9 @@ public protocol FAAnimatable
 	
 	func magnitude<T>(toValue value : T) -> CGFloat
 	func valueFromComponents<T>(_ vector :  [CGFloat]) -> T
-	func progressValue<T>(to value : FAAnimatable, atProgress progress : CGFloat) -> T
+	func progressValue<T>(to value : T, atProgress progress : CGFloat) -> T
 	
-	func valueProgress(fromValue : Any, atValue : Any) -> CGFloat
+	func valueProgress<T>(fromValue : T, atValue : T) -> CGFloat
 }
 
 public enum FAEasing : Equatable
@@ -94,9 +94,7 @@ Use .Average, to select the average duration in the group
 - Average: find the average duration, and adjust all animations to match
 */
 
-public enum FAPrimaryTimingPriority : Int {
-	case maxTime
-	case minTime
-	case median
-	case average
+public enum FAPrimaryTimingPriority : Int
+{
+	case maxTime, minTime, median, average
 }
