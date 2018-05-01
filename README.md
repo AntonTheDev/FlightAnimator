@@ -2,15 +2,12 @@
 [![Cocoapods Compatible](https://img.shields.io/badge/pod-v1.0.0-blue.svg)]()
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)]()
 [![Build Status](https://travis-ci.org/AntonTheDev/FlightAnimator.svg?branch=master)](https://travis-ci.org/AntonTheDev/FlightAnimator)
-[![Cocoapods Compatible](https://img.shields.io/badge/compatability%20-swift--4-blue.svg )]()
+[![Cocoapods Compatible](https://img.shields.io/badge/supports%20-swift--4-orange.svg )]()
 [![Platform](https://img.shields.io/badge/platform-iOS%20|%20tvOS-lightgrey.svg)]()
-
 [![License](https://img.shields.io/badge/license-MIT-343434.svg)](/LICENSE.md)
 [![Join the chat at https://gitter.im/AntonTheDev/FlightAnimator](https://badges.gitter.im/AntonTheDev/FlightAnimator.svg)](https://gitter.im/AntonTheDev/FlightAnimator?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ![alt tag](/Documentation/FlightBanner.png?raw=true)
-
-* See [Installation Instructions](/Documentation/installation.md) for clarification
 
 ## Introduction
 
