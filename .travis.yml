@@ -1,11 +1,10 @@
 language: objective-c
-osx_image: xcode8.3
+osx_image: xcode9.3
 
 xcode_sdk:
-- iphonesimulator10.3
+- iphonesimulator11.3
 
-xcode_workspace: FlightAnimator.xcworkspace
 
 jobs:
   include:
-    - script: xcodebuild -workspace FlightAnimator.xcworkspace -scheme FlightAnimator-Demo -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 7,OS=10.3.1' test
+    - script: xcodebuild -workspace FlightAnimator.xcworkspace -scheme FlightAnimator-Demo -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone X,OS=11.3' test
