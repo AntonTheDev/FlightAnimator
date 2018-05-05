@@ -54,7 +54,7 @@ alt="FlightAnimator Demo" border="0" /> </a>
 
 **FlightAnimator** provides a very flexible syntax for defining animations ranging in complexity with ease. Following a blocks based builder approach you can easily define an animation group, and it's property animations in no time.
 
-Under the hood animations built are `CAAnimationGroup`(s) with multiple custom `CAKeyframeAnimation`(s) defined uniquely per property. Once it's time to animate, **FlightAnimator** will dynamically synchronize the remaining progress for all the animations relative to the current presentationLayer's values, then continue to animate to it's final state.
+Under the hood animations built are `CAAnimationGroup`(s) with multiple custom `CAKeyframeAnimation`(s) defined uniquely per property. Once it's time to animate, **FlightAnimator** will dynamically synchronize the remaining progress for all the animations relative to the current presentationLayer's values, then continue to animate to its final state.
 
 ### Simple Animation
 
@@ -120,7 +120,7 @@ Once the function call exits the closure, **FlightAnimator** performs the follow
 
 1. Adds the newly created `FAAnimationGroup` to the calling **view**'s layer,
 2. Synchronizes the grouped `FABasicAnimations` relative to the calling **view**'s presentation layer values
-3. Triggers the animation by applying the **toValue** from the grouped animations to to the calling **view**'s layer.
+3. Triggers the animation by applying the **toValue** from the grouped animations to the calling **view**'s layer.
 
 ## Chaining Animations
 
@@ -241,7 +241,7 @@ When the animation is applied, if the view is in mid flight, it will synchronize
 
 #### Register/Cache Animation
 
-To register an animation, call a globally defined method, and create an animations just as defined earlier examples within the maker block. The following example shows how to register, and cache an animation for a key on a specified view.
+To register an animation, call a globally defined method, and create animations just as defined earlier examples within the maker block. The following example shows how to register, and cache an animation for a key on a specified view.
 
 ```swift
 struct AnimationKeys {
@@ -303,7 +303,7 @@ func animateView(toFrame : CGRect) {
 	}
 }
 ```
-Just like the demo app, This method gets called by different buttons, and takes on the frame value of button that triggered the method. Let's the animation has been triggered, and is in mid flight. While in mid flight another button is tapped, a new animation is applied, and ehe position changes, but the bounds stay the same.
+Just like the demo app, This method gets called by different buttons, and takes on the frame value of button that triggered the method. Let's the animation has been triggered, and is in mid flight. While in mid flight another button is tapped, a new animation is applied, and the position changes, but the bounds stay the same.
 
 Internally the framework will figure out the current progress in reference to the last animation, and will select the max duration value from the array of durations on the grouped property animations.
 
@@ -343,7 +343,7 @@ Simple as that, now when the view is redirected during an animation in mid fligh
 
 ### .SpringDecay w/ Initial Velocity
 
-When using a UIPanGestureRecognizer to move a view around on the screen by adjusting its position, and say there is a need to smoothly animate the view to the final destination right as the user lets go of the gesture. This is where the .SpringDecay easing comes into play. The .SpringDecay easing will slow the view down easily into place, all that need to be configured is the initial velocity, and it will calculate its own time relative to the velocity en route to its destination.
+When using a UIPanGestureRecognizer to move a view around on the screen by adjusting its position, and say there is a need to smoothly animate the view to the final destination right as the user lets go of the gesture. This is where the .SpringDecay easing comes into play. The .SpringDecay easing will slow the view down easily into place, all that needs to be configured is the initial velocity, and it will calculate its own time relative to the velocity en route to its destination.
 
 Below is an example of how to handle the handoff and use ``.SpringDecay(velocity: velocity)`` easing to perform the animation.
 
