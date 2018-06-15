@@ -18,6 +18,8 @@ struct AnimationConfiguration {
     
     var sizeFunction : FAEasing = FAEasing.outSine
     var positionFunction : FAEasing =  FAEasing.springCustom(velocity: CGPoint.zero, frequency: 14, ratio: 0.8)
+    var colorFunction : FAEasing =  FAEasing.springCustom(velocity: UIColor.clear.cgColor, frequency: 14, ratio: 0.8)
+    
     var alphaFunction : FAEasing = FAEasing.inSine
     var transformFunction : FAEasing = FAEasing.outBack
     
@@ -116,7 +118,7 @@ extension ViewController {
          //   a.transform(transform).duration(duration).easing(config.transformFunction).primary(config.transformPrimary)
            
           //  if color != nil {
-                a.backgroundColor(color!.cgColor).duration(duration).easing(config.alphaFunction).primary(config.positionPrimary)
+                a.backgroundColor(color!.cgColor).duration(duration).easing(config.colorFunction).primary(config.alphaPrimary)
           //  }
             if config.enableSecondaryView {
                 

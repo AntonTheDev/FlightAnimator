@@ -491,6 +491,15 @@ internal extension FABasicAnimation
                 
                 valueArray.append(newValue.valueRepresentation)
             }
+            else if let newValue = interpolatedSpringValue(animationTime) as? CGColorWrapper
+            {
+                if floor(newValue.magnitude(toValue: toAnimatableValue)) == 0.0
+                {
+                    bounceCount += 1
+                }
+                
+                valueArray.append(newValue.valueRepresentation)
+            }
             
             animationTime += frameRateTimeUnit
             

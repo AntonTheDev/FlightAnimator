@@ -25,7 +25,8 @@ class CGColorWrapper : FAAnimatable {
     
     public var zeroVelocityValue : FAAnimatable {
         get {
-            return CGColorWrapper(withColor: UIColor().cgColor)
+            return CGColorWrapper(withColor: CGColor(colorSpace: CGColorSpaceCreateDeviceRGB(),
+                                                     components: [0.0, 0.0, 0.0, 0.0])!)
         }
     }
     
