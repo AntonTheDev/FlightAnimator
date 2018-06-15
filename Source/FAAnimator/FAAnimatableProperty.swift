@@ -75,8 +75,13 @@ open class FAAnimatableProperty
                 animation.duration = Double(duration)
                 animation.isPrimary = primary
              
-                if let toValue = toValue as? NSValue {
+                if let toValue = toValue as? NSValue
+                {
                     animation.toValue = toValue
+                }
+                else if CFGetTypeID(toValue as AnyObject) == CGColor.typeID
+                {
+                    animation.toValue = toValue as! CGColor
                 }
  
                 animationGroup.configureAnimationGroup(withLayer: associatedView?.layer,
@@ -94,6 +99,10 @@ open class FAAnimatableProperty
         if let toValue = toValue as? NSValue
         {
             animation.toValue = toValue
+        }
+        else if CFGetTypeID(toValue as AnyObject) == CGColor.typeID
+        {
+            animation.toValue = toValue as! CGColor
         }
 
         animation.duration = Double(duration)

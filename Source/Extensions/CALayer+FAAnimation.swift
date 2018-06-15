@@ -103,13 +103,16 @@ extension CALayer {
         if let currentFromValue = self.value(forKeyPath: keyPath) {
             
             if CFGetTypeID(currentFromValue as AnyObject) == CGColor.typeID {
-                return currentFromValue as? FAAnimatable
+                return CGColorWrapper(withColor: currentFromValue as! CGColor) // currentFromValue as? FAAnimatable
+            }
+            
+            if let currentFromValue = currentFromValue as? CGColorWrapper {
+                return CGColorWrapper(withColor: currentFromValue as! CGColor) // currentFromValue.color// currentFromValue as? FAAnimatable
             }
 
             if let currentFromValue = currentFromValue as? NSValue {
                 return currentFromValue.typedValue() as? FAAnimatable
             }
-
         }
         
         return super.value(forKeyPath: keyPath) as? FAAnimatable

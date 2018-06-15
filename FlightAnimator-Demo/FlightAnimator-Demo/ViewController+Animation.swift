@@ -83,7 +83,8 @@ extension ViewController {
                      velocity : CGPoint = CGPoint.zero,
                      transform : CATransform3D = CATransform3DIdentity,
                      toAlpha : CGFloat = 1.0,
-                     duration : CGFloat = 0.5) {
+                     duration : CGFloat = 0.5,
+                     color : UIColor? = UIColor(rgba: "#006258")) {
         
         guard lastToFrame != toFrame else {
             return
@@ -109,11 +110,14 @@ extension ViewController {
                 print("DID Cancel")
             })
             
-            a.bounds(toBounds).duration(duration).easing(config.sizeFunction).primary(config.sizePrimary)
+        //    a.bounds(toBounds).duration(duration).easing(config.sizeFunction).primary(config.sizePrimary)
             a.position(toPosition).duration(duration).easing(config.positionFunction).primary(config.positionPrimary)
-            a.alpha(toAlpha).duration(duration).easing(config.alphaFunction).primary(config.alphaPrimary)
-            a.transform(transform).duration(duration).easing(config.transformFunction).primary(config.transformPrimary)
-            
+         //   a.alpha(toAlpha).duration(duration).easing(config.alphaFunction).primary(config.alphaPrimary)
+         //   a.transform(transform).duration(duration).easing(config.transformFunction).primary(config.transformPrimary)
+           
+          //  if color != nil {
+                a.backgroundColor(color!.cgColor).duration(duration).easing(config.alphaFunction).primary(config.positionPrimary)
+          //  }
             if config.enableSecondaryView {
                 
                 let currentBounds = CGRect(x: 0, y: 0, width: self.lastToFrame.size.width , height: self.lastToFrame.size.height)

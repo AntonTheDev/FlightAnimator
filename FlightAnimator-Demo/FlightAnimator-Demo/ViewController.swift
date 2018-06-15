@@ -372,6 +372,7 @@ extension ViewController {
     
     func topCenter(_ sender : UIButton) {
         animateView(sender.frame)
+        
     }
     
     func centerRight(_ sender : UIButton) {
@@ -389,7 +390,7 @@ extension ViewController {
         let scaledTransform  = CATransform3DScale(initialTransform, 0.5, 0.5, 1.0)
         let rotateTransform  =  CATransform3DRotate(scaledTransform, degree2radian(45), 0.0, 0.0, 1.0)
         
-        animateView(initialFrame, transform : rotateTransform)
+        animateView(initialFrame, transform : rotateTransform, color : UIColor.blue)
     }
     
     func bottomRight(_ sender : UIButton) {
@@ -401,7 +402,7 @@ extension ViewController {
     }
     
     @objc func bottomCenter(_ sender : UIButton) {
-        animateView(sender.frame)
+        animateView(sender.frame, color : UIColor.yellow)
     }
     
 }

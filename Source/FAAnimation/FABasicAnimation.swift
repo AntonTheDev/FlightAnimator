@@ -16,9 +16,17 @@ open class FABasicAnimation : CAKeyframeAnimation
 {
     open weak var animatingLayer : CALayer?
 
-    open var toValue        : AnyObject? { didSet { toAnimatableValue = animatableValue(from: toValue) } }
-    open var fromValue      : AnyObject? { didSet { fromAnimatableValue = animatableValue(from: fromValue) } }
-    open var previousValue  : AnyObject? { didSet { previousAnimatableValue = animatableValue(from: previousValue) } }
+    open var toValue        : AnyObject? {
+        didSet { toAnimatableValue = animatableValue(from: toValue) }
+    }
+    
+    open var fromValue      : AnyObject? {
+        didSet { fromAnimatableValue = animatableValue(from: fromValue) }
+    }
+    
+    open var previousValue  : AnyObject? {
+        didSet { previousAnimatableValue = animatableValue(from: previousValue) }
+    }
     
     internal var toAnimatableValue       : FAAnimatable?
     internal var fromAnimatableValue     : FAAnimatable?
@@ -88,13 +96,19 @@ open class FABasicAnimation : CAKeyframeAnimation
     
     func animatableValue(from anyObject : AnyObject?) -> FAAnimatable?
     {
+        if CFGetTypeID(anyObject as AnyObject) == CGColor.typeID
+        {
+            return CGColorWrapper(withColor: anyObject as! CGColor)
+        }
+        
+        if let anyObject = anyObject as? UIColor
+        {
+            return CGColorWrapper(withColor: anyObject.cgColor)
+        }
+        
         if let anyObject = anyObject as? NSValue
         {
             return anyObject.typedValue() as? FAAnimatable
-        }
-        else if CFGetTypeID(previousValue as AnyObject) == CGColor.typeID
-        {
-            return anyObject as! CGColor
         }
         
         return nil
