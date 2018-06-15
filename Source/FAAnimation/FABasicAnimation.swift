@@ -459,6 +459,13 @@ internal extension FABasicAnimation
                 valueArray.append(newValue.valueRepresentation)
                 animationTime += frameRateTimeUnit
             }
+            else if let newValue = interpolatedSpringValue(animationTime) as? CGColorWrapper,
+                    let toAnimatableValue = self.toAnimatableValue
+            {
+                animationComplete = newValue.magnitude(toValue: toAnimatableValue) < FAConfig.SpringDecayMagnitudeThreshold
+                valueArray.append(newValue.valueRepresentation)
+                animationTime += frameRateTimeUnit
+            }
             
         } while (animationComplete == false)
         
