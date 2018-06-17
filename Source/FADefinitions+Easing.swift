@@ -390,7 +390,12 @@ public struct FASpring {
      
      - returns: Preconfigured Spring
      */
-    init(finalValue: CGFloat, initialValue : CGFloat, positionVelocity velocity: CGFloat,  angularFrequency frequency: CGFloat, dampingRatio ratio: CGFloat) {
+    init(finalValue: CGFloat,
+         initialValue : CGFloat,
+         positionVelocity velocity: CGFloat,
+         angularFrequency frequency: CGFloat,
+         dampingRatio ratio: CGFloat)
+    {
         self.dampingRatio = ratio
         self.angularFrequency = frequency
         self.equilibriumPosition = finalValue

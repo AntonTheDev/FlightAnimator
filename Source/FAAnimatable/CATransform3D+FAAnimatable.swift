@@ -17,15 +17,6 @@ extension CATransform3D : FAAnimatable
         }
     }
     
-    public var zeroVelocityValue : FAAnimatable {
-        get {
-            return CATransform3D(m11: 0, m12: 0, m13: 0, m14: 0,
-                                 m21: 0, m22: 0, m23: 0, m24: 0,
-                                 m31: 0, m32: 0, m33: 0, m34: 0,
-                                 m41: 0, m42: 0, m43: 0, m44: 0)
-        }
-    }
-    
     public var magnitude : CGFloat {
         get {
             var totalValue = m11.magnitude + m12.magnitude + m13.magnitude + m14.magnitude
@@ -50,6 +41,15 @@ extension CATransform3D : FAAnimatable
                      m21, m22, m23, m24,
                      m31, m32, m33, m34,
                      m41, m42, m43, m44]
+        }
+    }
+    
+    public var zeroVelocityVector: [CGFloat] {
+        get {
+            return  [0, 0, 0, 0,
+                     0, 0, 0, 0,
+                     0, 0, 0, 0,
+                     0, 0, 0, 0]
         }
     }
     

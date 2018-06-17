@@ -9,8 +9,8 @@
 import Foundation
 import UIKit
 
-class CGColorWrapper : FAAnimatable {
-
+class CGColorWrapper : FAAnimatable
+{
     var color : CGColor
     
     init(withColor color: CGColor) {
@@ -20,13 +20,6 @@ class CGColorWrapper : FAAnimatable {
     public var valueType : FAValueType {
         get {
             return .cgColor
-        }
-    }
-    
-    public var zeroVelocityValue : FAAnimatable {
-        get {
-            return CGColorWrapper(withColor: CGColor(colorSpace: CGColorSpaceCreateDeviceRGB(),
-                                                     components: [0.0, 0.0, 0.0, 0.0])!)
         }
     }
     
@@ -51,11 +44,17 @@ class CGColorWrapper : FAAnimatable {
         }
     }
     
+    var zeroVelocityVector: [CGFloat] {
+        get {
+            return  [0, 0, 0, 0]
+        }
+    }
+
+    
     public func valueFromComponents<T>(_ components :  [CGFloat]) -> T
     {
-        
         let colorValue = CGColor(colorSpace: CGColorSpaceCreateDeviceRGB(),
-                        components: [components[0], components[1], components[2], components[3]])
+                                 components: [components[0], components[1], components[2], components[3]])
         
         let animatableColor = CGColorWrapper(withColor: colorValue!)
         

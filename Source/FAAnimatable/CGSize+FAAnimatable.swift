@@ -42,6 +42,12 @@ extension CGSize : FAAnimatable
         }
     }
     
+    public var zeroVelocityVector: [CGFloat] {
+        get {
+            return  [0, 0]
+        }
+    }
+    
     public func valueFromComponents<T>(_ vector :  [CGFloat]) -> T
     {
         return CGSize(width : vector[0], height : vector[1]) as! T

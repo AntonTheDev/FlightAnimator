@@ -492,22 +492,17 @@ internal extension FABasicAnimation
 internal extension FABasicAnimation
 {
     fileprivate func springComponents(_ initialVelocity: Any?,
-                                            angularFrequency: CGFloat,
-                                            dampingRatio: CGFloat) {
-        
+                                      angularFrequency: CGFloat,
+                                      dampingRatio: CGFloat)
+    {
         guard let toAnimatableValue = toAnimatableValue,
-            let fromAnimatableValue = fromAnimatableValue else
+              let fromAnimatableValue = fromAnimatableValue else
         {
             return
         }
         
-        var vectorVelocity = toAnimatableValue.zeroVelocityValue
-        
-        if let velocity = initialVelocity as? FAAnimatable
-        {
-            vectorVelocity = velocity
-        }
-        
+        var vectorVelocity = (initialVelocity as? FAAnimatable)?.vector ?? toAnimatableValue.zeroVelocityVector
+
         springs = [FASpring]()
         
         if toAnimatableValue.vector.count == fromAnimatableValue.vector.count
@@ -516,7 +511,7 @@ internal extension FABasicAnimation
             {
                 let floatSpring = FASpring(finalValue       : toAnimatableValue.vector[index],
                                            initialValue     : fromAnimatableValue.vector[index],
-                                           positionVelocity : vectorVelocity.vector[index],
+                                           positionVelocity : vectorVelocity[index],
                                            angularFrequency : angularFrequency,
                                            dampingRatio     : dampingRatio)
                 
@@ -533,7 +528,7 @@ internal extension FABasicAnimation
             return easingFunction
         }
         
-        var adjustedVelocity : Any = toAnimatableValue.zeroVelocityValue
+        var adjustedVelocity : Any = toAnimatableValue.zeroVelocityVector
         
         if  let presentationLayer  = animation?.animatingLayer?.presentation(),
             let animatingLayer = animation?.animatingLayer,

@@ -46,12 +46,6 @@ extension CGFloat : FAAnimatable
         }
     }
     
-    public var zeroVelocityValue : FAAnimatable {
-        get {
-            return CGFloat(0.0)
-        }
-    }
-    
     public var magnitude : CGFloat {
         get {
             return self * self
@@ -65,6 +59,12 @@ extension CGFloat : FAAnimatable
     }
     
     public var vector : [CGFloat] {
+        get {
+            return  [self]
+        }
+    }
+    
+    public var zeroVelocityVector: [CGFloat] {
         get {
             return  [self]
         }

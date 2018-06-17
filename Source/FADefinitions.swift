@@ -31,11 +31,11 @@ public protocol FAAnimatable
 {
 	var valueType           : FAValueType   { get }
 	var vector              : [CGFloat]     { get }
-	var componentCount      : Int           { get }
+	var zeroVelocityVector  : [CGFloat]     { get }
+    var componentCount      : Int           { get }
 	
 	var magnitude           : CGFloat       { get }
 	var valueRepresentation : AnyObject     { get }
-	var zeroVelocityValue   : FAAnimatable  { get }
 	
 	func magnitude<T>(toValue value : T) -> CGFloat
 	func valueFromComponents<T>(_ vector :  [CGFloat]) -> T

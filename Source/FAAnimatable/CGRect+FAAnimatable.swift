@@ -16,12 +16,7 @@ extension CGRect : FAAnimatable
             return .cgRect
         }
     }
-    
-    public var zeroVelocityValue : FAAnimatable {
-        get {
-            return CGRect.zero
-        }
-    }
+
     
     public var magnitude : CGFloat {
         get {
@@ -30,11 +25,13 @@ extension CGRect : FAAnimatable
         }
     }
     
+   
     public var valueRepresentation : AnyObject {
         get {
             return NSValue(cgRect: self)
         }
     }
+    
     
     public var vector : [CGFloat] {
         get {
@@ -42,15 +39,24 @@ extension CGRect : FAAnimatable
         }
     }
     
+    
+    public var zeroVelocityVector: [CGFloat] {
+        get {
+            return  [origin.x, origin.y, width, height]
+        }
+    }
+    
+    
     public func valueFromComponents<T>(_ vector :  [CGFloat]) -> T
     {
         return CGRect(x : vector[0], y : vector[1], width : vector[2], height : vector[3]) as! T
     }
     
-    public func progressValue<T>(to value : T, atProgress progress : CGFloat) -> T {
-        
-        if let value = value as? CGRect {
-            
+    
+    public func progressValue<T>(to value : T, atProgress progress : CGFloat) -> T
+    {
+        if let value = value as? CGRect
+        {
             var adjustedRect = CGRect.zero
             
             adjustedRect.size = size.progressValue(to: value.size, atProgress: progress)

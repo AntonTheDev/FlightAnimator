@@ -17,12 +17,6 @@ extension CGPoint : FAAnimatable
         }
     }
     
-    public var zeroVelocityValue : FAAnimatable {
-        get {
-            return CGPoint.zero
-        }
-    }
-    
     public var magnitude : CGFloat {
         get {
             let totalValue = (x * x) + (y * y)
@@ -39,6 +33,12 @@ extension CGPoint : FAAnimatable
     public var vector : [CGFloat] {
         get {
             return  [x, y]
+        }
+    }
+    
+    public var zeroVelocityVector: [CGFloat] {
+        get {
+            return  [0, 0]
         }
     }
     
