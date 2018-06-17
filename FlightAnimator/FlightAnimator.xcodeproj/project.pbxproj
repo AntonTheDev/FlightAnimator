@@ -123,10 +123,10 @@
 			children = (
 				3A0F035E2098203500770E34 /* FADefinitions.swift */,
 				3A0F035F2098203500770E34 /* FADefinitions+Easing.swift */,
+				3A0F036D2098203500770E34 /* FADefinitions+Defaults.swift */,
 				3A0F03602098203500770E34 /* FAAnimation */,
 				3A0F03652098203500770E34 /* FAAnimator */,
 				3A0F03682098203500770E34 /* Extensions */,
-				3A0F036D2098203500770E34 /* FADefinitions+Defaults.swift */,
 				3A0F036E2098203500770E34 /* FAAnimatable */,
 			);
 			name = Source;
@@ -136,10 +136,10 @@
 		3A0F03602098203500770E34 /* FAAnimation */ = {
 			isa = PBXGroup;
 			children = (
-				3A0F03612098203500770E34 /* FAAnimationGroup+Reverse.swift */,
-				3A0F03622098203500770E34 /* FAAnimationGroup+Triggers.swift */,
 				3A0F03632098203500770E34 /* FABasicAnimation.swift */,
 				3A0F03642098203500770E34 /* FAAnimationGroup.swift */,
+				3A0F03612098203500770E34 /* FAAnimationGroup+Reverse.swift */,
+				3A0F03622098203500770E34 /* FAAnimationGroup+Triggers.swift */,
 			);
 			path = FAAnimation;
 			sourceTree = "<group>";
@@ -156,10 +156,10 @@
 		3A0F03682098203500770E34 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				3A0F03692098203500770E34 /* CALayer+FAAnimation.swift */,
-				3A0F036A2098203500770E34 /* UIView+FAAnimation.swift */,
 				3A0F036B2098203500770E34 /* CAAnimation+Callbacks.swift */,
+				3A0F03692098203500770E34 /* CALayer+FAAnimation.swift */,
 				3A0F036C2098203500770E34 /* NSValue+FAAnimation.swift */,
+				3A0F036A2098203500770E34 /* UIView+FAAnimation.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -167,12 +167,12 @@
 		3A0F036E2098203500770E34 /* FAAnimatable */ = {
 			isa = PBXGroup;
 			children = (
-				3A0F036F2098203500770E34 /* CGPoint+FAAnimatable.swift */,
-				3A0F03702098203500770E34 /* CGRect+FAAnimatable.swift */,
-				3A0F03712098203500770E34 /* CGSize+FAAnimatable.swift */,
-				3A0F03722098203500770E34 /* CATransform3D+FAAnimatable.swift */,
 				3A0F03732098203500770E34 /* CGFloat+FAAnimatable.swift */,
+				3A0F036F2098203500770E34 /* CGPoint+FAAnimatable.swift */,
+				3A0F03712098203500770E34 /* CGSize+FAAnimatable.swift */,
+				3A0F03702098203500770E34 /* CGRect+FAAnimatable.swift */,
 				3A0F03742098203500770E34 /* CGColor+FAAnimatable.swift */,
+				3A0F03722098203500770E34 /* CATransform3D+FAAnimatable.swift */,
 			);
 			path = FAAnimatable;
 			sourceTree = "<group>";

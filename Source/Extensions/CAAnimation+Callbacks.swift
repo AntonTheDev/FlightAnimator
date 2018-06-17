@@ -12,8 +12,8 @@ import QuartzCore
 
 public typealias FAAnimationDelegateCallBack = ((_ anim: CAAnimation) -> Void)
 
-public class FAAnimationDelegate : NSObject, CAAnimationDelegate {
-    
+public class FAAnimationDelegate : NSObject, CAAnimationDelegate
+{
     var animationDidStart  : FAAnimationDelegateCallBack?
     var animationDidStop   : FAAnimationDelegateCallBack?
     var animationDidCancel : FAAnimationDelegateCallBack?
@@ -50,8 +50,9 @@ public class FAAnimationDelegate : NSObject, CAAnimationDelegate {
     }
 }
 
-public extension CAAnimation {
-    
+
+public extension CAAnimation
+{
     public func setDidStopCallback(_ stopCallback : @escaping FAAnimationDelegateCallBack)
     {
         if callbacksSupported() == false
@@ -80,6 +81,7 @@ public extension CAAnimation {
         
         delegate = activeDelegate
     }
+    
     
     public func setDidCancelCallback(_ stopCallback : @escaping FAAnimationDelegateCallBack)
     {
@@ -110,6 +112,7 @@ public extension CAAnimation {
         delegate = activeDelegate
     }
     
+    
     public func setDidStartCallback(_ startCallback : @escaping FAAnimationDelegateCallBack)
     {
         if callbacksSupported() == false
@@ -139,13 +142,25 @@ public extension CAAnimation {
         delegate = activeDelegate
     }
     
+    
     fileprivate func callbacksSupported() -> Bool
     {
+        if  self is FAAnimationGroup ||
+            self is FABasicAnimation
+        {
+            return true
+        }
+        
+        return false
+        /*
         if let _ = self as? FAAnimationGroup {
+        
         } else if let _ = self as? FABasicAnimation {
+        
         } else{
             return false
         }
         return true
+         */
     }
 }

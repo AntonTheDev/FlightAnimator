@@ -12,44 +12,81 @@ import UIKit
 public func ==(lhs:FAAnimationTrigger, rhs:FAAnimationTrigger) -> Bool
 {
     return lhs.animatedView == rhs.animatedView &&
-        lhs.isTimedBased == rhs.isTimedBased &&
-        lhs.triggerProgessValue == rhs.triggerProgessValue &&
-        lhs.animationKey == rhs.animationKey
+           lhs.isTimedBased == rhs.isTimedBased &&
+           lhs.triggerProgessValue == rhs.triggerProgessValue &&
+           lhs.animationKey == rhs.animationKey
 }
 
 open class FAAnimationTrigger : Equatable
 {
-    open  var isTimedBased = true
-    open var triggerProgessValue : CGFloat?
-    open var animationKey : NSString?
-    open weak var animatedView : UIView?
-    open weak var animation : FAAnimationGroup?
+    open var animationKey : NSString?                   // Copied
+    
+    open weak var animatedView : UIView?                // Copied
+    
+    open weak var animation : FAAnimationGroup?         // Copied
+    
+    open var isTimedBased = true                        // Copied
+    
+    open var triggerProgessValue : CGFloat?             // Copied
     
     required public init() { }
     
     open func copyWithZone(_ zone: NSZone?) -> AnyObject
     {
         let animationGroup = FAAnimationTrigger()
-        animationGroup.isTimedBased         = isTimedBased
-        animationGroup.triggerProgessValue  = triggerProgessValue
+
         animationGroup.animationKey         = animationKey
         animationGroup.animatedView         = animatedView
         animationGroup.animation            = animation
+        animationGroup.isTimedBased         = isTimedBased
+        animationGroup.triggerProgessValue  = triggerProgessValue
+       
         return animationGroup
+    }
+    
+    func applyAnimation()
+    {
+        if let animationKey = animationKey
+        {
+            animatedView?.applyAnimation(forKey: animationKey as String)
+        }
+    }
+    
+    func didTriggerAnimation(relativeTo primaryAnimation : FABasicAnimation?) -> Bool
+    {
+            if isTimedBased
+            {
+                if primaryAnimation?.timeProgress() >= triggerProgessValue!
+                {
+                    applyAnimation()
+                    
+                    return true
+                }
+            }
+            else if primaryAnimation?.valueProgress() >= triggerProgessValue!
+            {
+                applyAnimation()
+                
+                return true
+            }
+            
+            return false
     }
 }
 
-//MARK: - FAAnimationTrigger Logic
 
-public extension FAAnimationGroup {
-    
+//MARK: - FAAnimationTrigger Logic
+public extension FAAnimationGroup
+{
     /**
-     This is the internal definition for creating a trigger
-     
-     - parameter animation:     the animation or animation group to attach
-     - parameter view:          the view to attach it to
-     - parameter timeProgress:  the relative time progress to trigger animation on the view
-     - parameter valueProgress: the relative value progress to trigger animation on the view
+     *
+     * This is the internal definition for creating a trigger
+     *
+     * - parameter animation:     the animation or animation group to attach
+     * - parameter view:          the view to attach it to
+     * - parameter timeProgress:  the relative time progress to trigger animation
+     * - parameter valueProgress: the relative value progress to trigger animation
+     *
      */
     internal func configureFAAnimationTrigger(_ animation : AnyObject,
                                               onView view : UIView,
@@ -86,18 +123,22 @@ public extension FAAnimationGroup {
         animationGroup?.animatingLayer = view.layer
         
         let animationTrigger = FAAnimationTrigger()
+        
         animationTrigger.isTimedBased = timeBased
         animationTrigger.triggerProgessValue = progress
         animationTrigger.animationKey = animationGroup?.animationKey as NSString?
         animationTrigger.animatedView = view
         
         _animationTriggerArray.append(animationTrigger)
+        
         view.appendAnimation(animationGroup!, forKey: animationGroup!.animationKey!)
     }
     
     
     /**
-     Starts a timer
+     *
+     * Starts a trigger timer associated with the animation
+     *
      */
     func startTriggerTimer()
     {
@@ -119,7 +160,9 @@ public extension FAAnimationGroup {
     
     
     /**
-     Stops the timer
+     *
+     * Stops a trigger timer associated with the animation
+     *
      */
     func stopTriggerTimer() {
         
@@ -139,19 +182,19 @@ public extension FAAnimationGroup {
     
     
     /**
-     Triggers an animation if the value or time progress is met
+     *
+     * Triggers an animation if the value or time progress is met
+     *
      */
-    @objc func updateTrigger() {
-        
-        for segment in animationTriggerArray
+    @objc func updateTrigger()
+    {
+        for trigger in animationTriggerArray
         {
-            if let triggerSegment = self.activeTriggerSegment(segment)
+            if trigger.didTriggerAnimation(relativeTo: primaryAnimation)
             {
-                if DebugTriggerLogEnabled {  print("TRIGGER ++ KEY \(segment.animationKey!)  -  CALINK  \(String(describing: displayLink))\n") }
+                if DebugTriggerLogEnabled {  print("TRIGGER ++ KEY \(trigger.animationKey!)  -  CALINK  \(String(describing: displayLink))\n") }
                 
-                triggerSegment.animatedView?.applyAnimation(forKey: triggerSegment.animationKey! as String)
-                
-                animationTriggerArray.fa_removeObject(triggerSegment)
+                animationTriggerArray.fa_removeObject(trigger)
             }
             
             if animationTriggerArray.count <= 0 && autoreverse == false
@@ -160,22 +203,5 @@ public extension FAAnimationGroup {
                 return
             }
         }
-    }
-    
-    func activeTriggerSegment(_ segment : FAAnimationTrigger) -> FAAnimationTrigger?
-    {
-        if segment.isTimedBased
-        {
-            if primaryAnimation?.timeProgress() >= segment.triggerProgessValue!
-            {
-                return segment
-            }
-        }
-        else if primaryAnimation?.valueProgress() >= segment.triggerProgessValue!
-        {
-            return segment
-        }
-
-        return nil
     }
 }

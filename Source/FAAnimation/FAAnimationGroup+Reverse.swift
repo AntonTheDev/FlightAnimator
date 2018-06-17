@@ -51,7 +51,7 @@ internal extension FAAnimationGroup
         animationGroup.autoreverseActiveCount  = autoreverseActiveCount
         animationGroup.reverseEasingCurve      = reverseEasingCurve
         
-        if let view =  animatingLayer?.owningView()
+        if let view =  animatingLayer?.view
         {
             let progressDelay = max(0.0 , autoreverseDelay/duration)
             configureFAAnimationTrigger(animationGroup, onView: view, atTimeProgress : 1.0 + CGFloat(progressDelay))
@@ -63,7 +63,9 @@ internal extension FAAnimationGroup
     func clearAutoreverseGroup()
     {
         _animationTriggerArray = [FAAnimationTrigger]()
+        
         isRemovedOnCompletion = true
+       
         stopTriggerTimer()
     }
     

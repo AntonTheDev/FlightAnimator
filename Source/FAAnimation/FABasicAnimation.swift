@@ -9,59 +9,199 @@
 import Foundation
 import UIKit
 
-
 //MARK: - FABasicAnimation
-
 open class FABasicAnimation : CAKeyframeAnimation
 {
-    open weak var animatingLayer : CALayer?
+    /**
+     *
+     * This is the animating layer that is part of this animation.
+     *
+     * A weak reference used later when intercepting the animation
+     * in mid flight, the presentation
+     * layer is actusally the one representing the current property
+     * value for the actual visual representation of the layer
+     * while in mid flight
+     *
+     */
+    open weak var animatingLayer : CALayer?                         // Copied
 
-    open var toValue        : AnyObject? {
-        didSet { toAnimatableValue = animatableValue(from: toValue) }
-    }
-    
-    open var fromValue      : AnyObject? {
-        didSet { fromAnimatableValue = animatableValue(from: fromValue) }
-    }
-    
-    open var previousValue  : AnyObject? {
-        didSet { previousAnimatableValue = animatableValue(from: previousValue) }
-    }
-    
-    internal var toAnimatableValue       : FAAnimatable?
-    internal var fromAnimatableValue     : FAAnimatable?
-    internal var previousAnimatableValue : FAAnimatable?
 
-    open var easingFunction : FAEasing = .linear
+    /**
+     * This is the destination toValue for the animation.
+     *
+     * Supported Types:
+     *  * CGFloat
+     *  * CGPoint
+     *  * CGSize
+     *  * CGRect
+     *  * CGColor
+     *  * CATransform3D
+     *
+     */
+    open var toValue        : AnyObject? {                          // Copied
+        didSet {
+            toAnimatableValue = animatableValue(from: toValue)
+        }
+    }
     
+    
+    /**
+     *
+     * The fromValue for the animation. Configured from
+     * the presentation layer's value when the animation
+     * is intercepted in flight.
+     *
+     * Otherwise, it is set to the layer's current value,
+     * when the animation begins.
+     *
+     * Supported Types:
+     *  * CGFloat
+     *  * CGPoint
+     *  * CGSize
+     *  * CGRect
+     *  * CGColor
+     *  * CATransform3D
+     *
+     */
+    open var fromValue      : AnyObject? {                          // Copied
+        didSet {
+            fromAnimatableValue = animatableValue(from: fromValue)
+        }
+    }
+    
+    
+    /**
+     *
+     * The previous value is set if there is a prior
+     * animation in propress for the specific property.
+     *
+     * So, if it's in mid flight, and a new animation
+     * is applied, it uses projection to recalculate
+     * the remaiming time to be reapplied for all the
+     * propprty animations in progress of animation
+     *
+     */
+    open var previousValue  : AnyObject? {                          // Copied
+        didSet {
+            previousAnimatableValue = animatableValue(from: previousValue)
+        }
+    }
+
+    
+    /**
+     *
+     * Animatable interpretation for the animation value, ^ set above
+     * in the didSet observer, most values work no problem.
+     *
+     * Be on the watch out for the CGColorWrapper,
+     * kind of an odd exception, something trips out if you
+     * cast CGColor to a protocol.
+     *
+     */
+    internal var toAnimatableValue       : FAAnimatable?            // Copied
+    
+    
+    /**
+     *
+     * Animatable interpretation for the animation value, ^ set above
+     * in the didSet observer, most values work no problem.
+     *
+     * Be on the watch out for the CGColorWrapper,
+     * kind of an odd exception, something trips out if you
+     * cast CGColor to a protocol.
+     *
+     */
+    internal var fromAnimatableValue     : FAAnimatable?            // Copied
+    
+    
+    /**
+     *
+     * Animatable interpretation for the animation value, ^ set above
+     * in the didSet observer, most values work no problem.
+     *
+     * Be on the watch out for the CGColorWrapper,
+     * kind of an odd exception, something trips out if you
+     * cast CGColor to a protocol.
+     *
+     */
+    internal var previousAnimatableValue : FAAnimatable?            // Copied
+
+    /**
+     *
+     * The easing function of the property animation
+     *
+     */
+    open var easingFunction : FAEasing = .linear                    // Copied
+    
+    
+    /**
+     *
+     * If you want to pretend this is a CABasicAnimation Animation?
+     *
+     */
     open override var timingFunction: CAMediaTimingFunction? {
-        didSet { easingFunction = easingFunction(from : timingFunction) }
+        didSet {
+            easingFunction = easingFunction(from : timingFunction)
+        }
     }
     
-    internal var springs                 : [FASpring]?
-    internal var startTime               : CFTimeInterval?
-    internal var isPrimary      : Bool = false
 
-    required public init?(coder aDecoder: NSCoder)
-    {
-        super.init(coder: aDecoder)
-        initializeInitialValues()
-    }
+    /**
+     *
+     * The vector springs, every single property is a vector.
+     * every dimention of a vector gets assigned a spring
+     * when using the decay of spring easing functions
+     *
+     */
+    internal var springs                 : [FASpring]?              // Copied
     
+    
+    /**
+     *
+     * This is the CALayer start time, mapped to the
+     * layer's timespace. It's as if each layer lives
+     * within a multiverse
+     *
+     */
+    internal var startTime               : CFTimeInterval?          // Copied
+    
+    
+    /**
+     *
+     * This flag determines if the animation is the primary
+     * driver. When multiple animations need to compete
+     * to be the source of truth in synchcronizing against,
+     * this flag allows for predetrmining one, otherwise the
+     * the FAAnimationGroup will determine it based on the
+     * timing priority defined.
+     *
+     */
+    internal var isPrimary      : Bool = false                      // Copied
+
+
     override public init()
     {
         super.init()
-        initializeInitialValues()
+        configureDefaultState()
     }
+    
+    
+    required public init?(coder aDecoder: NSCoder)
+    {
+        super.init(coder: aDecoder)
+        configureDefaultState()
+    }
+    
     
     public convenience init(keyPath path: String?)
     {
         self.init()
         keyPath = path
-        initializeInitialValues()
+        configureDefaultState()
     }
     
-    internal func initializeInitialValues()
+    
+    internal func configureDefaultState()
     {
         CALayer.swizzleAddAnimation()
         
@@ -71,6 +211,7 @@ open class FABasicAnimation : CAKeyframeAnimation
         isRemovedOnCompletion = true
         values = [AnyObject]()
     }
+    
     
     override open func copy(with zone: NSZone?) -> Any
     {
@@ -84,6 +225,8 @@ open class FABasicAnimation : CAKeyframeAnimation
         animation.fromValue                 = fromValue
         animation.previousValue             = previousValue
         
+        animation.easingFunction            = easingFunction
+        
         animation.toAnimatableValue         = toAnimatableValue
         animation.fromAnimatableValue       = fromAnimatableValue
         animation.previousAnimatableValue   = previousAnimatableValue
@@ -93,6 +236,7 @@ open class FABasicAnimation : CAKeyframeAnimation
         
         return animation
     }
+    
     
     func animatableValue(from anyObject : AnyObject?) -> FAAnimatable?
     {
@@ -116,19 +260,27 @@ open class FABasicAnimation : CAKeyframeAnimation
     
     internal func easingFunction(from mediaTiming : CAMediaTimingFunction?) -> FAEasing
     {
-        guard let mediaTiming = mediaTiming else {
+        guard let mediaTiming = mediaTiming else
+        {
             return .linear
         }
         
         print("timingFunction has no effect, converting to 'easingFunction' property\n")
         
-        switch mediaTiming.value(forKey: "name") as! String {
+        switch mediaTiming.value(forKey: "name") as! String
+        {
         case kCAMediaTimingFunctionEaseIn:
+            
             return .inCubic
+        
         case kCAMediaTimingFunctionEaseOut:
+        
             return .outCubic
+        
         case kCAMediaTimingFunctionEaseInEaseOut:
+        
             return .inOutCubic
+        
         default:
             return .smoothStep
         }
@@ -159,8 +311,9 @@ internal extension FABasicAnimation {
          *  value instead of the presentation layer.
          *
          *  Technically if the fromValue (presentation layer's current value) is equal
-         *  to the from value, and the current layer's value does not match, it means that
-         *  we do not need to intercept the animation in flight, and skip the synchronization.
+         *  to the from value, and if the current layer's value does not equal to the
+         *  presentation layer's value, it means that  we do not need to intercept
+         *  the animation in flight, and skip the synchronization.
          *
          */
         guard let animationLayerValue = animatingLayer?.animatableValueForKeyPath(keyPath!),
@@ -226,7 +379,6 @@ internal extension FABasicAnimation {
 
 
 //MARK: - Animation Progress Calculations
-
 internal extension FABasicAnimation {
    
     func valueProgress() -> CGFloat
@@ -246,6 +398,7 @@ internal extension FABasicAnimation {
         if let presentationLayer = animatingLayer?.presentation()
         {
             let currentTime = presentationLayer.convertTime(CACurrentMediaTime(), to: nil)
+           
             let difference = currentTime - startTime!
             
             return CGFloat(round(100 * (difference / duration))/100)
@@ -271,6 +424,7 @@ internal extension FABasicAnimation {
         var progress : CGFloat  = 1.0
         
         let progressedMagnitude = previousValue.magnitude(toValue:fromAnimatableValue)
+        
         let overallMagnitude = fromAnimatableValue.magnitude(toValue:toAnimatableValue)
         
         progress = progressedMagnitude / overallMagnitude
@@ -333,8 +487,8 @@ internal extension FABasicAnimation
     }
 }
 
-//MARK: Spring Configuration
 
+//MARK: Spring Configuration
 internal extension FABasicAnimation
 {
     fileprivate func springComponents(_ initialVelocity: Any?,
@@ -349,7 +503,8 @@ internal extension FABasicAnimation
         
         var vectorVelocity = toAnimatableValue.zeroVelocityValue
         
-        if let velocity = initialVelocity as? FAAnimatable {
+        if let velocity = initialVelocity as? FAAnimatable
+        {
             vectorVelocity = velocity
         }
         
@@ -436,6 +591,7 @@ internal extension FABasicAnimation
         return fromAnimatableValue.valueFromComponents(progressComponents)
     }
     
+    
     fileprivate func interpolatedSpringDecayValues() -> (duration : Double, values : [AnyObject])
     {
         guard let toAnimatableValue = toAnimatableValue else
@@ -466,12 +622,14 @@ internal extension FABasicAnimation
                 valueArray.append(newValue.valueRepresentation)
                 animationTime += frameRateTimeUnit
             }
-            
-        } while (animationComplete == false)
+        }
+        while (animationComplete == false)
         
         valueArray.append(toAnimatableValue.valueRepresentation)
+        
         return (duration : Double(animationTime), values : valueArray)
     }
+    
     
     fileprivate func interpolatedSpringValues() -> (duration : Double, values : [AnyObject])
     {

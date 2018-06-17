@@ -19,8 +19,10 @@ public extension UIView {
 		let animationKey = UUID().uuidString
 		
 		let newAnimator = FlightAnimator(withView: self, forKey : animationKey,  priority : timingPriority)
-		animator(newAnimator)
-		applyAnimation(forKey: animationKey)
+		
+        animator(newAnimator)
+		
+        applyAnimation(forKey: animationKey)
 	}
 	
 	public func registerAnimation(forKey key: String,

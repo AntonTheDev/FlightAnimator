@@ -8,19 +8,26 @@
 
 import Foundation
 import UIKit
-private struct FAAssociatedKey {
+
+private struct FAAssociatedKey
+{
     static var layoutConfigurations = "layoutConfigurations"
 }
 
-internal extension UIView {
-    
+internal extension UIView
+{
     var cachedAnimations: [NSString : FAAnimationGroup]? {
-        get {
+        get
+        {
             return fa_getAssociatedObject(self, associativeKey: &FAAssociatedKey.layoutConfigurations)
         }
-        set {
-            if let value = newValue {
-                fa_setAssociatedObject(self, value: value, associativeKey: &FAAssociatedKey.layoutConfigurations, policy: objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        set
+        {
+            if let value = newValue
+            {
+                fa_setAssociatedObject(self, value: value,
+                                       associativeKey: &FAAssociatedKey.layoutConfigurations,
+                                       policy: objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             }
         }
     }
@@ -28,17 +35,20 @@ internal extension UIView {
     func fa_setAssociatedObject<T>(_ object: AnyObject,
                                 value: T,
                                 associativeKey: UnsafeRawPointer,
-                                policy: objc_AssociationPolicy) {
-        
-        if T.self is AnyObject.Type {
+                                policy: objc_AssociationPolicy)
+    {
+        if T.self is AnyObject.Type
+        {
             objc_setAssociatedObject(object, associativeKey, value as AnyObject,  policy)
-        } else {
+        }
+        else
+        {
             objc_setAssociatedObject(object, associativeKey, ValueWrapper(value),  policy)
         }
     }
     
-    func fa_getAssociatedObject<T>(_ object: AnyObject, associativeKey: UnsafeRawPointer) -> T? {
-       
+    func fa_getAssociatedObject<T>(_ object: AnyObject, associativeKey: UnsafeRawPointer) -> T?
+    {
         if let v = objc_getAssociatedObject(object, associativeKey) as? T
         {
             return v
@@ -53,32 +63,38 @@ internal extension UIView {
         }
     }
     
-    func applyAnimationsToSubViews(_ inView : UIView, forKey key: String, animated : Bool = true) {
-        for subView in inView.subviews {
+    func applyAnimationsToSubViews(_ inView : UIView, forKey key: String, animated : Bool = true)
+    {
+        for subView in inView.subviews
+        {
             subView.applyAnimation(forKey: key, animated: animated)
         }
     }
     
-    func appendAnimation(_ animation : AnyObject, forKey key: String) {
-        
-        if cachedAnimations == nil {
+    func appendAnimation(_ animation : AnyObject, forKey key: String)
+    {
+        if cachedAnimations == nil
+        {
             cachedAnimations = [NSString : FAAnimationGroup]()
         }
         
-        if let newAnimation = animation as? FABasicAnimation {
-            
-            if let oldAnimation = cachedAnimations![NSString(string: key)] {
+        if let newAnimation = animation as? FABasicAnimation
+        {
+            if let oldAnimation = cachedAnimations![NSString(string: key)]
+            {
                 oldAnimation.stopTriggerTimer()
             }
             
             let newAnimationGroup = FAAnimationGroup()
             newAnimationGroup.animations = [newAnimation]
             newAnimationGroup.animatingLayer = layer
+           
             cachedAnimations![NSString(string: key)] = newAnimationGroup
         }
-        else if let newAnimationGroup = animation as? FAAnimationGroup {
-            
-            if let oldAnimation = cachedAnimations![key as NSString] {
+        else if let newAnimationGroup = animation as? FAAnimationGroup
+        {
+            if let oldAnimation = cachedAnimations![key as NSString]
+            {
                 oldAnimation.stopTriggerTimer()
             }
             
@@ -90,12 +106,13 @@ internal extension UIView {
 
 internal extension UIView {
     
-    internal func formattedNumericValue(forValue value : Any, forKey key : String) -> Any {
-        
+    internal func formattedNumericValue(forValue value : Any, forKey key : String) -> Any
+    {
         var formalValue : Any = value
         
         if let coreValue = layer.value(forKey: key) as? NSValue,
-            let typedValue = coreValue.typedValue() as? NSNumber {
+           let typedValue = coreValue.typedValue() as? NSNumber
+        {
             
             let numberType = CFNumberGetType(typedValue)
             
