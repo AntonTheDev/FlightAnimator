@@ -528,7 +528,7 @@ internal extension FABasicAnimation
             return easingFunction
         }
         
-        var adjustedVelocity : Any = toAnimatableValue.zeroVelocityVector
+        var adjustedVelocity : [CGFloat] = toAnimatableValue.zeroVelocityVector
         
         if  let presentationLayer  = animation?.animatingLayer?.presentation(),
             let animatingLayer = animation?.animatingLayer,
@@ -537,14 +537,14 @@ internal extension FABasicAnimation
             let currentTime = presentationLayer.convertTime(CACurrentMediaTime(), to: animatingLayer)
             let deltaTime = CGFloat(currentTime - animationStartTime) - FAConfig.AnimationTimeAdjustment
 			
-            var progressComponents = [CGFloat]()
+            var currentVectorVelocity = [CGFloat]()
             
             for index in 0..<toAnimatableValue.componentCount
             {
-                progressComponents.append(springs![index].velocity(deltaTime))
+                currentVectorVelocity.append(springs![index].velocity(deltaTime))
             }
             
-            adjustedVelocity = toAnimatableValue.valueFromComponents(progressComponents)
+            adjustedVelocity = currentVectorVelocity
         }
         
         switch easingFunction

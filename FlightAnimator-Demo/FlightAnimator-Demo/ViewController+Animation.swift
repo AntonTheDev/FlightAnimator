@@ -17,8 +17,8 @@ struct AnimationConfiguration {
     var primaryTimingPriority : FAPrimaryTimingPriority = .maxTime
     
     var sizeFunction : FAEasing = FAEasing.outSine
-    var positionFunction : FAEasing =  FAEasing.springCustom(velocity: CGPoint.zero, frequency: 14, ratio: 0.8)
-    var colorFunction : FAEasing =  FAEasing.springCustom(velocity: UIColor.clear.cgColor, frequency: 14, ratio: 0.8)
+    var positionFunction : FAEasing =  FAEasing.springCustom(velocity: [0, 0], frequency: 14, ratio: 0.8)
+    var colorFunction : FAEasing =  FAEasing.springCustom(velocity: [0, 0, 0, 0], frequency: 14, ratio: 0.8)
     
     var alphaFunction : FAEasing = FAEasing.inSine
     var transformFunction : FAEasing = FAEasing.outBack
@@ -172,7 +172,7 @@ extension ViewController {
     }
     
     func finalizePanAnimation(_ toFrame : CGRect,
-                              velocity : CGPoint = CGPoint.zero) {
+                              velocity : [CGFloat] = [0, 0]) {
         
         let finalFrame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 240)
         let finalBounds = CGRect(x: 0, y: 0, width: toFrame.size.width, height: toFrame.size.height)

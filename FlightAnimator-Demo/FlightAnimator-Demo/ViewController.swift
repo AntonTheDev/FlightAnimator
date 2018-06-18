@@ -180,7 +180,7 @@ class ViewController: UIViewController {
             let finalFrame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 240)
             let currentVelocity = recognizer.velocity(in: view)
             
-            finalizePanAnimation(finalFrame, velocity: currentVelocity)
+            finalizePanAnimation(finalFrame, velocity:  [currentVelocity.x, currentVelocity.x])
             lastToFrame = finalFrame
         default:
             break

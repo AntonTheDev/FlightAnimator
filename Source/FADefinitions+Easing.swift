@@ -410,8 +410,10 @@ public struct FASpring {
             self.dampingRatio = 0.0
         }
         
-        // Over Damped
-        if self.dampingRatio > 1.0 + CGFLT_EPSILON {
+       
+        if self.dampingRatio > 1.0 + CGFLT_EPSILON
+        {
+            // Over Damped
             za = -angularFrequency * dampingRatio
             zb = angularFrequency * sqrt(dampingRatio * dampingRatio - 1.0)
             z1 = za - zb
@@ -419,13 +421,15 @@ public struct FASpring {
             c1 = (positionVelocity - (positionValue - equilibriumPosition) * z2) / (-2.0 * zb)
             c2 = (positionValue - equilibriumPosition) - c1
         }
+        else if (self.dampingRatio > 1.0 - CGFLT_EPSILON)
+        {
             // Critically Damped
-        else if (self.dampingRatio > 1.0 - CGFLT_EPSILON) {
             c1 = positionVelocity + angularFrequency * (positionValue - equilibriumPosition)
             c2 = (positionValue - equilibriumPosition)
         }
+        else
+        {
             // Under Damped
-        else {
             omegaZeta  = angularFrequency * dampingRatio
             alpha  = angularFrequency * sqrt(1.0 - dampingRatio * dampingRatio)
             c1 = (positionValue - equilibriumPosition)

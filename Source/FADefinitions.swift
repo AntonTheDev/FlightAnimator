@@ -59,8 +59,8 @@ public enum FAEasing : Equatable
 	case inElastic, outElastic, inOutElastic, outInElastic
 	case inBounce, outBounce, inOutBounce, outInBounce
 	
-	case springDecay(velocity: Any?)
-	case springCustom(velocity: Any?, frequency: CGFloat , ratio: CGFloat)
+	case springDecay(velocity: [CGFloat]?)
+	case springCustom(velocity: [CGFloat]?, frequency: CGFloat , ratio: CGFloat)
 }
 
 
