@@ -153,7 +153,7 @@ public extension FAAnimationGroup
         
         if DebugTriggerLogEnabled {  print("START ++++++++ KEY \(String(describing: animationKey))  -  CALINK  \(String(describing: displayLink))\n") }
         
-        self.displayLink?.add(to: RunLoop.main, forMode: RunLoopMode.defaultRunLoopMode)
+        self.displayLink?.add(to: RunLoop.main, forMode: RunLoop.Mode.default)
         
         updateTrigger()
     }

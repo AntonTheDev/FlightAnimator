@@ -205,8 +205,8 @@ open class FABasicAnimation : CAKeyframeAnimation
     {
         CALayer.swizzleAddAnimation()
         
-        calculationMode = kCAAnimationLinear
-        fillMode = kCAFillModeForwards
+        calculationMode = CAAnimationCalculationMode.linear
+        fillMode = CAMediaTimingFillMode.forwards
         
         isRemovedOnCompletion = true
         values = [AnyObject]()
@@ -269,15 +269,15 @@ open class FABasicAnimation : CAKeyframeAnimation
         
         switch mediaTiming.value(forKey: "name") as! String
         {
-        case kCAMediaTimingFunctionEaseIn:
+        case CAMediaTimingFunctionName.easeIn.rawValue:
             
             return .inCubic
         
-        case kCAMediaTimingFunctionEaseOut:
+        case CAMediaTimingFunctionName.easeOut.rawValue:
         
             return .outCubic
         
-        case kCAMediaTimingFunctionEaseInEaseOut:
+        case CAMediaTimingFunctionName.easeInEaseOut.rawValue:
         
             return .inOutCubic
         
