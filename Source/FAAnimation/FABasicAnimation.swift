@@ -608,7 +608,7 @@ internal extension FABasicAnimation
             {
                 animationComplete = newValue.magnitude(toValue: toAnimatableValue) < FAConfig.SpringDecayMagnitudeThreshold
                 
-                print(newValue.magnitude(toValue: toAnimatableValue))
+                print("\(newValue) - \(toAnimatableValue) \(newValue.magnitude(toValue: toAnimatableValue))")
                 valueArray.append(newValue.valueRepresentation)
                 animationTime += frameRateTimeUnit
             }
