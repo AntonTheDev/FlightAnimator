@@ -159,7 +159,7 @@ class CurveSelectionCollectionViewCell : UICollectionViewCell {
 		var tempSwitch = UISwitch()
 		tempSwitch.isAccessibilityElement = true
 		tempSwitch.backgroundColor = UIColor.clear
-		tempSwitch.addTarget(self, action: #selector(CurveSelectionCollectionViewCell.value_changed(_:)), for: UIControlEvents.valueChanged)
+        tempSwitch.addTarget(self, action: #selector(CurveSelectionCollectionViewCell.value_changed(_:)), for: UIControl.Event.valueChanged)
 		return tempSwitch
 	}()
 }

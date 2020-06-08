@@ -8,7 +8,7 @@
 
 import Foundation
 import UIKit
-
+import QuartzCore
 /**
  * Equatable FAAnimationGroup Implementation
  */
@@ -146,7 +146,7 @@ open class FAAnimationGroup : CAAnimationGroup
 	{
         super.init()
         animations = [CAAnimation]()
-        fillMode = CAMediaTimingFillMode.forwards
+        //fillMode = CAMediaTimingFillMode.forwards
         isRemovedOnCompletion = true
     }
     

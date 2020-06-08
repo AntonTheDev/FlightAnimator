@@ -383,10 +383,10 @@ class ConfigurationView : UIViewController {
     
     lazy var closeButton: UIButton = {
         var button = UIButton()
-        button.imageEdgeInsets = UIEdgeInsetsMake(20, 20, 20, 20)
-        button.setTitle("▼", for: UIControlState())
+        button.imageEdgeInsets = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
+        button.setTitle("▼", for: UIControl.State())
         button.backgroundColor = UIColor.clear
-        button.setTitleColor(UIColor.white, for: UIControlState())
+        button.setTitleColor(UIColor.white, for: UIControl.State())
         button.addTarget(self, action: #selector(ConfigurationView.tappedCloseConfig), for: .touchUpInside)
         return button
     }()
@@ -409,7 +409,7 @@ class ConfigurationView : UIViewController {
         tempSwitch.accessibilityLabel = "EnableSecondarySwitch"
         tempSwitch.isAccessibilityElement = true
         tempSwitch.backgroundColor = UIColor.clear
-        tempSwitch.addTarget(self, action: #selector(ConfigurationView.secondary_view_value_changed(_:)), for: UIControlEvents.valueChanged)
+        tempSwitch.addTarget(self, action: #selector(ConfigurationView.secondary_view_value_changed(_:)), for: UIControl.Event.valueChanged)
         return tempSwitch
     }()
     

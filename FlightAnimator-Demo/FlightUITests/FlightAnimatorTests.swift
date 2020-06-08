@@ -29,6 +29,16 @@ class FlightAnimatorTests: XCTestCase {
         }
     }
     
+    
+    func testMagnitudeInterpolation() {
+        var point = CGPoint(x: 186.5, y: 13)
+        print(point.magnitude(toValue: point))
+        var animationComplete = point.magnitude(toValue: point) < FAConfig.SpringDecayMagnitudeThreshold
+        
+        XCTAssertEqual(animationComplete, true, "Magnitude Animaiton Complete")
+        
+    }
+    
     func testFAVectorComponents() {
         
         XCTAssertEqual(CGSize(width: 10,height: 10).vector.count, 2, "CGSize Vector has incorrectnumber of vector")

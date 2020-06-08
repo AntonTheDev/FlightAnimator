@@ -17,7 +17,7 @@ struct FAConfig
 	static let SpringDecayDamping       : CGFloat = 0.97
 	static let SpringCustomBounceCount  : Int = 4
 	
-	static let SpringDecayMagnitudeThreshold  : CGFloat = 0.01
+	static let SpringDecayMagnitudeThreshold  : CGFloat = 0.02
 	
 	static let AnimationTimeAdjustment   : CGFloat = 2.0 * (1.0 / FAConfig.InterpolationFrameCount)
 }

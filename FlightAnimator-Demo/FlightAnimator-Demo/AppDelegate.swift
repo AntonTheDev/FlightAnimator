@@ -14,7 +14,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var baseViewController: ViewController = ViewController()
     var baseNavViewController: UINavigationController = UINavigationController()
     
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         self.baseNavViewController.view.backgroundColor = UIColor.white
         baseNavViewController.setNavigationBarHidden(true, animated: false)
         window = UIWindow(frame: UIScreen.main.bounds)

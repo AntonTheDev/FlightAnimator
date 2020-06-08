@@ -8,7 +8,7 @@
 
 import Foundation
 import UIKit
-
+import QuartzCore
 //MARK: - FABasicAnimation
 open class FABasicAnimation : CAKeyframeAnimation
 {
@@ -205,8 +205,8 @@ open class FABasicAnimation : CAKeyframeAnimation
     {
         CALayer.swizzleAddAnimation()
         
-        calculationMode = CAAnimationCalculationMode.linear
-        fillMode = CAMediaTimingFillMode.forwards
+       // calculationMode = .linear
+       // fillMode = .forwards
         
         isRemovedOnCompletion = true
         values = [AnyObject]()
@@ -266,7 +266,9 @@ open class FABasicAnimation : CAKeyframeAnimation
         }
         
         print("timingFunction has no effect, converting to 'easingFunction' property\n")
+        return .inCubic
         
+        /*
         switch mediaTiming.value(forKey: "name") as! String
         {
         case CAMediaTimingFunctionName.easeIn.rawValue:
@@ -284,6 +286,7 @@ open class FABasicAnimation : CAKeyframeAnimation
         default:
             return .smoothStep
         }
+ */
     }
 }
 
@@ -607,6 +610,8 @@ internal extension FABasicAnimation
                 let toAnimatableValue = self.toAnimatableValue
             {
                 animationComplete = newValue.magnitude(toValue: toAnimatableValue) < FAConfig.SpringDecayMagnitudeThreshold
+                
+                print(newValue.magnitude(toValue: toAnimatableValue))
                 valueArray.append(newValue.valueRepresentation)
                 animationTime += frameRateTimeUnit
             }

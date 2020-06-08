@@ -33,7 +33,7 @@ func CGCSRectEdgeInset(_ inputFrame : CGRect, edgeInsets : UIEdgeInsets) -> CGRe
 }
 
 func CGCSRectEdgeOutset(_ inputFrame : CGRect, edgeInsets : UIEdgeInsets) -> CGRect {
-    let invertedEdgeInsets : UIEdgeInsets = UIEdgeInsetsMake(-edgeInsets.top, -edgeInsets.left, -edgeInsets.bottom, -edgeInsets.right)
+    let invertedEdgeInsets : UIEdgeInsets = UIEdgeInsets(top: -edgeInsets.top, left: -edgeInsets.left, bottom: -edgeInsets.bottom, right: -edgeInsets.right)
     return CGCSRectEdgeInset(inputFrame, edgeInsets: invertedEdgeInsets)
 }
 

@@ -211,8 +211,8 @@ class ViewController: UIViewController {
     lazy var settingsButton: UIButton = {
         var button = UIButton()
             button.accessibilityLabel = "SettingsButton"
-        button.setImage(UIImage(named:"settingsIcon"), for: UIControlState())
-        button.imageEdgeInsets = UIEdgeInsetsMake(20, 20, 20, 20)
+        button.setImage(UIImage(named:"settingsIcon"), for: UIControl.State())
+        button.imageEdgeInsets = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
         button.backgroundColor = UIColor(rgba: "#2364c6")
         button.addTarget(self, action: #selector(ViewController.tappedShowConfig), for: .touchUpInside)
         return button
@@ -267,10 +267,10 @@ class ViewController: UIViewController {
     
     lazy var animateToTopButton: UIButton = {
         let button = UIButton(type: .custom)
-        button.setTitle("   ▲      Top and Expand                  ".uppercased(), for: UIControlState())
+        button.setTitle("   ▲      Top and Expand                  ".uppercased(), for: UIControl.State())
         
         button.backgroundColor = UIColor(rgba: "#2364c6")
-        button.setTitleColor(UIColor.white, for: UIControlState())
+        button.setTitleColor(UIColor.white, for: UIControl.State())
         button.titleLabel?.font = UIFont(name: "Helvetica", size: 11)
         button.titleLabel?.numberOfLines = 3
         button.titleLabel?.textAlignment = .left
@@ -282,10 +282,10 @@ class ViewController: UIViewController {
     lazy var animateToBottomButton: UIButton = {
         
         let button = UIButton(type: .custom)
-        button.setTitle("   ▼      Bottom and Expand          ".uppercased(), for: UIControlState())
+        button.setTitle("   ▼      Bottom and Expand          ".uppercased(), for: UIControl.State())
         
         button.backgroundColor = UIColor(rgba: "#2364c6")
-        button.setTitleColor(UIColor.white, for: UIControlState())
+        button.setTitleColor(UIColor.white, for: UIControl.State())
         button.titleLabel?.font = UIFont(name: "Helvetica", size: 11)
         button.titleLabel?.numberOfLines = 3
         button.titleLabel?.textAlignment = .left
@@ -309,10 +309,10 @@ class ViewController: UIViewController {
     
     func newButton(withTitle title : String , action: Selector, backgroundColor : UIColor = UIColor.clear, textColor : UIColor = UIColor.white) -> UIButton {
         let button = UIButton(type: .custom)
-        button.setTitle(title, for: UIControlState())
+        button.setTitle(title, for: UIControl.State())
         
         button.backgroundColor = backgroundColor
-        button.setTitleColor(textColor, for: UIControlState())
+        button.setTitleColor(textColor, for: UIControl.State())
         button.titleLabel?.font = UIFont(name: "Helvetica", size: 11)
         button.titleLabel?.numberOfLines = 3
         button.titleLabel?.textAlignment = .center
