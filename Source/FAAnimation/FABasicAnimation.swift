@@ -606,9 +606,13 @@ internal extension FABasicAnimation
                 let newValue = newObjectValue.typedValue() as? FAAnimatable,
                 let toAnimatableValue = self.toAnimatableValue
             {
-                animationComplete = newValue.magnitude(toValue: toAnimatableValue) < FAConfig.SpringDecayMagnitudeThreshold
+                if newValue.valueType != toAnimatableValue.valueType {
+                    animationComplete = true
+                } else {
+                    animationComplete = newValue.magnitude(toValue: toAnimatableValue) < FAConfig.SpringDecayMagnitudeThreshold
+                }
                 
-                print("\(newValue) - \(toAnimatableValue) \(newValue.magnitude(toValue: toAnimatableValue))")
+                // print(" \(newObjectValue.)\(newValue) - \(toAnimatableValue) \(newValue.magnitude(toValue: toAnimatableValue))")
                 valueArray.append(newValue.valueRepresentation)
                 animationTime += frameRateTimeUnit
             }
