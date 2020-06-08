@@ -146,7 +146,7 @@ open class FAAnimationGroup : CAAnimationGroup
 	{
         super.init()
         animations = [CAAnimation]()
-        //fillMode = CAMediaTimingFillMode.forwards
+        fillMode = CAMediaTimingFillMode.forwards
         isRemovedOnCompletion = true
     }
     

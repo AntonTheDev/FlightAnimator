@@ -205,8 +205,8 @@ open class FABasicAnimation : CAKeyframeAnimation
     {
         CALayer.swizzleAddAnimation()
         
-       // calculationMode = .linear
-       // fillMode = .forwards
+        calculationMode = .linear
+        fillMode = .forwards
         
         isRemovedOnCompletion = true
         values = [AnyObject]()
@@ -266,9 +266,7 @@ open class FABasicAnimation : CAKeyframeAnimation
         }
         
         print("timingFunction has no effect, converting to 'easingFunction' property\n")
-        return .inCubic
         
-        /*
         switch mediaTiming.value(forKey: "name") as! String
         {
         case CAMediaTimingFunctionName.easeIn.rawValue:
@@ -286,7 +284,6 @@ open class FABasicAnimation : CAKeyframeAnimation
         default:
             return .smoothStep
         }
- */
     }
 }
 
