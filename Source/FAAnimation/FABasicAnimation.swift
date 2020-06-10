@@ -606,11 +606,11 @@ internal extension FABasicAnimation
                 let newValue = newObjectValue.typedValue() as? FAAnimatable,
                 let toAnimatableValue = self.toAnimatableValue
             {
-               // if newValue.valueType != toAnimatableValue.valueType {
-               //     animationComplete = true
-               // } else {
+                if newValue.valueType != toAnimatableValue.valueType {
+                    animationComplete = true
+                } else {
                     animationComplete = newValue.magnitude(toValue: toAnimatableValue) < FAConfig.SpringDecayMagnitudeThreshold
-               // }
+                }
                 
                 // print(" \(newObjectValue.)\(newValue) - \(toAnimatableValue) \(newValue.magnitude(toValue: toAnimatableValue))")
                 valueArray.append(newValue.valueRepresentation)
